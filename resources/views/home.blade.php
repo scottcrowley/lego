@@ -1,21 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="flex items-center">
+    <div class="md:w-1/2 md:mx-auto">
+        <div class="rounded shadow">
+            <div class="font-medium text-lg text-teal-darker bg-teal p-3 rounded-t">
+                Dashboard
+            </div>
+            <div class="bg-white p-3 rounded-b">
+                @if (session('status'))
+                    <div class="bg-green-lightest border border-green-light text-green-dark text-sm px-4 py-3 rounded mb-4">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
+                <p class="text-grey-dark">
                     You are logged in!
-                </div>
+                </p>
             </div>
         </div>
     </div>

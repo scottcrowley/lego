@@ -1,0 +1,31 @@
+.btn {
+    @apply .bg-grey .text-grey-darkest .font-normal .text-sm .font-semibold .py-2 .px-4 .rounded;
+    cursor: pointer;
+
+    &.is-blue {
+        @apply .bg-blue .text-white;
+
+        &:hover {
+            @apply .bg-blue-dark;
+        }
+    }
+
+    &.is-outlined {
+        background: transparent;
+        @apply .border;
+    }
+
+    &.is-small {
+        @apply .text-xs .py-1 .px-3;
+    }
+
+    &:hover {
+        @apply .bg-grey-dark .text-white;
+    }
+
+    &.is-narrow {
+        @apply .py-1 .px-2;
+    }
+}
+
+
