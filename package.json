@@ -21,8 +21,8 @@
         "sass-loader": "^7.1.0",
         "tailwindcss": "^0.7.4",
         "vue": "^2.5.21",
-        "vue-template-compiler": "^2.5.21",
-        "vue-multiselect": "^2.1.3"
+        "vue-multiselect": "^2.1.3",
+        "vue-template-compiler": "^2.5.21"
     },
     "dependencies": {
         "ajv": "^6.6.2",
