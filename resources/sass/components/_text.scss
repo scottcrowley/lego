@@ -2,14 +2,14 @@
     @apply .flex .items-stretch .mb-3 .items-center;
     
     & label {
-        @apply .text-right .font-semibold .text-grey-dark .text-sm .pr-3 .align-middle .w-1/4;
+        @apply .text-right .font-semibold .text-secondary-dark .text-sm .pr-3 .align-middle .w-1/4;
     }
 
     & .field {
         @apply .flex .flex-col .w-3/4;
 
         & .danger {
-            @apply .text-red-dark .text-sm .mt-2;
+            @apply .text-error-dark .text-sm .mt-2;
         }
     }
 
@@ -19,23 +19,23 @@
 }
 
 ul.danger {
-    @apply .list-reset .w-3/4 .ml-auto .border .border-red-dark .rounded .p-4;
+    @apply .list-reset .w-3/4 .ml-auto .border .border-error-dark .rounded .p-4;
 
     & li {
-        @apply .text-red-dark .text-sm;
+        @apply .text-error-dark .text-sm;
     }
 }
 
 p {
-    @apply .text-base .text-grey-dark;
+    @apply .text-base .text-secondary-dark;
 }
 
 .title {
-    @apply .text-lg .text-grey-darker mb-2;
+    @apply .text-lg .text-secondary-darker mb-2;
 }
 
 a {
-    @apply .no-underline .text-grey-darker;
+    @apply .no-underline .text-secondary-darker;
 
     &.btn {
         @apply .text-center;
@@ -53,7 +53,7 @@ a {
 .item-list {
     &:hover {
         & p {
-            @apply .text-grey-darkest;
+            @apply .text-secondary-darkest;
         }
     }
 }

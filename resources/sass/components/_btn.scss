@@ -1,12 +1,12 @@
 .btn {
-    @apply .bg-grey .text-grey-darkest .font-normal .text-sm .font-semibold .py-2 .px-4 .rounded;
+    @apply .bg-secondary .text-secondary-darkest .font-normal .text-sm .font-semibold .py-2 .px-4 .rounded;
     cursor: pointer;
 
-    &.is-blue {
-        @apply .bg-blue .text-white;
+    &.is-primary {
+        @apply .bg-primary .text-white;
 
         &:hover {
-            @apply .bg-blue-dark;
+            @apply .bg-primary-dark;
         }
     }
 
@@ -20,7 +20,7 @@
     }
 
     &:hover {
-        @apply .bg-grey-dark .text-white;
+        @apply .bg-secondary-dark .text-white;
     }
 
     &.is-narrow {
