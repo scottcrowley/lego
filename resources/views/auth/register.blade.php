@@ -12,9 +12,17 @@
                     {{ csrf_field() }}
 
                     <div class="flex items-stretch mb-3">
+                        <label for="username" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">UserName</label>
+                        <div class="flex flex-col w-3/4">
+                            <input id="username" type="text" class="flex-grow h-8 px-2 border rounded {{ $errors->has('username') ? 'border-error-dark' : 'border-secondary-light' }}" name="username" value="{{ old('username') }}" required autofocus>
+                            {!! $errors->first('username', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
+                        </div>
+                    </div>
+
+                    <div class="flex items-stretch mb-3">
                         <label for="name" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">Name</label>
                         <div class="flex flex-col w-3/4">
-                            <input id="name" type="text" class="flex-grow h-8 px-2 border rounded {{ $errors->has('name') ? 'border-error-dark' : 'border-secondary-light' }}" name="name" value="{{ old('name') }}" autofocus>
+                            <input id="name" type="text" class="flex-grow h-8 px-2 border rounded {{ $errors->has('name') ? 'border-error-dark' : 'border-secondary-light' }}" name="name" value="{{ old('name') }}" required>
                             {!! $errors->first('name', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
