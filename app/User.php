@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -26,5 +25,11 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+        'rebrickable_api_key'
     ];
+
+    public function validAPI()
+    {
+        return $this->rebrickable_api_key != '';
+    }
 }

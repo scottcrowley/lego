@@ -17,4 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profiles', 'ProfilesController@index')->name('profiles')->middleware('auth');
+
+Route::group([
+    'middleware' => 'rebrickable'
+], function () {
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+});
