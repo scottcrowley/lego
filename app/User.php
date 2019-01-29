@@ -28,8 +28,21 @@ class User extends Authenticatable
         'rebrickable_api_key'
     ];
 
+    /**
+     * The relationships to always eager-load.
+     *
+     * @var array
+     */
+    protected $with = ['credentials'];
+
+    public function credentials()
+    {
+        return $this->hasOne(RebrickableCredentials::class);
+    }
+
     public function validAPI()
     {
-        return $this->rebrickable_api_key != '';
+        $credentials = $this->credentials;
+        return (! is_null($credentials) && $credentials->api_key != '');
     }
 }

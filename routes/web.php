@@ -17,7 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/profiles', 'ProfilesController@index')->name('profiles')->middleware('auth');
+Route::get('/profiles', 'ProfilesController@show')->name('profiles')->middleware('auth');
+Route::get('/profiles/edit', 'ProfilesController@edit')->name('profiles.edit')->middleware('auth');
+Route::patch('/profiles/edit', 'ProfilesController@update')->name('profiles.update')->middleware('auth');
 
 Route::group([
     'middleware' => 'rebrickable'

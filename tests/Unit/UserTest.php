@@ -17,7 +17,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function it_requires_a_rebrickable_api_key()
+    public function it_requires_a_rebrickable_credentials()
     {
         $this->signIn($user = create('App\User'));
 
