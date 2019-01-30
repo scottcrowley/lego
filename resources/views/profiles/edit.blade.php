@@ -35,6 +35,30 @@
                         </div>
                     </div>
 
+                    <div class="field-group">
+                        <label for="email">Current Password:</label>
+                        <div class="field">
+                            <input type="password" name="current_password" id="current_password" value="">
+                            {!! $errors->first('current_password', '<span class="danger">:message</span>') !!}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="email">New Password:</label>
+                        <div class="field">
+                            <input type="password" name="password" id="password" value="">
+                            {!! $errors->first('password', '<span class="danger">:message</span>') !!}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="email">Confirm New Password:</label>
+                        <div class="field">
+                            <input type="password" name="password_confirmation" id="password_confirmation" value="">
+                            {!! $errors->first('password_confirmation', '<span class="danger">:message</span>') !!}
+                        </div>
+                    </div>
+
                     @if (count($errors))
                         <div class="field-group">
                             <ul class="danger">

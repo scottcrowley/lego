@@ -75,6 +75,8 @@ class ProfilesController extends Controller
 
         $user->update($data);
 
+        session()->flash('flash', 'The profile was successfully updated!');
+
         return redirect(route('profiles'));
     }
 }

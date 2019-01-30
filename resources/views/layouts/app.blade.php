@@ -11,6 +11,7 @@
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    @yield('head')
 </head>
 <body class="bg-primary-lightest h-screen antialiased">
     <div id="app">
@@ -43,9 +44,12 @@
         </nav>
 
         @yield('content')
+
+        <flash message="{{ session('flash') }}"></flash>
     </div>
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>
