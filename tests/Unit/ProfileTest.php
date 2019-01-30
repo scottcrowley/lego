@@ -35,4 +35,32 @@ class ProfileTest extends TestCase
         $this->patch(route('profiles.update'), $user->toArray())
             ->assertSessionHasErrors('email');
     }
+
+    /** @test */
+    public function it_requires_all_password_fields_when_current_password_is_given()
+    {
+        $this->signIn($user = create('App\User'));
+
+        $data = [
+            'username' => $user->username,
+            'name' => $user->name,
+            'email' => $user->email,
+            'current_password' => 'secret',
+            'password' => '',
+            'password_confirmation' => '',
+        ];
+
+        $this->patch(route('profiles.update'), $data)
+            ->assertSessionHasErrors('password');
+
+        $data['password'] = 'somenewpassword';
+
+        $this->patch(route('profiles.update'), $data)
+            ->assertSessionHasErrors('password');
+
+        $data['password'] = 'secret';
+
+        $this->patch(route('profiles.update'), $data)
+            ->assertSessionHasErrors('password');
+    }
 }

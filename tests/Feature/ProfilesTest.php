@@ -40,13 +40,33 @@ class ProfilesTest extends TestCase
     /** @test */
     public function a_user_may_update_their_profile()
     {
+        $this->withoutExceptionHandling();
         $this->signIn($user = create('App\User'));
 
         $user->name = 'New Name';
         $this->patch(route('profiles.update'), $user->toArray())
-            ->assertRedirect(route('profiles'));
+        ->assertRedirect(route('profiles'));
 
         $this->get(route('profiles'))
-            ->assertSee('New Name');
+        ->assertSee('New Name');
+    }
+
+    /** @test */
+    public function a_user_can_update_their_password()
+    {
+        $this->signIn($user = create('App\User'));
+
+        $data = [
+            'username' => $user->username,
+            'name' => $user->name,
+            'email' => $user->email,
+            'current_password' => 'secret',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ];
+
+        $this->patch(route('profiles.update'), $data);
+
+        $this->assertTrue(\Hash::check($data['password'], $user->fresh()->password));
     }
 }
