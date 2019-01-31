@@ -37,7 +37,7 @@ class User extends Authenticatable
 
     public function credentials()
     {
-        return $this->hasOne(RebrickableCredentials::class);
+        return $this->hasOne(RebrickableCredentials::class, 'user_id');
     }
 
     public function validAPI()

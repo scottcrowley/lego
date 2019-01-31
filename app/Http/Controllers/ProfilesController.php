@@ -30,7 +30,7 @@ class ProfilesController extends Controller
      */
     public function edit()
     {
-        $user = auth()->user();
+        $user = \App\User::find(auth()->id());
 
         return view('profiles.edit', compact('user'));
     }

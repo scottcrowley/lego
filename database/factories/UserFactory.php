@@ -30,6 +30,5 @@ $factory->define(App\RebrickableCredentials::class, function (Faker $faker) {
         'email' => $faker->safeEmail,
         'password' => $faker->password(),
         'api_key' => $faker->uuid,
-        'token' => $faker->sha256,
     ];
 });
