@@ -20,7 +20,7 @@ class ProfilesController extends Controller
     {
         $user = $user ?: auth()->user();
 
-        return view('profiles.index', compact('user'));
+        return view('profiles.show', compact('user'));
     }
 
     /**
@@ -75,7 +75,7 @@ class ProfilesController extends Controller
 
         $user->update($data);
 
-        session()->flash('flash', 'The profile was successfully updated!');
+        session()->flash('flash', ['message' => 'The profile was successfully updated!', 'level' => 'success']);
 
         return redirect(route('profiles'));
     }

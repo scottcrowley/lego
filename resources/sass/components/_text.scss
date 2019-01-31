@@ -18,11 +18,39 @@
     }
 }
 
-ul.danger {
-    @apply .list-reset .w-3/4 .ml-auto .border .border-error-dark .rounded .p-4;
+ul {
+    @apply .list-reset;
+}
 
-    & li {
-        @apply .text-error-dark .text-sm;
+.success {
+    @apply .text-success-dark;
+
+    &div {
+        @apply .bg-success .border .border-success-dark .text-white;
+    }
+}
+
+.warning {
+    @apply .text-warning-dark;
+
+    &div {
+        @apply .bg-warning .border .border-warning-dark .text-grey-dark;
+    }
+}
+
+.danger {
+    @apply .text-error-dark;
+
+    &div {
+        @apply .bg-error .border .border-error-dark .text-white;
+    }
+
+    &ul {
+        @apply .w-3/4 .ml-auto .border .border-error-dark .rounded .p-4;
+
+        & li {
+            @apply .text-error-dark .text-sm;
+        }
     }
 }
 

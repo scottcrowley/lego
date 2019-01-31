@@ -14,7 +14,7 @@
         data() {
             return {
                 body: this.message,
-                level: this.baselevel,
+                level: this.baselevel, //success, warning, danger
                 show: false
             }
         },
@@ -23,9 +23,7 @@
             classes() {
                 let defaults = ['fixed', 'p-4', 'border'];
 
-                if (this.level === 'warning') defaults.push('bg-yellow', 'border-yellow-dark', 'text-grey-dark');
-                else if (this.level === 'danger') defaults.push('bg-red', 'border-red-dark', 'text-white');
-                else defaults.push('bg-green', 'border-green-dark', 'text-white');
+                defaults.push(this.level);
 
                 return defaults;
             }
