@@ -3,11 +3,26 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\RebrickableAPI;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CredentialsTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        app()->singleton(RebrickableApi::class, function () {
+            return \Mockery::mock(RebrickableApi::class, function ($m) {
+                $m->shouldReceive('generateToken')
+                    ->andReturn(
+                        ['user_token' => 'ad5042154683aff84557c47f73e62f92f']
+                    );
+            });
+        });
+    }
 
     /** @test */
     public function a_user_must_be_signed_in_to_view_create_page()
@@ -42,16 +57,31 @@ class CredentialsTest extends TestCase
     {
         $this->signIn($user = create('App\User'));
 
-        $credentials = makeRaw('App\RebrickableCredentials', ['user_id' => $user->id]);
+        create('App\RebrickableCredentials', ['user_id' => $user->id]);
+
+        $credentials = $user->credentials->toArray();
 
         $credentials['email'] = 'new@email.com';
         $credentials['password'] = 'newpassword';
         $credentials['api_key'] = 'mynewapikey';
 
-        $this->post(route('credentials.update'), $credentials);
+        $response = $this->patch(route('credentials.update'), $credentials);
 
         $this->get(route('profiles.edit'))
             ->assertSee($credentials['email'])
             ->assertSee($credentials['api_key']);
     }
+
+    // /** @test */
+    // public function a_user_token_is_generated_when_credentials_are_created()
+    // {
+    //     $this->signIn($user = create('App\User'));
+
+    //     $credentials = makeRaw('App\RebrickableCredentials', ['user_id' => $user->id]);
+
+    //     $this->post(route('credentials.store'), $credentials);
+
+    //     $this->get(route('profiles.edit'))
+    //         ->assertSee('ad5042154683aff84557c47f73e62f92f');
+    // }
 }

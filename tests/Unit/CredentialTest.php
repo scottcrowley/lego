@@ -58,9 +58,9 @@ class CredentialTest extends TestCase
         $credentials = makeRaw('App\RebrickableCredentials', ['user_id' => $user->id, 'api_key' => '']);
 
         $this->post(route('credentials.store'), $credentials)
-            ->assertSessionHasErrors('api_key');
+        ->assertSessionHasErrors('api_key');
 
         $this->patch(route('credentials.store'), $credentials)
-            ->assertSessionHasErrors('api_key');
+        ->assertSessionHasErrors('api_key');
     }
 }

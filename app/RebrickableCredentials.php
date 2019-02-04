@@ -13,8 +13,24 @@ class RebrickableCredentials extends Model
      */
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // static::created(function ($RebrickableCredentials) {
+        //     $RebrickableCredentials->generateUserToken();
+        // });
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    protected function generateUserToken()
+    {
+        $rbApi = new RebrickableApi($this);
+
+        $response = $rbApi->generateToken();
     }
 }
