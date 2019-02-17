@@ -32,3 +32,10 @@ $factory->define(App\RebrickableCredentials::class, function (Faker $faker) {
         'api_key' => $faker->uuid,
     ];
 });
+
+$factory->define(App\StorageType::class, function (Faker $faker) {
+    return [
+        'name' => $faker->word,
+        'description' => $faker->sentence(),
+    ];
+});

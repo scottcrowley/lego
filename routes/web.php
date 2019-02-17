@@ -37,6 +37,14 @@ Route::group([
 });
 
 Route::group([
+    'prefix' => 'storage',
+    'middleware' => 'auth'
+], function () {
+    Route::post('/types', 'StorageTypesController@store')->name('storage.types.store');
+    Route::patch('/types/{type}', 'StorageTypesController@update')->name('storage.types.update');
+});
+
+Route::group([
     'middleware' => 'rebrickable'
 ], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
