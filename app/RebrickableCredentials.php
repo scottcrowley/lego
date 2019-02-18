@@ -13,14 +13,23 @@ class RebrickableCredentials extends Model
      */
     protected $guarded = [];
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected $rebrickableApi;
 
-        // static::created(function ($RebrickableCredentials) {
-        //     $RebrickableCredentials->generateUserToken();
-        // });
-    }
+    // public function __construct(RebrickableApi $rebrickableApi, $attributes = [])
+    // {
+    //     parent::__construct($attributes);
+
+    //     $this->rebrickableApi = $rebrickableApi;
+    // }
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::created(function ($RebrickableCredentials) {
+    //         $RebrickableCredentials->generateUserToken();
+    //     });
+    // }
 
     public function user()
     {
@@ -29,8 +38,6 @@ class RebrickableCredentials extends Model
 
     protected function generateUserToken()
     {
-        $rbApi = new RebrickableApi($this);
-
-        $response = $rbApi->generateToken();
+        // return $rebrickableApi->generateToken();
     }
 }

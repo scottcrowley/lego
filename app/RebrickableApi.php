@@ -18,7 +18,7 @@ class RebrickableApi
     {
         $this->credentials = $credentials;
 
-        $this->verifyCredentials();
+        // $this->verifyCredentials();
     }
 
     public function generateToken()

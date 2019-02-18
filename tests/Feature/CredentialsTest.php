@@ -41,6 +41,7 @@ class CredentialsTest extends TestCase
     /** @test */
     public function a_user_can_create_new_credentials_if_they_do_not_exist()
     {
+        $this->withoutExceptionHandling();
         $this->signIn($user = create('App\User'));
 
         $credentials = makeRaw('App\RebrickableCredentials', ['user_id' => $user->id]);
