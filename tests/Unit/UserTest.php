@@ -17,13 +17,13 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function it_requires_a_rebrickable_credentials()
+    public function it_requires_rebrickable_credentials()
     {
         $this->signIn($user = create('App\User'));
 
         config(['rebrickable.api.key' => '']);
 
         $this->get(route('dashboard'))
-            ->assertRedirect(route('profiles'));
+            ->assertRedirect(route('profile'));
     }
 }

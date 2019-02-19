@@ -14,7 +14,9 @@ class StorageTypesController extends Controller
      */
     public function index()
     {
-        //
+        $types = StorageType::orderBy('name')->get();
+
+        return view('storage.types.index', compact('types'));
     }
 
     /**
@@ -24,7 +26,7 @@ class StorageTypesController extends Controller
      */
     public function create()
     {
-        //
+        return view('storage.types.create');
     }
 
     /**

@@ -5,14 +5,14 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ProfilesTest extends TestCase
+class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
     public function a_user_must_be_signed_in_to_view()
     {
-        $this->get(route('profiles'))
+        $this->get(route('profile'))
             ->assertRedirect(route('login'));
     }
 
@@ -21,7 +21,7 @@ class ProfilesTest extends TestCase
     {
         $this->signIn($user = create('App\User'));
 
-        $this->get(route('profiles'))
+        $this->get(route('profile'))
             ->assertSee($user->username)
             ->assertSee($user->name);
     }
@@ -31,7 +31,7 @@ class ProfilesTest extends TestCase
     {
         $this->signIn($user = create('App\User'));
 
-        $this->get(route('profiles.edit'))
+        $this->get(route('profile.edit'))
             ->assertSee($user->username)
             ->assertSee($user->name);
     }
@@ -42,10 +42,10 @@ class ProfilesTest extends TestCase
         $this->signIn($user = create('App\User'));
 
         $user->name = 'New Name';
-        $this->patch(route('profiles.update'), $user->toArray())
-        ->assertRedirect(route('profiles'));
+        $this->patch(route('profile.update'), $user->toArray())
+        ->assertRedirect(route('profile'));
 
-        $this->get(route('profiles'))
+        $this->get(route('profile'))
         ->assertSee('New Name');
     }
 
@@ -63,7 +63,7 @@ class ProfilesTest extends TestCase
             'password_confirmation' => 'password',
         ];
 
-        $this->patch(route('profiles.update'), $data);
+        $this->patch(route('profile.update'), $data);
 
         $this->assertTrue(\Hash::check($data['password'], $user->fresh()->password));
     }

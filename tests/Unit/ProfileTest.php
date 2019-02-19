@@ -14,7 +14,7 @@ class ProfileTest extends TestCase
     {
         $this->signIn($user = create('App\User', ['username' => '']));
 
-        $this->patch(route('profiles.update'), $user->toArray())
+        $this->patch(route('profile.update'), $user->toArray())
             ->assertSessionHasErrors('username');
     }
 
@@ -23,7 +23,7 @@ class ProfileTest extends TestCase
     {
         $this->signIn($user = create('App\User', ['name' => '']));
 
-        $this->patch(route('profiles.update'), $user->toArray())
+        $this->patch(route('profile.update'), $user->toArray())
             ->assertSessionHasErrors('name');
     }
 
@@ -32,7 +32,7 @@ class ProfileTest extends TestCase
     {
         $this->signIn($user = create('App\User', ['email' => '']));
 
-        $this->patch(route('profiles.update'), $user->toArray())
+        $this->patch(route('profile.update'), $user->toArray())
             ->assertSessionHasErrors('email');
     }
 
@@ -50,17 +50,17 @@ class ProfileTest extends TestCase
             'password_confirmation' => '',
         ];
 
-        $this->patch(route('profiles.update'), $data)
+        $this->patch(route('profile.update'), $data)
             ->assertSessionHasErrors('password');
 
         $data['password'] = 'somenewpassword';
 
-        $this->patch(route('profiles.update'), $data)
+        $this->patch(route('profile.update'), $data)
             ->assertSessionHasErrors('password');
 
         $data['password'] = 'secret';
 
-        $this->patch(route('profiles.update'), $data)
+        $this->patch(route('profile.update'), $data)
             ->assertSessionHasErrors('password');
     }
 }

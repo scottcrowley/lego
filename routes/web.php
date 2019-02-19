@@ -18,18 +18,20 @@ Route::get('/', function () {
 });
 
 Route::group([
-    'prefix' => 'profiles',
+    'prefix' => 'profile',
     'middleware' => 'auth'
 ], function () {
-    Route::get('/', 'ProfilesController@show')->name('profiles');
-    Route::get('/edit', 'ProfilesController@edit')->name('profiles.edit');
-    Route::patch('/edit', 'ProfilesController@update')->name('profiles.update');
+    Route::get('/', 'ProfileController@show')->name('profile');
+    Route::get('/edit', 'ProfileController@edit')->name('profile.edit');
+    Route::patch('/edit', 'ProfileController@update')->name('profile.update');
 });
 
 Route::group([
     'prefix' => 'storage',
     'middleware' => 'auth'
 ], function () {
+    Route::get('/types', 'StorageTypesController@index')->name('storage.types.index');
+    Route::get('/types/create', 'StorageTypesController@create')->name('storage.types.create');
     Route::post('/types', 'StorageTypesController@store')->name('storage.types.store');
     Route::patch('/types/{type}', 'StorageTypesController@update')->name('storage.types.update');
 });

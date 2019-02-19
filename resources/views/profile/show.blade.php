@@ -16,7 +16,7 @@
                             <br>Please update them before proceeding.</p>
                     @endif
                     <p class="mt-6">
-                        <a href="/profiles/edit" class="btn is-primary">Edit Profile</a>
+                        <a href="{{ route('profile.edit') }}" class="btn is-primary">Edit Profile</a>
                     </p>
                 @endif
             </div>

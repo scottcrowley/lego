@@ -1,12 +1,12 @@
 .field-group {
-    @apply .flex .items-stretch .mb-3 .items-center;
+    @apply .mb-3;
     
     & label {
-        @apply .text-right .font-semibold .text-secondary-dark .text-sm .pr-3 .align-middle .w-1/4;
+        @apply .font-semibold .text-secondary-dark .text-sm;
     }
 
     & .field {
-        @apply .flex .flex-col .w-3/4;
+        @apply .flex .flex-col .flex-1 .mt-2;
 
         & .danger {
             @apply .text-sm .mt-2;

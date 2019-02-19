@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Rules\CurrentPassword;
 use Illuminate\Validation\Rule;
 
-class ProfilesController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display the specified resource.
@@ -20,7 +20,7 @@ class ProfilesController extends Controller
     {
         $user = $user ?: auth()->user();
 
-        return view('profiles.show', compact('user'));
+        return view('profile.show', compact('user'));
     }
 
     /**
@@ -32,13 +32,13 @@ class ProfilesController extends Controller
     {
         $user = \App\User::find(auth()->id());
 
-        return view('profiles.edit', compact('user'));
+        return view('profile.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  Card  $card
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -77,6 +77,6 @@ class ProfilesController extends Controller
 
         session()->flash('flash', ['message' => 'The profile was successfully updated!', 'level' => 'success']);
 
-        return redirect(route('profiles'));
+        return redirect(route('profile'));
     }
 }

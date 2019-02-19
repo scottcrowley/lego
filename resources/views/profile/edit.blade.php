@@ -7,7 +7,7 @@
             <div class="font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
                 Edit {{ $user->username }}'s Profile
             </div>
-            <form method="POST" action="{{ route('profiles.update') }}">
+            <form method="POST" action="{{ route('profile.update') }}">
                 @csrf
                 @method('PATCH')
                 <div class="bg-white p-3 pb-6 rounded-b">
@@ -71,7 +71,7 @@
                     
                     <div class="field-group">
                         <div class="ml-auto">
-                            <a href="/profiles" class="mr-3">Cancel</a>
+                            <a href="{{ route('profile') }}" class="mr-3">Cancel</a>
                             <button type="submit" class="btn is-primary">Update Profile</button>
                         </div>
                     </div>

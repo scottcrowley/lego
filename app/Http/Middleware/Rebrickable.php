@@ -23,6 +23,6 @@ class Rebrickable
             return $next($request);
         }
 
-        return redirect(route('profiles'))->with('message', 'Valid Rebrickable credentials are required.');
+        return redirect(route('profile'))->with('message', 'Valid Rebrickable credentials are required.');
     }
 }

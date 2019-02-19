@@ -11,49 +11,49 @@
                 <form class="form-horizontal" method="POST" action="{{ route('register') }}">
                     {{ csrf_field() }}
 
-                    <div class="flex items-stretch mb-3">
-                        <label for="username" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">UserName</label>
-                        <div class="flex flex-col w-3/4">
-                            <input id="username" type="text" class="flex-grow h-8 px-2 border rounded {{ $errors->has('username') ? 'border-error-dark' : 'border-secondary-light' }}" name="username" value="{{ old('username') }}" required autofocus>
+                    <div class="field-group">
+                        <label for="username" class="">UserName</label>
+                        <div class="field">
+                            <input id="username" type="text" class="{{ $errors->has('username') ? 'border-error-dark' : 'border-secondary-light' }}" name="username" value="{{ old('username') }}" required autofocus>
                             {!! $errors->first('username', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
 
-                    <div class="flex items-stretch mb-3">
-                        <label for="name" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">Name</label>
-                        <div class="flex flex-col w-3/4">
-                            <input id="name" type="text" class="flex-grow h-8 px-2 border rounded {{ $errors->has('name') ? 'border-error-dark' : 'border-secondary-light' }}" name="name" value="{{ old('name') }}" required>
+                    <div class="field-group">
+                        <label for="name" class="">Name</label>
+                        <div class="field">
+                            <input id="name" type="text" class="{{ $errors->has('name') ? 'border-error-dark' : 'border-secondary-light' }}" name="name" value="{{ old('name') }}" required>
                             {!! $errors->first('name', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
 
-                    <div class="flex items-stretch mb-3">
-                        <label for="email" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">E-Mail Address</label>
-                        <div class="flex flex-col w-3/4">
-                            <input id="email" type="email" class="flex-grow h-8 px-2 border rounded {{ $errors->has('email') ? 'border-error-dark' : 'border-secondary-light' }}" name="email" value="{{ old('email') }}" required>
+                    <div class="field-group">
+                        <label for="email" class="">E-Mail Address</label>
+                        <div class="field">
+                            <input id="email" type="email" class="{{ $errors->has('email') ? 'border-error-dark' : 'border-secondary-light' }}" name="email" value="{{ old('email') }}" required>
                             {!! $errors->first('email', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
 
-                    <div class="flex items-stretch mb-4">
-                        <label for="password" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">Password</label>
-                        <div class="flex flex-col w-3/4">
-                            <input id="password" type="password" class="flex-grow h-8 px-2 rounded border {{ $errors->has('password') ? 'border-error-dark' : 'border-secondary-light' }}" name="password" required>
+                    <div class="field-group">
+                        <label for="password" class="">Password</label>
+                        <div class="field">
+                            <input id="password" type="password" class="{{ $errors->has('password') ? 'border-error-dark' : 'border-secondary-light' }}" name="password" required>
                             {!! $errors->first('password', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
 
-                    <div class="flex items-stretch mb-4">
-                        <label for="password_confirmation" class="text-right font-semibold text-secondary-dark text-sm pt-2 pr-3 align-middle w-1/4">Confirm Password</label>
-                        <div class="flex flex-col w-3/4">
-                            <input id="password_confirmation" type="password" class="flex-grow h-8 px-2 rounded border {{ $errors->has('password_confirmation') ? 'border-error-dark' : 'border-secondary-light' }}" name="password_confirmation" required>
+                    <div class="field-group">
+                        <label for="password_confirmation" class="">Confirm Password</label>
+                        <div class="field">
+                            <input id="password_confirmation" type="password" class="{{ $errors->has('password_confirmation') ? 'border-error-dark' : 'border-secondary-light' }}" name="password_confirmation" required>
                             {!! $errors->first('password_confirmation', '<span class="text-error-dark text-sm mt-2">:message</span>') !!}
                         </div>
                     </div>
 
-                    <div class="flex">
-                        <div class="w-3/4 ml-auto">
-                            <button type="submit" class="bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2 px-4 rounded mr-3">
+                    <div class="field-group flex">
+                        <div class="ml-auto mt-3">
+                            <button type="submit" class="btn is-primary">
                                 Register
                             </button>
                         </div>
