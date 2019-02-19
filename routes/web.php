@@ -27,16 +27,6 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'credentials',
-    'middleware' => 'auth'
-], function () {
-    Route::post('/credentials', 'CredentialsController@store')->name('credentials.store');
-    Route::patch('/credentials', 'CredentialsController@update')->name('credentials.update');
-    Route::get('/credentials/create', 'CredentialsController@create')->name('credentials.create');
-    Route::get('/credentials/edit', 'CredentialsController@edit')->name('credentials.edit');
-});
-
-Route::group([
     'prefix' => 'storage',
     'middleware' => 'auth'
 ], function () {

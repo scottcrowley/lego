@@ -21,6 +21,8 @@ class UserTest extends TestCase
     {
         $this->signIn($user = create('App\User'));
 
+        config(['rebrickable.api.key' => '']);
+
         $this->get(route('dashboard'))
             ->assertRedirect(route('profiles'));
     }

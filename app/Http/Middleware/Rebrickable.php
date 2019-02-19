@@ -19,10 +19,10 @@ class Rebrickable
             return redirect('login');
         }
 
-        if (auth()->check() && auth()->user()->validAPI()) {
+        if (auth()->check() && auth()->user()->validCredentials()) {
             return $next($request);
         }
 
-        return redirect(route('profiles'))->with('message', 'A Rebrickable API key is required.');
+        return redirect(route('profiles'))->with('message', 'Valid Rebrickable credentials are required.');
     }
 }

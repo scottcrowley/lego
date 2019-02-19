@@ -24,15 +24,6 @@ $factory->define(App\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\RebrickableCredentials::class, function (Faker $faker) {
-    return [
-        'user_id' => factory(App\User::class),
-        'email' => $faker->safeEmail,
-        'password' => $faker->password(),
-        'api_key' => $faker->uuid,
-    ];
-});
-
 $factory->define(App\StorageType::class, function (Faker $faker) {
     return [
         'name' => $faker->word,

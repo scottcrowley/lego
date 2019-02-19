@@ -24,25 +24,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
-        'rebrickable_api_key'
+        'password', 'remember_token'
     ];
 
-    /**
-     * The relationships to always eager-load.
-     *
-     * @var array
-     */
-    protected $with = ['credentials'];
-
-    public function credentials()
+    public function validCredentials()
     {
-        return $this->hasOne(RebrickableCredentials::class, 'user_id');
-    }
+        $credentials = config('rebrickable.api');
 
-    public function validAPI()
-    {
-        $credentials = $this->credentials;
-        return (! is_null($credentials) && $credentials->api_key != '');
+        return (
+            ! is_null($credentials) &&
+            $credentials['email'] != '' &&
+            $credentials['password'] != '' &&
+            $credentials['key'] != ''
+        );
     }
 }
