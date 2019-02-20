@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="flex items-center">
-    <div class="md:w-1/2 md:mx-auto">
+    <div class="w-3/4 lg:w-1/2 mx-auto">
         <div class="rounded shadow">
             <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
                 <div>Add A New Storage Type</div>

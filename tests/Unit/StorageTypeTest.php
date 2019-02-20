@@ -12,25 +12,38 @@ class StorageTypeTest extends TestCase
     /** @test */
     public function it_requires_a_name()
     {
-        $this->signIn($user = create('App\User'));
+        $this->signIn();
 
         $type = makeRaw('App\StorageType', ['name' => '']);
 
         $this->post(route('storage.types.store'), $type)
+        ->assertSessionHasErrors('name');
+
+        $type = create('App\StorageType');
+
+        $type->name = '';
+
+        $this->patch(route('storage.types.update', $type->id), $type->toArray())
             ->assertSessionHasErrors('name');
+    }
 
-        $type = createRaw('App\StorageType');
+    /** @test */
+    public function it_requires_a_unique_name()
+    {
+        $this->signIn();
 
-        $type['name'] = '';
+        create('App\StorageType', ['name' => 'Special Container']);
 
-        $this->patch(route('storage.types.update', $type['id']), $type)
+        $type = makeRaw('App\StorageType', ['name' => 'Special Container']);
+
+        $this->post(route('storage.types.store'), $type)
             ->assertSessionHasErrors('name');
     }
 
     /** @test */
     public function it_requires_a_description()
     {
-        $this->signIn($user = create('App\User'));
+        $this->signIn();
 
         $type = makeRaw('App\StorageType', ['description' => '']);
 

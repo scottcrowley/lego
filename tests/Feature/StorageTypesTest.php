@@ -10,6 +10,26 @@ class StorageTypesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function an_authenticated_user_can_view_all_types()
+    {
+        $this->signIn();
+
+        $type = create('App\StorageType');
+
+        $this->get(route('storage.types.index'))
+        ->assertSee($type->name);
+    }
+
+    /** @test */
+    public function an_authenicated_user_can_view_type_create_page()
+    {
+        $this->signIn();
+
+        $this->get(route('storage.types.create'))
+            ->assertSee('Add A New Storage Type');
+    }
+
+    /** @test */
     public function an_authenticated_user_can_add_a_new_storage_type()
     {
         $this->signIn();
@@ -32,28 +52,26 @@ class StorageTypesTest extends TestCase
 
         $type = $type->toArray();
 
-        $this->patch(route('storage.types.update', $type['id']), $type);
+        $this->patch(route('storage.types.update', $type['id']), $type)
+            ->assertRedirect(route('storage.types.index'));
+
+        $this->get(route('storage.types.index'))
+            ->assertSee('New Storage Type');
 
         $this->assertDatabaseHas('storage_types', $type);
     }
 
     /** @test */
-    public function an_authenticated_user_can_view_all_types()
+    public function an_authenticated_user_can_delete_a_storage_type()
     {
+        $this->withoutExceptionHandling();
+
         $this->signIn();
 
         $type = create('App\StorageType');
 
-        $this->get(route('storage.types.index'))
-        ->assertSee($type->name);
-    }
+        $this->delete(route('storage.types.delete', $type->id));
 
-    /** @test */
-    public function an_authenicated_user_can_view_type_create_page()
-    {
-        $this->signIn();
-
-        $this->get(route('storage.types.create'))
-            ->assertSee('Add A New Storage Type');
+        $this->assertDatabaseMissing('storage_types', $type->toArray());
     }
 }

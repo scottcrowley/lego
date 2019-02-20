@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\StorageType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StorageTypesController extends Controller
 {
@@ -37,7 +38,7 @@ class StorageTypesController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'name' => 'required',
+            'name' => 'required|unique:storage_types',
             'description' => 'required'
         ]);
 
@@ -45,16 +46,16 @@ class StorageTypesController extends Controller
 
         session()->flash('flash', ['message' => 'Storage Type added successfully!', 'level' => 'success']);
 
-        return redirect(route('storage.types'));
+        return redirect(route('storage.types.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  StorageType  $type
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(StorageType $type)
     {
         //
     }
@@ -62,12 +63,12 @@ class StorageTypesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  StorageType  $type
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(StorageType $type)
     {
-        //
+        return view('storage.types.edit', compact('type'));
     }
 
     /**
@@ -79,7 +80,7 @@ class StorageTypesController extends Controller
     public function update(StorageType $type)
     {
         $data = request()->validate([
-            'name' => 'required',
+            'name' => ['required', Rule::unique('storage_types')->ignore($type->id)],
             'description' => 'required'
         ]);
 
@@ -87,17 +88,25 @@ class StorageTypesController extends Controller
 
         session()->flash('flash', ['message' => 'Storage Type updated successfully!', 'level' => 'success']);
 
-        return redirect(route('storage.types'));
+        return redirect(route('storage.types.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  StorageType  $type
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(StorageType $type)
     {
-        //
+        $type->delete();
+
+        session()->flash('flash', 'The storage type was deleted successfully!');
+
+        if (request()->wantsJson()) {
+            return response([], 204);
+        }
+
+        return redirect(route('storage.types.index'));
     }
 }

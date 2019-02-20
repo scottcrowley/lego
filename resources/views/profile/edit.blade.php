@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="flex items-center flex-col">
-    <div class="md:w-1/2 md:mx-auto">
+    <div class="w-3/4 lg:w-1/2 mx-auto">
         <div class="rounded shadow">
             <div class="font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
                 Edit {{ $user->username }}'s Profile
@@ -69,7 +69,7 @@
                         </div>
                     @endif
                     
-                    <div class="field-group">
+                    <div class="field-group mt-6">
                         <div class="ml-auto">
                             <a href="{{ route('profile') }}" class="mr-3">Cancel</a>
                             <button type="submit" class="btn is-primary">Update Profile</button>

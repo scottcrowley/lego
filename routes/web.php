@@ -33,7 +33,10 @@ Route::group([
     Route::get('/types', 'StorageTypesController@index')->name('storage.types.index');
     Route::get('/types/create', 'StorageTypesController@create')->name('storage.types.create');
     Route::post('/types', 'StorageTypesController@store')->name('storage.types.store');
+    Route::get('/types/{type}', 'StorageTypesController@show')->name('storage.types.show');
+    Route::get('/types/{type}/edit', 'StorageTypesController@edit')->name('storage.types.edit');
     Route::patch('/types/{type}', 'StorageTypesController@update')->name('storage.types.update');
+    Route::delete('/types/{type}', 'StorageTypesController@destroy')->name('storage.types.delete');
 });
 
 Route::group([
