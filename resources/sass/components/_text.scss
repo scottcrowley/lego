@@ -6,13 +6,13 @@
     }
     
     & label {
-        @apply .font-semibold .text-secondary-dark .text-sm;
+        @apply .font-semibold .text-secondary-darker .text-sm;
     }
 
     & .field {
         @apply .flex .flex-col .flex-1 .mt-2;
 
-        & .danger {
+        & span.danger {
             @apply .text-sm .mt-2;
         }
     }
@@ -22,35 +22,45 @@
     }
 }
 
-ul {
-    @apply .list-reset;
-}
-
 .success {
     @apply .text-success-dark;
-
-    &div {
-        @apply .bg-success .border .border-success-dark .text-white;
-    }
 }
 
 .warning {
     @apply .text-warning-dark;
-
-    &div {
-        @apply .bg-warning .border .border-warning-dark .text-grey-dark;
-    }
 }
 
 .danger {
     @apply .text-error-dark;
+}
 
-    &div {
-        @apply .bg-error .border .border-error-dark .text-white;
+div {
+    &.success {
+        @apply .bg-success .border .border-success-dark .text-white;
     }
 
-    &ul {
-        @apply .w-3/4 .ml-auto .border .border-error-dark .rounded .p-4;
+    &.warning {
+        @apply .bg-warning .border .border-warning-dark .text-grey-dark;
+    }
+
+    &.danger {
+        @apply .bg-error .border .border-error-dark .text-white;
+    }
+}
+
+input {
+    @apply .bg-transparent .border-secondary .text-secondary-darkest .text-base;
+
+    &.danger {
+        @apply .border-error-dark .text-secondary-darkest;
+    }
+}
+
+ul {
+    @apply .list-reset;
+
+    &.danger {
+        @apply .w-3/4 .m-auto .border .border-error-dark .rounded .p-4;
 
         & li {
             @apply .text-error-dark .text-sm;

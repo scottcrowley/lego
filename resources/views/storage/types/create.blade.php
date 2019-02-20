@@ -14,14 +14,14 @@
                         <div class="field-group">
                             <label for="name">Name:</label>
                             <div class="field">
-                                <input type="text" name="name" id="name" value="{{ old('name') }}" required>
+                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="{{ $errors->has('name') ? 'danger' : '' }}" required>
                                 {!! $errors->first('name', '<span class="danger">:message</span>') !!}
                             </div>
                         </div>
                         <div class="field-group">
                             <label for="description">Description:</label>
                             <div class="field">
-                                <input type="text" name="description" id="description" value="{{ old('description') }}" required>
+                                <input type="text" name="description" id="description" value="{{ old('description') }}" class="{{ $errors->has('description') ? 'danger' : '' }}" required>
                                 {!! $errors->first('description', '<span class="danger">:message</span>') !!}
                             </div>
                         </div>
@@ -36,8 +36,8 @@
                             </div>
                         @endif
                         
-                        <div class="field-group flex">
-                            <div class="ml-auto mt-3">
+                        <div class="field-group flex mt-6 align-center">
+                            <div class="ml-auto items-center">
                                 <a href="{{ route('storage.types.index') }}" class="mr-3">Cancel</a>
                                 <button type="submit" class="btn is-primary">Add Type</button>
                             </div>

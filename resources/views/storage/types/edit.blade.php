@@ -14,14 +14,14 @@
                     <div class="field-group">
                         <label for="name">Name:</label>
                         <div class="field">
-                            <input type="text" name="name" id="name" value="{{ old('name', $type->name) }}" required>
+                            <input type="text" name="name" id="name" value="{{ old('name', $type->name) }}" class="{{ $errors->has('name') ? 'danger' : '' }}" required>
                             {!! $errors->first('name', '<span class="danger">:message</span>') !!}
                         </div>
                     </div>
                     <div class="field-group">
                         <label for="description">Description:</label>
                         <div class="field">
-                            <input type="text" name="description" id="description" value="{{ old('description', $type->description) }}" required>
+                            <input type="text" name="description" id="description" value="{{ old('description', $type->description) }}" class="{{ $errors->has('description') ? 'danger' : '' }}" required>
                             {!! $errors->first('description', '<span class="danger">:message</span>') !!}
                         </div>
                     </div>

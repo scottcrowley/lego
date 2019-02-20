@@ -50,17 +50,6 @@ class StorageTypesController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  StorageType  $type
-     * @return \Illuminate\Http\Response
-     */
-    public function show(StorageType $type)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  StorageType  $type
