@@ -12,4 +12,14 @@ class StorageType extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * A storage type has to many locations
+     *
+     * @return hasMany
+     */
+    public function locations()
+    {
+        return $this->hasMany(StorageLocation::class);
+    }
 }

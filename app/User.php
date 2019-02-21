@@ -27,6 +27,11 @@ class User extends Authenticatable
         'password', 'remember_token'
     ];
 
+    /**
+     * Checks if a user has valid rebrickable credentials set in the env file
+     *
+     * @return bool
+     */
     public function validCredentials()
     {
         $credentials = config('rebrickable.api');

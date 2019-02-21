@@ -27,7 +27,9 @@ class StorageLocationsController extends Controller
      */
     public function create()
     {
-        //
+        $location = new StorageLocation;
+        $types = \App\StorageType::orderBy('name')->get();
+        return view('storage.locations.create', compact('location', 'types'));
     }
 
     /**
@@ -69,7 +71,8 @@ class StorageLocationsController extends Controller
      */
     public function edit(StorageLocation $location)
     {
-        //
+        $types = \App\StorageType::orderBy('name')->get();
+        return view('storage.locations.edit', compact('location', 'types'));
     }
 
     /**

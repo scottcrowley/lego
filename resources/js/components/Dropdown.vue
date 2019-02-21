@@ -1,10 +1,10 @@
 <template>
-    <div class="relative inline-block" ref="dropdowncontainer">
-        <div role="button" class="inline-block select-none" @click.prevent="toggle">
+    <div class="dropdown-menu" ref="dropdowncontainer">
+        <div role="button" class="dropdown-toggle-wrap" @click.prevent="toggle">
             <slot name="link"></slot>
         </div>
 
-        <div v-show="open" class="absolute pin-r overflow-hidden z-10">
+        <div v-show="open" class="dropdown-items-wrap">
             <slot name="dropdown-items"></slot>
         </div>
     </div>

@@ -27,7 +27,8 @@ class StorageTypesController extends Controller
      */
     public function create()
     {
-        return view('storage.types.create');
+        $type = new StorageType;
+        return view('storage.types.create', compact('type'));
     }
 
     /**

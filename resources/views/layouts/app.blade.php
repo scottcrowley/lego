@@ -30,19 +30,19 @@
                         @else
                             <dropdown>
                                 <div slot="link" class="block md:hidden">
-                                    <button class="flex items-center px-3 py-2 border rounded text-blue border-blue-light hover:text-white hover:bg-blue-dark hover:border-blue-dark" style="outline: none;">
+                                    <button class="burger" style="outline: none;">
                                         <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
                                     </button>
                                 </div>
                                 <button slot="link" class="hidden md:block btn is-primary is-small" style="outline: none;">{{ Auth::user()->name }}</button>
         
-                                <div slot="dropdown-items" class="w-32 mt-px bg-white border border-grey rounded-b p-2 text-right">
+                                <div slot="dropdown-items" class="text-right pr-3 pl-10">
+                                    <a href="{{ route('dashboard') }}">Dashboard</a>
                                     <a href="{{ route('logout') }}"
-                                        class="block mb-2 no-underline hover:underline text-grey-darker text-sm"
                                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                        {{ csrf_field() }}
+                                        @csrf
                                     </form>
                                 </div>
                             </dropdown>
@@ -50,12 +50,15 @@
                     </div>
                 </div>
                 <div class="flex item-end justify-center mb-2 mt-2 md:mt-3">
-                    <dropdown>
-                        <a slot="link" class="dropdown-toggle" href="#">Storage</a>
-                        <div slot="dropdown-items" class="w-48 mt-px mr-3 bg-white border border-grey rounded-b p-3">
-                            <a href="{{ route('storage.types.index') }}" class="block">Types</a>
-                        </div>
-                    </dropdown>
+                    @if (auth()->check())
+                        <dropdown>
+                            <a slot="link" class="dropdown-toggle" href="#">Storage</a>
+                            <div slot="dropdown-items" class="pl-3 pr-10">
+                                <a href="{{ route('storage.types.index') }}">Types</a>
+                                <a href="{{ route('storage.locations.index') }}">Locations</a>
+                            </div>
+                        </dropdown>
+                    @endif
                 </div>
             </div>
         </nav>
