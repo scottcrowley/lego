@@ -27,16 +27,27 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'storage',
+    'prefix' => 'storage/types',
     'middleware' => 'auth'
 ], function () {
-    Route::get('/types', 'StorageTypesController@index')->name('storage.types.index');
-    Route::get('/types/create', 'StorageTypesController@create')->name('storage.types.create');
-    Route::post('/types', 'StorageTypesController@store')->name('storage.types.store');
-    Route::get('/types/{type}', 'StorageTypesController@show')->name('storage.types.show');
-    Route::get('/types/{type}/edit', 'StorageTypesController@edit')->name('storage.types.edit');
-    Route::patch('/types/{type}', 'StorageTypesController@update')->name('storage.types.update');
-    Route::delete('/types/{type}', 'StorageTypesController@destroy')->name('storage.types.delete');
+    Route::get('', 'StorageTypesController@index')->name('storage.types.index');
+    Route::get('/create', 'StorageTypesController@create')->name('storage.types.create');
+    Route::post('', 'StorageTypesController@store')->name('storage.types.store');
+    Route::get('/{type}', 'StorageTypesController@show')->name('storage.types.show');
+    Route::get('/{type}/edit', 'StorageTypesController@edit')->name('storage.types.edit');
+    Route::patch('/{type}', 'StorageTypesController@update')->name('storage.types.update');
+    Route::delete('/{type}', 'StorageTypesController@destroy')->name('storage.types.delete');
+});
+
+Route::group([
+    'prefix' => 'storage/locations',
+    'middleware' => 'auth'
+], function () {
+    Route::get('', 'StorageLocationsController@index')->name('storage.locations.index');
+    Route::get('/create', 'StorageLocationsController@create')->name('storage.locations.create');
+    Route::post('', 'StorageLocationsController@store')->name('storage.locations.store');
+    Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
+    Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');
 });
 
 Route::group([

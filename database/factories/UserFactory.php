@@ -26,7 +26,17 @@ $factory->define(App\User::class, function (Faker $faker) {
 
 $factory->define(App\StorageType::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
+        'name' => $faker->unique()->word,
         'description' => $faker->sentence(),
+    ];
+});
+
+$factory->define(App\StorageLocation::class, function (Faker $faker) {
+    return [
+        'name' => $faker->unique()->word,
+        'description' => $faker->sentence(),
+        'storage_type_id' => function () {
+            return factory(App\StorageType::class);
+        }
     ];
 });
