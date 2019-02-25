@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\RebrickableApi;
 use Illuminate\Http\Request;
+use App\Gateways\RebrickableApi;
 
 class RebrickableApiController extends Controller
 {

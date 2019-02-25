@@ -19,7 +19,7 @@ class StorageLocationsTest extends TestCase
         $this->get(route('storage.locations.index'))
             ->assertSee($location->name);
     }
-    
+
     /** @test */
     public function an_authenticated_user_can_view_location_create_page()
     {
@@ -44,7 +44,7 @@ class StorageLocationsTest extends TestCase
         $this->get(route('storage.locations.index'))
             ->assertSee($location['name']);
     }
-    
+
     /** @test */
     public function an_authenticated_user_can_view_location_edit_page()
     {
@@ -52,6 +52,22 @@ class StorageLocationsTest extends TestCase
         $location = create('App\StorageLocation');
 
         $this->get(route('storage.locations.edit', $location->id))
-            ->assertSee('Edit ' . $location->name);
+            ->assertSee('Edit '.$location->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_update_a_location()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $location->name = 'Some new name';
+
+        $this->patch(route('storage.locations.update', $location->id), $location->toArray())
+            ->assertRedirect(route('storage.locations.index'));
+
+        $this->get(route('storage.locations.index'))
+            ->assertSee('Some new name');
     }
 }

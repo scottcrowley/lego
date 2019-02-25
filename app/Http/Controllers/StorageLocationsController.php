@@ -84,7 +84,7 @@ class StorageLocationsController extends Controller
     public function update(StorageLocation $location)
     {
         $data = request()->validate([
-            'name' => ['required', 'unique:storage_locations', Rule::unique('storage_locations')->ignore($location->id)],
+            'name' => ['required', Rule::unique('storage_locations')->ignore($location->id)],
             'description' => 'required',
             'storage_type_id' => 'exists:storage_types,id'
         ]);

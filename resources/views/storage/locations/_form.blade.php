@@ -1,3 +1,4 @@
+@csrf
 <div class="field-group">
     <label for="name">Name:</label>
     <div class="field">

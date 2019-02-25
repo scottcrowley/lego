@@ -8,7 +8,7 @@
                 <div>Edit {{ $location->name }}</div>
             </div>
             <div class="bg-white p-3 pb-6 rounded-b">
-                <form method="POST" action="{{ route('storage.locations.store') }}">
+                <form method="POST" action="{{ route('storage.locations.update', $location->id) }}">
                     @method('PATCH')
                     @include('storage.locations._form', ['formType' => 'edit'])
                 </form>
