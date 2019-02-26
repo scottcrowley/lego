@@ -55,3 +55,11 @@ Route::group([
 ], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 });
+
+Route::group([
+    'prefix' => 'api',
+    'middleware' => 'rebrickable'
+], function () {
+    Route::get('/colors', 'RebrickableApiController@getColors')->name('api.colors');
+    Route::get('/themes', 'RebrickableApiController@getThemes')->name('api.themes');
+});

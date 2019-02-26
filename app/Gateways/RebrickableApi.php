@@ -65,7 +65,7 @@ class RebrickableApi
      * @param string $ordering
      * @return array
      */
-    public function getColors(int $page = 1, int $page_size = 100, $ordering = 'name')
+    public function getColors(int $page = 1, int $page_size = 100, $ordering = '')
     {
         $this->appendUrl('lego/colors/');
         $this->appendUrlParam('page='.$page);
@@ -85,7 +85,7 @@ class RebrickableApi
      * @param string $ordering
      * @return array
      */
-    public function getThemes(int $page = 1, int $page_size = 100, $ordering = 'name')
+    public function getThemes(int $page = 1, int $page_size = 100, $ordering = '')
     {
         $this->appendUrl('lego/themes/');
         $this->appendUrlParam('page='.$page);

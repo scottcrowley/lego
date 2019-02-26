@@ -2,63 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Filters\ColorFilters;
+use App\Filters\ThemeFilters;
 use App\Gateways\RebrickableApi;
 
 class RebrickableApiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * gets all colors
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Support\Collection
      */
-    public function index()
+    public function getColors(ColorFilters $filters)
     {
-        //
+        return $filters->apply(
+            cache()->rememberForever('colors', function () {
+                $api = new RebrickableApi();
+                return $api->getAll('colors');
+            })
+        );
     }
 
     /**
-     * Store a newly created resource in storage.
+     * gets all themes
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Support\Collection
      */
-    public function store(Request $request)
+    public function getThemes(ThemeFilters $filters)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RebrickableApi  $rebrickableApi
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RebrickableApi $rebrickableApi)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RebrickableApi  $rebrickableApi
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RebrickableApi $rebrickableApi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RebrickableApi  $rebrickableApi
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RebrickableApi $rebrickableApi)
-    {
-        //
+        return $filters->apply(
+            cache()->rememberForever('themes', function () {
+                $api = new RebrickableApi();
+                return $api->getAll('themes');
+            })
+        );
     }
 }
