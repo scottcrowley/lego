@@ -30,6 +30,28 @@ class RebrickableApi
     }
 
     /**
+     * special getter for all sets since the amount of data needs to be throttled
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getAllSets()
+    {
+        $firstPage = $this->getType('lego/sets', 1, 100, '');
+
+        $response = $this->parseResponse();
+
+        $totalPages = ceil($response['count'] / 100);
+
+        $baseUrl = $this->baseUrl.'lego/sets/?ordering=name&page_size=100&page=';
+
+        $client = $this->generateGuzzleClient();
+        $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
+        $all = $this->executeGuzzlePool($client, $requests, $firstPage);
+
+        return collect($all);
+    }
+
+    /**
      * gets all of an allowed type
      *
      * @param string $type
@@ -37,19 +59,18 @@ class RebrickableApi
      */
     public function getAll($type)
     {
-        $type = ucwords(strtolower($type));
-        $allowedTypes = ['Colors', 'Themes'];
+        $allowedTypes = ['colors', 'themes', 'part_categories', 'sets'];
 
         abort_if(! in_array($type, $allowedTypes), 400, 'Request Type is not allowed!');
 
-        $all = call_user_func([$this, 'get'.$type], 1, 100, '');
+        $all = $this->getType('lego/'.$type, 1, 100, '');
 
         $response = $this->parseResponse();
 
         $totalPages = ceil($response['count'] / 100);
 
         for ($i = 2; $i <= $totalPages; $i++) {
-            $page = call_user_func([$this, 'get'.$type], $i, 100, '');
+            $page = $this->getType('lego/'.$type, $i, 100, '');
 
             $all = array_merge($all, $page);
         }
@@ -58,36 +79,17 @@ class RebrickableApi
     }
 
     /**
-     * retrieves all colors
+     * retrieves all of a given type
      *
-     * @param mixed int
-     * @param mixed int
+     * @param string $type
+     * @param int $page
+     * @param int $page_size
      * @param string $ordering
      * @return array
      */
-    public function getColors(int $page = 1, int $page_size = 100, $ordering = '')
+    public function getType($type, int $page = 1, int $page_size = 100, $ordering = '')
     {
-        $this->appendUrl('lego/colors/');
-        $this->appendUrlParam('page='.$page);
-        $this->appendUrlParam('page_size='.$page_size);
-        $this->appendUrlParam('ordering='.$ordering);
-
-        $this->executeGet();
-
-        return $this->getResults();
-    }
-
-    /**
-     * retrieves all themes
-     *
-     * @param mixed int
-     * @param mixed int
-     * @param string $ordering
-     * @return array
-     */
-    public function getThemes(int $page = 1, int $page_size = 100, $ordering = '')
-    {
-        $this->appendUrl('lego/themes/');
+        $this->appendUrl($type);
         $this->appendUrlParam('page='.$page);
         $this->appendUrlParam('page_size='.$page_size);
         $this->appendUrlParam('ordering='.$ordering);

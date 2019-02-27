@@ -60,6 +60,9 @@ Route::group([
     'prefix' => 'api',
     'middleware' => 'rebrickable'
 ], function () {
+    Route::get('/clear/{type}', 'RebrickableApiController@clearCache')->name('api.clear');
     Route::get('/colors', 'RebrickableApiController@getColors')->name('api.colors');
     Route::get('/themes', 'RebrickableApiController@getThemes')->name('api.themes');
+    Route::get('/part_categories', 'RebrickableApiController@getPartCategories')->name('api.part_categories');
+    Route::get('/sets', 'RebrickableApiController@getSets')->name('api.sets');
 });

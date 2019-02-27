@@ -3,6 +3,9 @@
 namespace App\Gateways;
 
 use Zttp\Zttp;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 trait ApiCore
 {
@@ -212,5 +215,66 @@ trait ApiCore
         $this->prepareExecution();
 
         $this->response = Zttp::withHeaders($this->header)->get($this->url.$this->urlParams);
+    }
+
+    /**
+     * generates a new Guzzle Client
+     *
+     * @return Client
+     */
+    protected function generateGuzzleClient()
+    {
+        return new Client([
+            'base_uri' => $this->baseUrl,
+            'timeout' => 90.0,
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'key '.$this->credentials['key']
+            ]
+        ]);
+    }
+
+    /**
+     * generates a Guzzle Request for each page
+     *
+     * @param int $totalPages
+     * @param string $baseUrl
+     * @return Request
+     */
+    protected function generateGuzzleRequests($totalPages, $baseUrl)
+    {
+        return function () use ($totalPages, $baseUrl) {
+            for ($i = 2; $i <= $totalPages; $i++) {
+                $uri = $baseUrl.$i;
+                yield new Request('GET', $uri);
+            }
+        };
+    }
+
+    /**
+     * executeGuzzlePool
+     *
+     * @param Client $client
+     * @param Request $requests
+     * @param array $data
+     * @return array
+     */
+    protected function executeGuzzlePool($client, $requests, $data)
+    {
+        $pool = new Pool($client, $requests(), [
+            'concurrency' => 5,
+            'fulfilled' => function ($response, $index) use (&$data) {
+                $page = json_decode($response->getBody(), true);
+                $data = array_merge($data, $page['results']);
+            },
+            'rejected' => function ($reason, $index) {
+                abort(400, 'An error occurred while retrieving all of the requested data. Reason: '.$reason);
+            },
+        ]);
+
+        $promise = $pool->promise();
+        $promise->wait();
+
+        return $data;
     }
 }
