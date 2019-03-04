@@ -10,9 +10,12 @@ use App\Filters\PartCategoryFilters;
 
 class RebrickableApiController extends Controller
 {
+    use RebrickableApiHelpers;
+
     /**
      * gets all colors
      *
+     * @param ColorFilters $filters
      * @return \Illuminate\Support\Collection
      */
     public function getColors(ColorFilters $filters)
@@ -28,21 +31,118 @@ class RebrickableApiController extends Controller
     /**
      * gets all themes
      *
+     * @param ThemeFilters $filters
      * @return \Illuminate\Support\Collection
      */
     public function getThemes(ThemeFilters $filters)
     {
-        return $filters->apply(
+        $themes = $filters->apply(
             cache()->rememberForever('themes', function () {
                 $api = new RebrickableApi();
                 return $api->getAll('themes');
             })
         );
+
+        if (session('single_request')) {
+            return redirect(route('api.themes.show', session('single_request')));
+        }
+
+        return $themes;
+    }
+
+    /**
+     * retrieve details about a given theme
+     *
+     * @param int $id
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTheme($id)
+    {
+        if (! cache()->has('themes')) {
+            return redirect(route('api.themes'))->with('single_request', $id);
+        }
+
+        $themes = cache('themes');
+
+        $theme = $themes->where('id', $id)->first();
+
+        if (is_null($theme)) {
+            $theme = [];
+        }
+
+        $theme = collect($this->themeParentHierarchy($theme, $themes));
+
+        if (session('set_request')) {
+            session()->put('set_theme', $theme);
+            return redirect(route('api.sets.show', session('set_request')));
+        }
+
+        return $theme;
     }
 
     /**
      * gets all themes
      *
+     * @param SetFilters $filters
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSets(SetFilters $filters)
+    {
+        $sets = $filters->apply(
+            cache()->rememberForever('sets', function () {
+                $api = new RebrickableApi();
+                return $api->getAllSets();
+            })
+        );
+
+        if (session('single_request')) {
+            return redirect(route('api.sets.show', session('single_request')));
+        }
+
+        return $sets;
+    }
+
+    /**
+     * retrieve details about a given set
+     *
+     * @param int $id
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSet($setNum)
+    {
+        if (substr($setNum, -2) != '-1') {
+            $setNum = $setNum.'-1';
+        }
+
+        if (! cache()->has('sets')) {
+            return redirect(route('api.sets'))->with('single_request', $setNum);
+        }
+
+        $sets = cache('sets');
+
+        $set = $sets->where('set_num', $setNum)->first();
+
+        if (is_null($set)) {
+            $set = ['set_num' => null, 'theme' => null];
+        }
+
+        if (! session('set_theme') && isset($set['theme_id'])) {
+            session()->put('set_request', $setNum);
+
+            return redirect(route('api.themes.show', $set['theme_id']));
+        } elseif (session('set_theme')) {
+            $set['theme'] = session('set_theme');
+            session()->put('set_theme', null);
+            session()->put('set_request', null);
+        }
+
+        return collect($set);
+    }
+
+    /**
+     * gets all themes
+     *
+     * @param PartCategoryFilters $filters
      * @return \Illuminate\Support\Collection
      */
     public function getPartCategories(PartCategoryFilters $filters)
@@ -51,21 +151,6 @@ class RebrickableApiController extends Controller
             cache()->rememberForever('part_categories', function () {
                 $api = new RebrickableApi();
                 return $api->getAll('part_categories');
-            })
-        );
-    }
-
-    /**
-     * gets all themes
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getSets(SetFilters $filters)
-    {
-        return $filters->apply(
-            cache()->rememberForever('sets', function () {
-                $api = new RebrickableApi();
-                return $api->getAllSets();
             })
         );
     }

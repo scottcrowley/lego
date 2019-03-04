@@ -63,6 +63,8 @@ Route::group([
     Route::get('/clear/{type}', 'RebrickableApiController@clearCache')->name('api.clear');
     Route::get('/colors', 'RebrickableApiController@getColors')->name('api.colors');
     Route::get('/themes', 'RebrickableApiController@getThemes')->name('api.themes');
+    Route::get('/themes/{id}', 'RebrickableApiController@getTheme')->name('api.themes.show');
     Route::get('/part_categories', 'RebrickableApiController@getPartCategories')->name('api.part_categories');
     Route::get('/sets', 'RebrickableApiController@getSets')->name('api.sets');
+    Route::get('/sets/{setNum}', 'RebrickableApiController@getSet')->name('api.sets.show');
 });
