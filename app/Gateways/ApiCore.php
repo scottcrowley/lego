@@ -226,7 +226,7 @@ trait ApiCore
     {
         return new Client([
             'base_uri' => $this->baseUrl,
-            'timeout' => 90.0,
+            'timeout' => 120.0,
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'key '.$this->credentials['key']

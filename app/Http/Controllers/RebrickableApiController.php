@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\SetFilters;
+use App\Filters\PartFilters;
 use App\Filters\ColorFilters;
 use App\Filters\ThemeFilters;
 use App\Gateways\RebrickableApi;
@@ -78,6 +79,28 @@ class RebrickableApiController extends Controller
         }
 
         return $theme;
+    }
+
+    /**
+     * gets all themes
+     *
+     * @param partFilters $filters
+     * @return \Illuminate\Support\Collection
+     */
+    public function getParts(PartFilters $filters)
+    {
+        $parts = $filters->apply(
+            cache()->rememberForever('parts', function () {
+                $api = new RebrickableApi();
+                return $api->getAllParts();
+            })
+        );
+
+        if (session('single_request')) {
+            return redirect(route('api.parts.show', session('single_request')));
+        }
+
+        return $parts;
     }
 
     /**

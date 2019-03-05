@@ -67,4 +67,6 @@ Route::group([
     Route::get('/part_categories', 'RebrickableApiController@getPartCategories')->name('api.part_categories');
     Route::get('/sets', 'RebrickableApiController@getSets')->name('api.sets');
     Route::get('/sets/{setNum}', 'RebrickableApiController@getSet')->name('api.sets.show');
+    Route::get('/parts', 'RebrickableApiController@getParts')->name('api.parts');
+    Route::get('/parts/{partNum}', 'RebrickableApiController@getPart')->name('api.parts.show');
 });

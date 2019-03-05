@@ -52,6 +52,31 @@ class RebrickableApi
     }
 
     /**
+     * special getter for all parts since the amount of data needs to be throttled
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getAllParts()
+    {
+        $firstPage = $this->getType('lego/parts', 1, 100, '');
+
+        $response = $this->parseResponse();
+
+        $totalPages = floor((ceil($response['count'] / 100)) / 3);
+
+        $baseUrl = $this->baseUrl.'lego/parts/?ordering=name&page_size=100&page=';
+
+        $client = $this->generateGuzzleClient();
+        $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
+        $all = $this->executeGuzzlePool($client, $requests, $firstPage);
+
+        $all = collect($all);
+        dd($all->count());
+
+        return collect($all);
+    }
+
+    /**
      * gets all of an allowed type
      *
      * @param string $type
