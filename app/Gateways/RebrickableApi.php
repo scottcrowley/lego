@@ -36,13 +36,13 @@ class RebrickableApi
      */
     public function getAllSets()
     {
-        $firstPage = $this->getType('lego/sets', 1, 100, '');
+        $firstPage = $this->getType('lego/sets', 1, 1000, '');
 
         $response = $this->parseResponse();
 
-        $totalPages = ceil($response['count'] / 100);
+        $totalPages = ceil($response['count'] / 1000);
 
-        $baseUrl = $this->baseUrl.'lego/sets/?ordering=name&page_size=100&page=';
+        $baseUrl = $this->baseUrl.'lego/sets/?ordering=name&page_size=1000&page=';
 
         $client = $this->generateGuzzleClient();
         $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
@@ -58,13 +58,13 @@ class RebrickableApi
      */
     public function getAllParts()
     {
-        $firstPage = $this->getType('lego/parts', 1, 100, '');
+        $firstPage = $this->getType('lego/parts', 1, 1000, '');
 
         $response = $this->parseResponse();
 
-        $totalPages = floor((ceil($response['count'] / 100)) / 3);
+        $totalPages = ceil($response['count'] / 1000);
 
-        $baseUrl = $this->baseUrl.'lego/parts/?ordering=name&page_size=100&page=';
+        $baseUrl = $this->baseUrl.'lego/parts/?ordering=name&page_size=1000&page=';
 
         $client = $this->generateGuzzleClient();
         $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
@@ -88,14 +88,14 @@ class RebrickableApi
 
         abort_if(! in_array($type, $allowedTypes), 400, 'Request Type is not allowed!');
 
-        $all = $this->getType('lego/'.$type, 1, 100, '');
+        $all = $this->getType('lego/'.$type, 1, 1000, '');
 
         $response = $this->parseResponse();
 
-        $totalPages = ceil($response['count'] / 100);
+        $totalPages = ceil($response['count'] / 1000);
 
         for ($i = 2; $i <= $totalPages; $i++) {
-            $page = $this->getType('lego/'.$type, $i, 100, '');
+            $page = $this->getType('lego/'.$type, $i, 1000, '');
 
             $all = array_merge($all, $page);
         }
@@ -112,7 +112,7 @@ class RebrickableApi
      * @param string $ordering
      * @return array
      */
-    public function getType($type, int $page = 1, int $page_size = 100, $ordering = '')
+    public function getType($type, int $page = 1, int $page_size = 1000, $ordering = '')
     {
         $this->appendUrl($type);
         $this->appendUrlParam('page='.$page);

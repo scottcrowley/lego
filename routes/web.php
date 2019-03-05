@@ -70,3 +70,11 @@ Route::group([
     Route::get('/parts', 'RebrickableApiController@getParts')->name('api.parts');
     Route::get('/parts/{partNum}', 'RebrickableApiController@getPart')->name('api.parts.show');
 });
+
+Route::group([
+    'prefix' => 'csv',
+    'middleware' => 'rebrickable'
+], function () {
+    Route::get('/clear/{type}', 'RebrickableCsvController@clearCache');
+    Route::get('/{type}', 'RebrickableCsvController@getType');
+});
