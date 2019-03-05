@@ -26,7 +26,13 @@ class RebrickableApi
 
         $this->executePost();
 
-        return $this->getResults();
+        $results = $this->getResults();
+
+        if ($results === false) {
+            $results = $this->getErrors();
+        }
+
+        return $results;
     }
 
     /**
@@ -37,6 +43,10 @@ class RebrickableApi
     public function getAllSets()
     {
         $firstPage = $this->getType('lego/sets', 1, 1000, '');
+
+        if ($firstPage === false) {
+            return $this->getErrors();
+        }
 
         $response = $this->parseResponse();
 
@@ -60,6 +70,10 @@ class RebrickableApi
     {
         $firstPage = $this->getType('lego/parts', 1, 1000, '');
 
+        if ($firstPage === false) {
+            return $this->getErrors();
+        }
+
         $response = $this->parseResponse();
 
         $totalPages = ceil($response['count'] / 1000);
@@ -71,7 +85,6 @@ class RebrickableApi
         $all = $this->executeGuzzlePool($client, $requests, $firstPage);
 
         $all = collect($all);
-        dd($all->count());
 
         return collect($all);
     }
@@ -90,12 +103,20 @@ class RebrickableApi
 
         $all = $this->getType('lego/'.$type, 1, 1000, '');
 
+        if ($all === false) {
+            return $this->getErrors();
+        }
+
         $response = $this->parseResponse();
 
         $totalPages = ceil($response['count'] / 1000);
 
         for ($i = 2; $i <= $totalPages; $i++) {
             $page = $this->getType('lego/'.$type, $i, 1000, '');
+
+            if ($page === false) {
+                return $this->getErrors();
+            }
 
             $all = array_merge($all, $page);
         }

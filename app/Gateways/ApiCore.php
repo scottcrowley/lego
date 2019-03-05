@@ -59,6 +59,13 @@ trait ApiCore
     public $results;
 
     /**
+     * array containing error details regarding the Zttp or Guzzle request
+     *
+     * @var array
+     */
+    public $errors = [];
+
+    /**
      * constructor that sets & verifies the proper credentials
      *
      * @return void
@@ -68,104 +75,6 @@ trait ApiCore
         $this->credentials = config('rebrickable.api');
 
         $this->verifyCredentials();
-    }
-
-    /**
-     * appendUrlParam
-     *
-     * @param string $param
-     * @return void
-     */
-    protected function appendUrlParam($param)
-    {
-        if ($param == '') {
-            return;
-        }
-
-        $urlParams = $this->urlParams;
-
-        $this->urlParams = ($urlParams == '') ? '?'.$param : $urlParams.'&'.$param;
-    }
-
-    /**
-     * appendUrl
-     *
-     * @param string $path
-     * @return void
-     */
-    protected function appendUrl($path = '')
-    {
-        if ($path == '') {
-            return;
-        }
-
-        if (! is_null($this->response)) {
-            $this->resetUrl();
-        }
-
-        $this->url = $this->baseUrl.$path;
-    }
-
-    /**
-     * Resets the url & urlParams properties
-     *
-     * @return void
-     */
-    protected function resetUrl()
-    {
-        $this->url = $this->urlParams = '';
-    }
-
-    protected function addPostParam($param, $value)
-    {
-        if ($param == '' || $value == '') {
-            return false;
-        }
-
-        if (! is_null($this->response)) {
-            $this->postParams = [];
-        }
-
-        $this->postParams = array_merge($this->postParams, [$param => $value]);
-
-        return true;
-    }
-
-    /**
-     * constructs the header for the Guzzle request with credentials
-     *
-     * @return bool
-     */
-    protected function prepareExecution()
-    {
-        $this->header = ['Accept' => 'application/json', 'Authorization' => 'key '.$this->credentials['key']];
-
-        return true;
-    }
-
-    /**
-     * convert Guzzle response to json
-     *
-     * @return void
-     */
-    protected function parseResponse()
-    {
-        return $this->response->json();
-    }
-
-    /**
-     * parses the Guzzle response and either returns a collection or an array of the results
-     *
-     * @param bool $collection
-     * @return mixed
-     */
-    public function getResults($collection = false)
-    {
-        $json = $this->parseResponse();
-
-        $this->results = (isset($json['results'])) ? $json['results'] : $json;
-
-        return ($collection) ? collect($this->results) : $this->results;
     }
 
     /**
@@ -194,6 +103,86 @@ trait ApiCore
     }
 
     /**
+     * appends to given param to the urlParams string
+     *
+     * @param string $param
+     * @return void
+     */
+    protected function appendUrlParam($param)
+    {
+        if ($param == '') {
+            return;
+        }
+
+        $urlParams = $this->urlParams;
+
+        $this->urlParams = ($urlParams == '') ? '?'.$param : $urlParams.'&'.$param;
+    }
+
+    /**
+     * appends the given path to the url
+     *
+     * @param string $path
+     * @return void
+     */
+    protected function appendUrl($path = '')
+    {
+        if ($path == '') {
+            return;
+        }
+
+        if (! is_null($this->response)) {
+            $this->resetUrl();
+        }
+
+        $this->url = $this->baseUrl.$path;
+    }
+
+    /**
+     * Resets the url & urlParams properties
+     *
+     * @return void
+     */
+    protected function resetUrl()
+    {
+        $this->url = $this->urlParams = '';
+    }
+
+    /**
+     * adds the given param to postParams array to be used in post requests
+     *
+     * @param string $param
+     * @param string $value
+     * @return bool
+     */
+    protected function addPostParam($param, $value)
+    {
+        if ($param == '' || $value == '') {
+            return false;
+        }
+
+        if (! is_null($this->response)) {
+            $this->postParams = [];
+        }
+
+        $this->postParams = array_merge($this->postParams, [$param => $value]);
+
+        return true;
+    }
+
+    /**
+     * constructs the header for the Guzzle request with credentials
+     *
+     * @return bool
+     */
+    protected function prepareExecution()
+    {
+        $this->header = ['Accept' => 'application/json', 'Authorization' => 'key '.$this->credentials['key']];
+
+        return true;
+    }
+
+    /**
      * execute a Guzzle POST request
      *
      * @return void
@@ -215,6 +204,87 @@ trait ApiCore
         $this->prepareExecution();
 
         $this->response = Zttp::withHeaders($this->header)->get($this->url.$this->urlParams);
+    }
+
+    /**
+     * convert Guzzle response to json
+     *
+     * @return void
+     */
+    protected function parseResponse()
+    {
+        return $this->response->json();
+    }
+
+    /**
+     * parses the Guzzle response and either returns a collection or an array of the results
+     *
+     * @param bool $collection
+     * @return mixed
+     */
+    public function getResults($collection = false)
+    {
+        if (! $this->validateResponse()) {
+            return false;
+        }
+
+        $json = $this->parseResponse();
+
+        $this->results = (isset($json['results'])) ? $json['results'] : $json;
+
+        return ($collection) ? collect($this->results) : $this->results;
+    }
+
+    /**
+     * validates the response
+     *
+     * @return bool
+     */
+    protected function validateResponse()
+    {
+        if (is_null($this->response)) {
+            $this->generateErrors(0);
+        } elseif ($this->response->isOK()) {
+            return true;
+        } else {
+            $this->generateErrors($this->response->status());
+        }
+        return false;
+    }
+
+    /**
+     * generates details based on a given status code
+     *
+     * @param int $status
+     * @return void
+     */
+    protected function generateErrors($status)
+    {
+        $errors = [
+            0 => 'No request has been made yet',
+            400 => 'Something was wrong with the format of your request',
+            401 => 'Unauthorized - your API key is invalid',
+            403 => 'Forbidden - you do not have access to operate on the requested item(s)',
+            404 => 'Item not found',
+            429 => 'Request was throttled',
+        ];
+
+        $detail = (isset($errors[$status])) ? $errors[$status] : 'An unknown error occurred';
+
+        $this->errors = [
+            'status' => $status,
+            'detail' => $detail
+        ];
+    }
+
+    /**
+     * getter for errors array
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**

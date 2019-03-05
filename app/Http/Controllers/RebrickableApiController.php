@@ -14,6 +14,17 @@ class RebrickableApiController extends Controller
     use RebrickableApiHelpers;
 
     /**
+     * gets user token
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getToken()
+    {
+        $api = new RebrickableApi();
+        return $api->generateToken();
+    }
+
+    /**
      * gets all colors
      *
      * @param ColorFilters $filters

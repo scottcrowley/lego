@@ -61,6 +61,7 @@ Route::group([
     'middleware' => 'rebrickable'
 ], function () {
     Route::get('/clear/{type}', 'RebrickableApiController@clearCache')->name('api.clear');
+    Route::get('/token', 'RebrickableApiController@getToken')->name('api.token');
     Route::get('/colors', 'RebrickableApiController@getColors')->name('api.colors');
     Route::get('/themes', 'RebrickableApiController@getThemes')->name('api.themes');
     Route::get('/themes/{id}', 'RebrickableApiController@getTheme')->name('api.themes.show');
