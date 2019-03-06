@@ -57,19 +57,30 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'api',
+    'prefix' => 'api/lego',
     'middleware' => 'rebrickable'
 ], function () {
-    Route::get('/clear/{type}', 'RebrickableApiController@clearCache')->name('api.clear');
-    Route::get('/token', 'RebrickableApiController@getToken')->name('api.token');
-    Route::get('/colors', 'RebrickableApiController@getColors')->name('api.colors');
-    Route::get('/themes', 'RebrickableApiController@getThemes')->name('api.themes');
-    Route::get('/themes/{id}', 'RebrickableApiController@getTheme')->name('api.themes.show');
-    Route::get('/part_categories', 'RebrickableApiController@getPartCategories')->name('api.part_categories');
-    Route::get('/sets', 'RebrickableApiController@getSets')->name('api.sets');
-    Route::get('/sets/{setNum}', 'RebrickableApiController@getSet')->name('api.sets.show');
-    Route::get('/parts', 'RebrickableApiController@getParts')->name('api.parts');
-    Route::get('/parts/{partNum}', 'RebrickableApiController@getPart')->name('api.parts.show');
+    Route::get('/clear/{type}', 'RebrickableApiLegoController@clearCache')->name('api.lego.clear');
+    Route::get('/colors', 'RebrickableApiLegoController@getColors')->name('api.lego.colors');
+    Route::get('/themes', 'RebrickableApiLegoController@getThemes')->name('api.lego.themes');
+    Route::get('/themes/{id}', 'RebrickableApiLegoController@getTheme')->name('api.lego.themes.show');
+    Route::get('/part_categories', 'RebrickableApiLegoController@getPartCategories')->name('api.lego.part_categories');
+    Route::get('/sets', 'RebrickableApiLegoController@getSets')->name('api.lego.sets');
+    Route::get('/sets/{setNum}', 'RebrickableApiLegoController@getSet')->name('api.lego.sets.show');
+    Route::get('/parts', 'RebrickableApiLegoController@getParts')->name('api.lego.parts');
+    Route::get('/parts/{partNum}', 'RebrickableApiLegoController@getPart')->name('api.lego.parts.show');
+});
+
+Route::group([
+    'prefix' => 'api/users',
+    'middleware' => 'rebrickable'
+], function () {
+    Route::get('/clear/{type}', 'RebrickableApiUserController@clearCache')->name('api.users.clear');
+    Route::get('/token', 'RebrickableApiUserController@getToken')->name('api.user.token');
+    Route::get('/setlists', 'RebrickableApiUserController@getSetLists')->name('api.users.setlists');
+    Route::get('/sets', 'RebrickableApiUserController@getSets')->name('api.users.sets');
+    Route::get('/allparts', 'RebrickableApiUserController@getAllParts')->name('api.users.allparts');
+    Route::get('/profile', 'RebrickableApiUserController@getProfile')->name('api.users.profile');
 });
 
 Route::group([

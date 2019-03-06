@@ -6,23 +6,12 @@ use App\Filters\SetFilters;
 use App\Filters\PartFilters;
 use App\Filters\ColorFilters;
 use App\Filters\ThemeFilters;
-use App\Gateways\RebrickableApi;
 use App\Filters\PartCategoryFilters;
+use App\Gateways\RebrickableApiLego;
 
-class RebrickableApiController extends Controller
+class RebrickableApiLegoController extends Controller
 {
     use RebrickableApiHelpers;
-
-    /**
-     * gets user token
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getToken()
-    {
-        $api = new RebrickableApi();
-        return $api->generateToken();
-    }
 
     /**
      * gets all colors
@@ -34,7 +23,7 @@ class RebrickableApiController extends Controller
     {
         return $filters->apply(
             cache()->rememberForever('colors', function () {
-                $api = new RebrickableApi();
+                $api = new RebrickableApiLego();
                 return $api->getAll('colors');
             })
         );
@@ -50,13 +39,13 @@ class RebrickableApiController extends Controller
     {
         $themes = $filters->apply(
             cache()->rememberForever('themes', function () {
-                $api = new RebrickableApi();
+                $api = new RebrickableApiLego();
                 return $api->getAll('themes');
             })
         );
 
         if (session('single_request')) {
-            return redirect(route('api.themes.show', session('single_request')));
+            return redirect(route('api.lego.themes.show', session('single_request')));
         }
 
         return $themes;
@@ -71,7 +60,7 @@ class RebrickableApiController extends Controller
     public function getTheme($id)
     {
         if (! cache()->has('themes')) {
-            return redirect(route('api.themes'))->with('single_request', $id);
+            return redirect(route('api.lego.themes'))->with('single_request', $id);
         }
 
         $themes = cache('themes');
@@ -86,7 +75,7 @@ class RebrickableApiController extends Controller
 
         if (session('set_request')) {
             session()->put('set_theme', $theme);
-            return redirect(route('api.sets.show', session('set_request')));
+            return redirect(route('api.lego.sets.show', session('set_request')));
         }
 
         return $theme;
@@ -102,13 +91,13 @@ class RebrickableApiController extends Controller
     {
         $parts = $filters->apply(
             cache()->rememberForever('parts', function () {
-                $api = new RebrickableApi();
+                $api = new RebrickableApiLego();
                 return $api->getAllParts();
             })
         );
 
         if (session('single_request')) {
-            return redirect(route('api.parts.show', session('single_request')));
+            return redirect(route('api.lego.parts.show', session('single_request')));
         }
 
         return $parts;
@@ -124,13 +113,13 @@ class RebrickableApiController extends Controller
     {
         $sets = $filters->apply(
             cache()->rememberForever('sets', function () {
-                $api = new RebrickableApi();
+                $api = new RebrickableApiLego();
                 return $api->getAllSets();
             })
         );
 
         if (session('single_request')) {
-            return redirect(route('api.sets.show', session('single_request')));
+            return redirect(route('api.lego.sets.show', session('single_request')));
         }
 
         return $sets;
@@ -149,7 +138,7 @@ class RebrickableApiController extends Controller
         }
 
         if (! cache()->has('sets')) {
-            return redirect(route('api.sets'))->with('single_request', $setNum);
+            return redirect(route('api.lego.sets'))->with('single_request', $setNum);
         }
 
         $sets = cache('sets');
@@ -163,7 +152,7 @@ class RebrickableApiController extends Controller
         if (! session('set_theme') && isset($set['theme_id'])) {
             session()->put('set_request', $setNum);
 
-            return redirect(route('api.themes.show', $set['theme_id']));
+            return redirect(route('api.lego.themes.show', $set['theme_id']));
         } elseif (session('set_theme')) {
             $set['theme'] = session('set_theme');
             session()->put('set_theme', null);
@@ -183,7 +172,7 @@ class RebrickableApiController extends Controller
     {
         return $filters->apply(
             cache()->rememberForever('part_categories', function () {
-                $api = new RebrickableApi();
+                $api = new RebrickableApiLego();
                 return $api->getAll('part_categories');
             })
         );
@@ -199,6 +188,6 @@ class RebrickableApiController extends Controller
     {
         cache()->forget($type);
 
-        return redirect(route('api.'.$type));
+        return redirect(route('api.lego.'.$type));
     }
 }

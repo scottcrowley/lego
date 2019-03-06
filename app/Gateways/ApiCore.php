@@ -75,6 +75,10 @@ trait ApiCore
         $this->credentials = config('rebrickable.api');
 
         $this->verifyCredentials();
+
+        if (class_basename($this) == 'RebrickableApiUser') {
+            $this->baseUrl = $this->baseUrl.$this->credentials['token'].'/';
+        }
     }
 
     /**
@@ -168,6 +172,27 @@ trait ApiCore
         $this->postParams = array_merge($this->postParams, [$param => $value]);
 
         return true;
+    }
+
+    /**
+     * retrieves all of a given type
+     *
+     * @param string $type
+     * @param int $page
+     * @param int $page_size
+     * @param string $ordering
+     * @return array
+     */
+    public function getType($type, int $page = 1, int $page_size = 1000, $ordering = '')
+    {
+        $this->appendUrl($type);
+        $this->appendUrlParam('page='.$page);
+        $this->appendUrlParam('page_size='.$page_size);
+        $this->appendUrlParam('ordering='.$ordering);
+
+        $this->executeGet();
+
+        return $this->getResults();
     }
 
     /**
