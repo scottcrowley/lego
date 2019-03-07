@@ -29,7 +29,7 @@
 }
 
 .btn-text {
-    @apply .bg-transparent .text-secondary-dark .font-normal .text-sm .font-semibold p-0 border-none .no-underline;
+    @apply .bg-transparent .text-secondary-dark .font-normal .text-sm .font-semibold .p-0 .border-none .no-underline;
     cursor: pointer;
 
     &.is-primary {
