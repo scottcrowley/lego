@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex items-center">
-    <div class="w-3/4 lg:w-1/2 mx-auto">
+<div class="container flex mx-auto justify-center">
+    <div class="w-3/4 lg:w-1/2">
         <div class="rounded shadow">
             <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
                 <div>Storage Container Types</div>
