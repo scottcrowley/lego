@@ -62,8 +62,6 @@ class RebrickableApiLego
         $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
         $all = $this->executeGuzzlePool($client, $requests, $firstPage);
 
-        $all = collect($all);
-
         return collect($all);
     }
 

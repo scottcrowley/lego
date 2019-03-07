@@ -14,6 +14,13 @@ class RebrickableApiLegoController extends Controller
     use RebrickableApiHelpers;
 
     /**
+     * default number of results to display
+     *
+     * @var integer
+     */
+    protected $defaultPerPage = 30;
+
+    /**
      * gets all colors
      *
      * @param ColorFilters $filters
@@ -21,12 +28,14 @@ class RebrickableApiLegoController extends Controller
      */
     public function getColors(ColorFilters $filters)
     {
-        return $filters->apply(
+        $colors = $filters->apply(
             cache()->rememberForever('colors', function () {
                 $api = new RebrickableApiLego();
                 return $api->getAll('colors');
             })
         );
+
+        return $colors->paginate($this->defaultPerPage);
     }
 
     /**
@@ -48,7 +57,7 @@ class RebrickableApiLegoController extends Controller
             return redirect(route('api.lego.themes.show', session('single_request')));
         }
 
-        return $themes;
+        return $themes->paginate($this->defaultPerPage);
     }
 
     /**
@@ -100,7 +109,7 @@ class RebrickableApiLegoController extends Controller
             return redirect(route('api.lego.parts.show', session('single_request')));
         }
 
-        return $parts;
+        return $parts->paginate($this->defaultPerPage);
     }
 
     /**
@@ -122,7 +131,7 @@ class RebrickableApiLegoController extends Controller
             return redirect(route('api.lego.sets.show', session('single_request')));
         }
 
-        return $sets;
+        return $sets->paginate($this->defaultPerPage);
     }
 
     /**
@@ -170,12 +179,14 @@ class RebrickableApiLegoController extends Controller
      */
     public function getPartCategories(PartCategoryFilters $filters)
     {
-        return $filters->apply(
+        $categories = $filters->apply(
             cache()->rememberForever('part_categories', function () {
                 $api = new RebrickableApiLego();
                 return $api->getAll('part_categories');
             })
         );
+
+        return $categories->paginate($this->defaultPerPage);
     }
 
     /**

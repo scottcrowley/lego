@@ -7,6 +7,13 @@ use App\Gateways\RebrickableApiUser;
 class RebrickableApiUserController extends Controller
 {
     /**
+     * default number of results to display
+     *
+     * @var integer
+     */
+    protected $defaultPerPage = 30;
+
+    /**
      * Generate a User Token to be used for authorising user account actions in subsequent calls.
      *
      * @return \Illuminate\Support\Collection
@@ -24,10 +31,12 @@ class RebrickableApiUserController extends Controller
      */
     public function getSetLists()
     {
-        return cache()->rememberForever('setlists', function () {
+        $setlists = cache()->rememberForever('setlists', function () {
             $api = new RebrickableApiUser();
             return $api->getAll('setlists');
         });
+
+        return $setlists->paginate($this->defaultPerPage);
     }
 
     /**
@@ -37,10 +46,12 @@ class RebrickableApiUserController extends Controller
      */
     public function getSets()
     {
-        return cache()->rememberForever('sets_user', function () {
+        $sets = cache()->rememberForever('sets_user', function () {
             $api = new RebrickableApiUser();
             return $api->getAll('sets');
         });
+
+        return $sets->paginate($this->defaultPerPage);
     }
 
     /**
@@ -50,10 +61,12 @@ class RebrickableApiUserController extends Controller
      */
     public function getAllParts()
     {
-        return cache()->rememberForever('allparts', function () {
+        $parts = cache()->rememberForever('allparts', function () {
             $api = new RebrickableApiUser();
             return $api->getAll('allparts');
         });
+
+        return $parts->paginate($this->defaultPerPage);
     }
 
     /**
