@@ -54,6 +54,44 @@ Route::group([
     'middleware' => 'rebrickable'
 ], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::group([
+        'prefix' => 'lego',
+    ], function () {
+        Route::get('/sets', function () {
+            return view('lego.sets');
+        })->name('lego.sets');
+        Route::get('/themes', function () {
+            return view('lego.themes');
+        })->name('lego.themes');
+        Route::get('/part_categories', function () {
+            return view('lego.part_categories');
+        })->name('lego.part_categories');
+        Route::get('/parts', function () {
+            return view('lego.parts');
+        })->name('lego.parts');
+        Route::get('/colors', function () {
+            return view('lego.colors');
+        })->name('lego.colors');
+    });
+    Route::group([
+        'prefix' => 'legouser',
+    ], function () {
+        Route::get('/setlists', function () {
+            return view('legouser.setlists');
+        })->name('legouser.setlists');
+        Route::get('/sets', function () {
+            return view('legouser.sets');
+        })->name('legouser.sets');
+        Route::get('/parts', function () {
+            return view('legouser.parts');
+        })->name('legouser.parts');
+        Route::get('/loose_parts', function () {
+            return view('legouser.loose_parts');
+        })->name('legouser.loose_parts');
+        Route::get('/lost_parts', function () {
+            return view('legouser.lost_parts');
+        })->name('legouser.lost_parts');
+    });
 });
 
 Route::group([

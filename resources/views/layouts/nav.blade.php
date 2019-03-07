@@ -35,15 +35,28 @@
         <div class="flex item-end justify-center mb-2 mt-2 md:mt-3">
             @if (auth()->check())
                 <dropdown>
+                    <a slot="link" class="dropdown-toggle" href="#">Your Legos</a>
+                    <div slot="dropdown-items">
+                        <a href="{{ route('legouser.setlists') }}">Set Lists</a>
+                        <a href="{{ route('legouser.sets') }}">Sets</a>
+                        <a href="{{ route('legouser.parts') }}">Parts</a>
+                        <a href="{{ route('legouser.loose_parts') }}">Loose Parts</a>
+                        <a href="{{ route('legouser.lost_parts') }}">Lost Parts</a>
+                    </div>
+                </dropdown>
+                <dropdown>
                     <a slot="link" class="dropdown-toggle" href="#">Lego</a>
-                    <div slot="dropdown-items" class="pl-3 pr-10">
-                        <a href="{{ route('storage.types.index') }}">Types</a>
-                        <a href="{{ route('storage.locations.index') }}">Locations</a>
+                    <div slot="dropdown-items">
+                        <a href="{{ route('lego.sets') }}">Sets</a>
+                        <a href="{{ route('lego.themes') }}">Themes</a>
+                        <a href="{{ route('lego.part_categories') }}">Part Categories</a>
+                        <a href="{{ route('lego.parts') }}">Parts</a>
+                        <a href="{{ route('lego.colors') }}">Colors</a>
                     </div>
                 </dropdown>
                 <dropdown>
                     <a slot="link" class="dropdown-toggle" href="#">Storage</a>
-                    <div slot="dropdown-items" class="pl-3 pr-10">
+                    <div slot="dropdown-items">
                         <a href="{{ route('storage.types.index') }}">Types</a>
                         <a href="{{ route('storage.locations.index') }}">Locations</a>
                     </div>

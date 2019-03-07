@@ -1,0 +1,83 @@
+[v-cloak] { display: none; }
+
+.dropdown-menu {
+    @apply .relative .inline-block ml-4;
+
+    &:first-of-type {
+        @apply .ml-0;
+    }
+
+    & .dropdown-toggle-wrap {
+        @apply .inline-block .select-none;
+    }
+
+    & .dropdown-items-wrap {
+        @apply .absolute .pin-r .overflow-hidden .z-10;
+
+        & div {
+            @apply .mt-px .bg-white .border .border-secondary .rounded-b .w-auto .py-3 .px-3;
+
+            min-width: 10rem;
+            
+            & a {
+                @apply .block .no-underline .text-secondary-dark .text-sm .mt-2;
+
+                &:first-of-type {
+                    @apply .mt-0;
+                }
+
+                &:hover {
+                    @apply .underline .text-secondary-darkest;
+                }
+            }
+        }
+    }
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.255em;
+    vertical-align: 0.2em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid #0000;
+    border-bottom: 0;
+    border-left: 0.3em solid #0000;
+}
+
+// Hat-tip to Bulma.
+.loader {
+    color: transparent !important;
+    pointer-events: none;
+    position: relative;
+}
+
+.loader:after {
+    animation: spinAround 500ms infinite linear;
+    border: 2px solid #dbdbdb;
+    border-radius: 290486px;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    content: "";
+    display: block;
+    width: 1em;
+    height: 1em;
+    position: relative;
+    position: absolute;
+    left: calc(50% - (1em / 2));
+    top: calc(50% - (1em / 2));
+    position: absolute !important;
+}
+
+@keyframes spinAround {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
