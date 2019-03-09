@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "ajv": "^6.6.2",
-        "imagemin": "^6.0.0"
+        "imagemin": "^6.0.0",
+        "laravel-vue-pagination": "^2.3.0"
     }
 }

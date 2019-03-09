@@ -9,7 +9,7 @@ trait RebrickableApiHelpers
      *
      * @param array $theme
      * @param Collection $themes
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     protected function themeParentHierarchy($theme, $themes)
     {
@@ -25,11 +25,22 @@ trait RebrickableApiHelpers
                 $parents[] = $parent;
                 $parentId = $parent['parent_id'];
             }
-            krsort($parents); //make top level parent first
+            $parents = array_reverse($parents); //make top level parent first
 
             $theme['parents'] = $parents;
+            $theme['parents_label'] = '';
+            if (count($parents)) {
+                foreach ($parents as $parent) {
+                    if ($theme['parents_label'] != '') {
+                        $theme['parents_label'] .= ' -> ';
+                    }
+                    $theme['parents_label'] .= $parent['name'];
+                }
+            } else {
+                $theme['parents_label'] = 'None';
+            }
         }
 
-        return $theme;
+        return collect($theme);
     }
 }

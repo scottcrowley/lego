@@ -72,7 +72,7 @@ abstract class Filters
      */
     protected function sort($field)
     {
-        return $this->collection = $this->collection->sortBy($field);
+        return $this->collection = $this->collection->sortBy($field, SORT_NATURAL);
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class Filters
      */
     protected function sortdesc($field)
     {
-        return $this->collection = $this->collection->sortByDesc($field);
+        return $this->collection = $this->collection->sortBy($field, SORT_NATURAL, true);
     }
 
     /**

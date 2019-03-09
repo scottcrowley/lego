@@ -35,6 +35,8 @@ class RebrickableApiLegoController extends Controller
             })
         );
 
+        $colors = $colors->values(); //rekeys the data since the key is the id of the rebrickable database
+
         return $colors->paginate($this->defaultPerPage);
     }
 
@@ -53,11 +55,24 @@ class RebrickableApiLegoController extends Controller
             })
         );
 
+        $themes = $themes->values(); //rekeys the data since the key is the id of the rebrickable database
+
         if (session('single_request')) {
             return redirect(route('api.lego.themes.show', session('single_request')));
+        } elseif (session('single_set_request')) {
+            return redirect(route('api.lego.sets'));
         }
 
-        return $themes->paginate($this->defaultPerPage);
+        $page = ($themes->paginate($this->defaultPerPage))->toArray();
+
+        if (count($page['data'])) {
+            foreach ($page['data'] as $k => $theme) {
+                $theme = $this->themeParentHierarchy($theme, $themes);
+                $page['data'][$k] = $theme;
+            }
+        }
+
+        return $page;
     }
 
     /**
@@ -80,7 +95,7 @@ class RebrickableApiLegoController extends Controller
             $theme = [];
         }
 
-        $theme = collect($this->themeParentHierarchy($theme, $themes));
+        $theme = $this->themeParentHierarchy($theme, $themes);
 
         if (session('set_request')) {
             session()->put('set_theme', $theme);
@@ -91,35 +106,19 @@ class RebrickableApiLegoController extends Controller
     }
 
     /**
-     * gets all themes
-     *
-     * @param partFilters $filters
-     * @return \Illuminate\Support\Collection
-     */
-    public function getParts(PartFilters $filters)
-    {
-        $parts = $filters->apply(
-            cache()->rememberForever('parts', function () {
-                $api = new RebrickableApiLego();
-                return $api->getAllParts();
-            })
-        );
-
-        if (session('single_request')) {
-            return redirect(route('api.lego.parts.show', session('single_request')));
-        }
-
-        return $parts->paginate($this->defaultPerPage);
-    }
-
-    /**
-     * gets all themes
+     * gets all sets
      *
      * @param SetFilters $filters
      * @return \Illuminate\Support\Collection
      */
     public function getSets(SetFilters $filters)
     {
+        if (! cache()->has('themes')) {
+            return redirect(route('api.lego.themes'))->with('single_set_request', 1);
+        }
+
+        $themes = cache('themes');
+
         $sets = $filters->apply(
             cache()->rememberForever('sets', function () {
                 $api = new RebrickableApiLego();
@@ -127,11 +126,33 @@ class RebrickableApiLegoController extends Controller
             })
         );
 
+        $sets = $sets->values(); //rekeys the data since the key is the id of the rebrickable database
+
         if (session('single_request')) {
             return redirect(route('api.lego.sets.show', session('single_request')));
         }
 
-        return $sets->paginate($this->defaultPerPage);
+        $page = ($sets->paginate($this->defaultPerPage))->toArray();
+
+        if (count($page['data'])) {
+            foreach ($page['data'] as $k => $set) {
+                if (is_null($set['theme_id'])) {
+                    continue;
+                }
+
+                $setTheme = $themes->where('id', $set['theme_id'])->first();
+
+                $theme = ($this->themeParentHierarchy($setTheme, $themes))->toArray();
+
+                $set['theme_details'] = $theme;
+
+                $set['theme_label'] = (is_null($theme['parent_id'])) ? $theme['name'] : $theme['parents_label'].' -> '.$theme['name'];
+
+                $page['data'][$k] = $set;
+            }
+        }
+
+        return $page;
     }
 
     /**
@@ -172,7 +193,55 @@ class RebrickableApiLegoController extends Controller
     }
 
     /**
-     * gets all themes
+     * gets all parts
+     *
+     * @param partFilters $filters
+     * @return \Illuminate\Support\Collection
+     */
+    public function getParts(PartFilters $filters)
+    {
+        if (! cache()->has('part_categories')) {
+            return redirect(route('api.lego.part_categories'))->with('single_parts_request');
+        }
+
+        $categories = cache('part_categories');
+
+        $parts = $filters->apply(
+            cache()->rememberForever('parts', function () {
+                $api = new RebrickableApiLego();
+                return $api->getAllParts();
+            })
+        );
+
+        $parts = $parts->values(); //rekeys the data since the key is the id of the rebrickable database
+
+        if (session('single_request')) {
+            return redirect(route('api.lego.parts.show', session('single_request')));
+        }
+
+        $page = ($parts->paginate($this->defaultPerPage))->toArray();
+
+        if (count($page['data'])) {
+            foreach ($page['data'] as $k => $part) {
+                if (is_null($part['part_cat_id'])) {
+                    continue;
+                }
+
+                $category = $categories->where('id', $part['part_cat_id'])->first();
+
+                $part['category_details'] = $category;
+
+                $part['category_label'] = $category['name'];
+
+                $page['data'][$k] = $part;
+            }
+        }
+
+        return $page;
+    }
+
+    /**
+     * gets all part categories
      *
      * @param PartCategoryFilters $filters
      * @return \Illuminate\Support\Collection
@@ -185,6 +254,12 @@ class RebrickableApiLegoController extends Controller
                 return $api->getAll('part_categories');
             })
         );
+
+        if (session('single_parts_request')) {
+            return redirect(route('api.lego.parts'));
+        }
+
+        $categories = $categories->values(); //rekeys the data since the key is the id of the rebrickable database
 
         return $categories->paginate($this->defaultPerPage);
     }
@@ -199,6 +274,8 @@ class RebrickableApiLegoController extends Controller
     {
         cache()->forget($type);
 
-        return redirect(route('api.lego.'.$type));
+        if (request()->has('redirect')) {
+            return redirect(route('api.lego.'.$type));
+        }
     }
 }

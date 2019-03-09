@@ -17,7 +17,9 @@
     <div id="app" v-cloak>
         @include('layouts.nav')
 
-        @yield('content')
+        <div class="container flex mx-auto justify-center pb-24">
+            @yield('content')
+        </div>
 
         <flash message="{{ session('flash.message') }}" baselevel="{{ session('flash.level') }}"></flash>
     </div>
