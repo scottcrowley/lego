@@ -22,6 +22,9 @@ Route::group([
 ], function () {
     Route::get('/themes', 'ThemesController@index')->name('themes.index');
     Route::post('/themes', 'ThemesController@store')->name('themes.store');
+
+    Route::get('/sets', 'SetsController@index')->name('sets.index');
+    Route::post('/sets', 'SetsController@store')->name('sets.store');
 });
 
 Route::group([

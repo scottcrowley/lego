@@ -13,6 +13,11 @@ class Theme extends Model
      */
     protected $guarded = [];
 
+    /**
+     * label for the theme's parent hierarchy
+     *
+     * @var string
+     */
     public $parentsLabel = '';
 
     /**

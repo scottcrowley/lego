@@ -55,3 +55,15 @@ $factory->state(App\Theme::class, 'withParent', function (Faker $faker) {
         }
     ];
 });
+
+$factory->define(App\Set::class, function (Faker $faker) {
+    return [
+        'set_num' => $faker->unique()->word,
+        'name' => $faker->unique()->word,
+        'year' => $faker->year(),
+        'theme_id' => function () {
+            return factory(App\Theme::class);
+        },
+        'num_parts' => $faker->randomNumber()
+    ];
+});

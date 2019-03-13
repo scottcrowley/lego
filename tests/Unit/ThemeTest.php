@@ -12,6 +12,8 @@ class ThemeTest extends TestCase
     /** @test */
     public function it_requires_a_name()
     {
+        $this->signIn();
+
         $theme = makeRaw('App\Theme', ['name' => '']);
 
         $this->post(route('themes.store'), $theme)

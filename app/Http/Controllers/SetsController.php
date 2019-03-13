@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Theme;
+use App\Set;
 use Illuminate\Http\Request;
 
-class ThemesController extends Controller
+class SetsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class ThemesController extends Controller
      */
     public function index()
     {
-        $themes = Theme::all();
+        $sets = Set::orderBy('name')->get();
 
-        return view('themes.index', compact('themes'));
+        return view('sets.index', compact('sets'));
     }
 
     /**
@@ -38,27 +38,31 @@ class ThemesController extends Controller
     public function store(Request $request)
     {
         $data = request()->validate([
-            'name' => 'required|unique:themes',
+            'set_num' => 'required|unique:sets',
+            'name' => 'required|unique:sets',
+            'year' => 'required',
+            'theme_id' => 'nullable|exists:themes,id',
+            'num_parts' => 'required'
         ]);
 
-        $theme = Theme::create($data);
+        $set = Set::create($data);
 
-        session()->flash('flash', ['message' => 'Theme added successfully!', 'level' => 'success']);
+        session()->flash('flash', ['message' => 'Set added successfully!', 'level' => 'success']);
 
         if (request()->wantsJson()) {
-            return response($theme, 201);
+            return response($set, 201);
         }
 
-        return redirect(route('themes.index'));
+        return redirect(route('sets.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Set  $set
      * @return \Illuminate\Http\Response
      */
-    public function show(Theme $theme)
+    public function show(Set $set)
     {
         //
     }
@@ -66,10 +70,10 @@ class ThemesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Set  $set
      * @return \Illuminate\Http\Response
      */
-    public function edit(Theme $theme)
+    public function edit(Set $set)
     {
         //
     }
@@ -78,10 +82,10 @@ class ThemesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Theme  $theme
+     * @param  \App\Set  $set
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Theme $theme)
+    public function update(Request $request, Set $set)
     {
         //
     }
@@ -89,10 +93,10 @@ class ThemesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Set  $set
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Theme $theme)
+    public function destroy(Set $set)
     {
         //
     }
