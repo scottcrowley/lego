@@ -18,6 +18,13 @@ Route::get('/', function () {
 });
 
 Route::group([
+    'middleware' => 'auth'
+], function () {
+    Route::get('/themes', 'ThemesController@index')->name('themes.index');
+    Route::post('/themes', 'ThemesController@store')->name('themes.store');
+});
+
+Route::group([
     'prefix' => 'profile',
     'middleware' => 'auth'
 ], function () {

@@ -40,3 +40,18 @@ $factory->define(App\StorageLocation::class, function (Faker $faker) {
         }
     ];
 });
+
+$factory->define(App\Theme::class, function (Faker $faker) {
+    return [
+        'name' => $faker->unique()->word,
+        'parent_id' => null
+    ];
+});
+
+$factory->state(App\Theme::class, 'withParent', function (Faker $faker) {
+    return [
+        'parent_id' => function () {
+            return factory(App\Theme::class);
+        }
+    ];
+});
