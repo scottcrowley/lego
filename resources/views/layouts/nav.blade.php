@@ -8,8 +8,8 @@
             </div>
             <div class="ml-auto">
                 @guest
-                    <a class="no-underline hover:underline text-primary-darker pr-3 text-sm" href="{{ url('/login') }}">{{ __('Login') }}</a>
-                    <a class="no-underline hover:underline text-primary-darker text-sm" href="{{ url('/register') }}">{{ __('Register') }}</a>
+                    <a class="block sm:inline sm:pr-3 sm:mb-2 no-underline hover:underline text-primary-darker text-sm" href="{{ url('/login') }}">{{ __('Login') }}</a>
+                    <a class="block sm:inline no-underline hover:underline text-primary-darker text-sm" href="{{ url('/register') }}">{{ __('Register') }}</a>
                 @else
                     <dropdown>
                         <div slot="link" class="block md:hidden">
