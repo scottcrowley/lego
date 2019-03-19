@@ -43,6 +43,10 @@ abstract class Filters
      */
     public function apply($collection)
     {
+        if (! $collection instanceof \Illuminate\Support\Collection) {
+            return $collection;
+        }
+
         $this->collection = $collection;
 
         foreach ($this->getFilters() as $filter => $value) {

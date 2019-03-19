@@ -35,6 +35,11 @@ class RebrickableApiLegoController extends Controller
             })
         );
 
+        if (! $colors instanceof \Illuminate\Support\Collection) {
+            cache()->forget('colors');
+            return response($colors['detail'], $colors['status']);
+        }
+
         $colors = $colors->values(); //rekeys the data since the key is the id of the rebrickable database
 
         return $colors->paginate($this->defaultPerPage);
@@ -125,6 +130,11 @@ class RebrickableApiLegoController extends Controller
                 return $api->getAllSets();
             })
         );
+
+        if (! $sets instanceof \Illuminate\Support\Collection) {
+            cache()->forget($sets);
+            return response($sets['detail'], $sets['status']);
+        }
 
         $sets = $sets->values(); //rekeys the data since the key is the id of the rebrickable database
 

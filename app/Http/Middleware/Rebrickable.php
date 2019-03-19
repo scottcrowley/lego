@@ -16,6 +16,9 @@ class Rebrickable
     public function handle($request, Closure $next)
     {
         if (! auth()->check()) {
+            if ($request->expectsJson()) {
+                return response('You need to be logged in to view content.', 403);
+            }
             return redirect('login');
         }
 
