@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex items-center">
-    <div class="w-3/4 lg:w-1/2 mx-auto">
+<div class="flex items-center w-full">
+    <div class="w-full sm:w-3/4 lg:w-1/2 mx-2 sm:mx-auto">
         <div class="rounded shadow">
             <div class="font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
                 {{ $user->username }}'s Profile

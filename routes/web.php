@@ -68,8 +68,11 @@ Route::group([
         'prefix' => 'lego',
     ], function () {
         Route::get('/sets', function () {
-            return view('lego.sets');
-        })->name('lego.sets');
+            return view('lego.sets.index');
+        })->name('lego.sets.index');
+        Route::get('/sets-grid', function () {
+            return view('lego.sets.grid');
+        })->name('lego.sets.grid');
         Route::get('/themes', function () {
             return view('lego.themes');
         })->name('lego.themes');

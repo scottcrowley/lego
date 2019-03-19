@@ -47,7 +47,7 @@
                 <dropdown>
                     <a slot="link" class="dropdown-toggle" href="#">Lego</a>
                     <div slot="dropdown-items">
-                        <a href="{{ route('lego.sets') }}">Sets</a>
+                        <a href="{{ route('lego.sets.index') }}">Sets</a>
                         <a href="{{ route('lego.themes') }}">Themes</a>
                         <a href="{{ route('lego.part_categories') }}">Part Categories</a>
                         <a href="{{ route('lego.parts') }}">Parts</a>
