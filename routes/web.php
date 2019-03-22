@@ -25,6 +25,12 @@ Route::group([
 
     Route::get('/sets', 'SetsController@index')->name('sets.index');
     Route::post('/sets', 'SetsController@store')->name('sets.store');
+
+    Route::get('/parts', 'PartsController@index')->name('parts.index');
+    Route::post('/parts', 'PartsController@store')->name('parts.store');
+
+    Route::get('/part_categories', 'PartCategoriesController@index')->name('part_categories.index');
+    Route::post('/part_categories', 'PartCategoriesController@store')->name('part_categories.store');
 });
 
 Route::group([

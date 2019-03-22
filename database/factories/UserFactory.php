@@ -67,3 +67,19 @@ $factory->define(App\Set::class, function (Faker $faker) {
         'num_parts' => $faker->randomNumber()
     ];
 });
+
+$factory->define(App\Part::class, function (Faker $faker) {
+    return [
+        'part_num' => $faker->unique()->word(),
+        'name' => $faker->word,
+        'part_category_id' => function () {
+            return factory(App\PartCategory::class);
+        }
+    ];
+});
+
+$factory->define(App\PartCategory::class, function (Faker $faker) {
+    return [
+        'name' => $faker->unique()->word,
+    ];
+});

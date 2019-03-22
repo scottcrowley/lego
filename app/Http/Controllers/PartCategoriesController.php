@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Set;
+use App\PartCategory;
 use Illuminate\Http\Request;
 
-class SetsController extends Controller
+class PartCategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class SetsController extends Controller
      */
     public function index()
     {
-        $sets = Set::orderBy('name')->get();
+        $categories = PartCategory::all();
 
-        return view('sets.index', compact('sets'));
+        return view('part_categories.index', compact('categories'));
     }
 
     /**
@@ -37,31 +37,27 @@ class SetsController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'set_num' => 'required|unique:sets',
-            'name' => 'required|unique:sets',
-            'year' => 'required',
-            'theme_id' => 'nullable|exists:themes,id',
-            'num_parts' => 'required'
+            'name' => 'required|unique:part_categories'
         ]);
 
-        $set = Set::create($data);
+        $category = PartCategory::create($data);
 
-        session()->flash('flash', ['message' => 'Set added successfully!', 'level' => 'success']);
+        session()->flash('flash', ['message' => 'Part Category added successfully!', 'level' => 'success']);
 
         if (request()->wantsJson()) {
-            return response($set, 201);
+            return response($category, 201);
         }
 
-        return redirect(route('sets.index'));
+        return redirect(route('part_categories.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Set  $set
+     * @param  \App\PartCategory  $partCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(Set $set)
+    public function show(PartCategory $partCategory)
     {
         //
     }
@@ -69,10 +65,10 @@ class SetsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Set  $set
+     * @param  \App\PartCategory  $partCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Set $set)
+    public function edit(PartCategory $partCategory)
     {
         //
     }
@@ -81,10 +77,10 @@ class SetsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Set  $set
+     * @param  \App\PartCategory  $partCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Set $set)
+    public function update(Request $request, PartCategory $partCategory)
     {
         //
     }
@@ -92,10 +88,10 @@ class SetsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Set  $set
+     * @param  \App\PartCategory  $partCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Set $set)
+    public function destroy(PartCategory $partCategory)
     {
         //
     }

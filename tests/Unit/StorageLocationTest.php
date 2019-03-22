@@ -88,4 +88,16 @@ class StorageLocationTest extends TestCase
 
         $this->assertEquals($type->name, $location->type->name);
     }
+
+    /** @test */
+    public function it_can_access_details_about_associated_part_categories()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+
+        $this->assertTrue($location->fresh()->partCategories->contains($category));
+    }
 }

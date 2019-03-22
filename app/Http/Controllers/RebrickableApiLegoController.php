@@ -243,11 +243,11 @@ class RebrickableApiLegoController extends Controller
 
         if (count($page['data'])) {
             foreach ($page['data'] as $k => $part) {
-                if (is_null($part['part_cat_id'])) {
+                if (is_null($part['part_category_id'])) {
                     continue;
                 }
 
-                $category = $categories->where('id', $part['part_cat_id'])->first();
+                $category = $categories->where('id', $part['part_category_id'])->first();
 
                 $part['category_details'] = $category;
 

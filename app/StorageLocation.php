@@ -29,4 +29,14 @@ class StorageLocation extends Model
     {
         return $this->belongsTo(StorageType::class, 'storage_type_id');
     }
+
+    /**
+     * A storage location belongs to many part categories
+     *
+     * @return hasMany
+     */
+    public function partCategories()
+    {
+        return $this->hasMany(PartCategory::class);
+    }
 }
