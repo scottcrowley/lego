@@ -24,6 +24,22 @@
                     </svg>
                 </div>
             </div>
+            <div class="relative ml-auto">
+                <select id="selectPerPage" @change="updatePerPage($event)">
+                    <option value="0">Per Page</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="75">75</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="select-menu-icon">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <div class="card-container" v-show="!loading">
@@ -53,10 +69,10 @@
                         class="mb-0"
                         :data="allData"
                         @pagination-change-page="getResults"
-                        :limit="limit"
-                        :show-disabled="showDisabled"
-                        :size="size"
-                        :align="align" />
+                        :limit="pagerLimit"
+                        :show-disabled="pagerShowDisabled"
+                        :size="pagerSize"
+                        :align="pagerAlign" />
             </div>
         </div>
     </div>
@@ -79,7 +95,7 @@
             }, 
             per_page: {
                 type: String,
-                default: '12'
+                default: '25'
             }, 
             valnames: {
                 type: Array,
@@ -92,35 +108,68 @@
         },
         data() {
             return {
-                limit: 2,
-                showDisabled: true,
-                size: 'small',
-                align: 'left',
+                pagerLimit: 2,
+                pagerShowDisabled: true,
+                pagerSize: 'small',
+                pagerAlign: 'left',
                 dataSet: [],
                 allData: {},
                 loading: true,
                 sortedCol: '',
-                sortDesc: false
+                sortdesc: false,
+                perpage: this.per_page,
+                currentPage: 1,
+                defaultPage: 0,
+                location: null
             }
         },
 
         mounted() {
-            this.checkSorted();
+            let checkedUrl = this.checkUrl();
+            if (!checkedUrl) {
+                this.checkSorted();
+            } else {
+                this.updateSortSelect();
+            }
+
             this.getResults();
         },
 
         methods: {
+            checkUrl() {
+                this.location = window.location;
+                let url = new URL(this.location.href);
+                let page = url.searchParams.get('page');
+                let sort = url.searchParams.get('sort');
+                let sortdesc = url.searchParams.get('sortdesc');
+                let perpage = url.searchParams.get('perpage');
+                let updateSort = (sort != null || sortdesc != null) ? true : false;
+
+                if (sort != null) {
+                    this.sortedCol = sort;
+                } else if (sortdesc != null) {
+                    this.sortdesc = true;
+                    this.sortedCol = sortdesc;
+                }
+
+                if (page) {
+                    this.defaultPage = page;
+                }
+
+                this.perpage = (perpage) ? perpage : this.perpage;
+                document.getElementById('selectPerPage').value = this.perpage;
+
+                return updateSort;
+            },
             checkSorted() {
                 let cols = this.valnames;
 
                 cols.forEach((col, index) => {
                     if (col.sortable && col.sorted) {
-                        let element = document.getElementById('selectSort');
-                        element.value = this.sortedCol = col.field;
-                        if (col.sortDesc) {
-                            this.sortDesc = true;
-                            let order = document.getElementById('selectOrder');
-                            order.value = 1;
+                        document.getElementById('selectSort').value = this.sortedCol = col.field;
+                        if (col.sortdesc) {
+                            this.sortdesc = true;
+                            document.getElementById('selectOrder').value = 1;
                         }
                     }
                 });
@@ -136,21 +185,40 @@
             updateSortOrder(event) {
                 let value = (event.target.value == '1') ? true : false;
                 
-                if (value != this.sortDesc) {
-                    this.sortDesc = value;
+                if (value != this.sortdesc) {
+                    this.sortdesc = value;
                     this.getResults();
                 }
+            },
+            updatePerPage(event) {
+                if (event.target.value == 0) return;
+                this.perpage = event.target.value;
+
+                this.getResults(this.currentPage);
+            },
+            updateSortSelect() {
+                let element = document.getElementById('selectSort');
+                element.value = this.sortedCol;
+
+                let sortdesc = (this.sortdesc) ? 1 : 0;
+                element = document.getElementById('selectOrder');
+                element.value = sortdesc;
             },
             getResults(page = 1) {
                 this.loading = true;
 
-                if (!page) {
+                if (!page && this.defaultPage == 0) {
                     page = 1;
+                } else if (this.defaultPage != 0) {
+                    page = this.defaultPage;
+                    this.defaultPage = 0;
                 }
 
-                let params = '?page=' + page + '&perpage=' + this.per_page;
+                this.currentPage = (this.currentPage != page) ? page : this.currentPage;
+
+                let params = '?page=' + page + '&perpage=' + this.perpage;
                 if (this.sortedCol != '') {
-                    params = params + '&sort' + (this.sortDesc ? 'desc' : '') + '=' + this.sortedCol;
+                    params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
                 }
 
                 axios.get(this.endpoint + params)
@@ -158,6 +226,7 @@
                         this.loading = false;
                         this.allData = response.data;
                         this.dataSet = response.data.data;
+                        this.updateUrl(params);
                     })
                     .catch(function(error) {
                         if (error.response) {
@@ -192,6 +261,9 @@
                     .then(response => {
                         this.getResults();
                     });
+            },
+            updateUrl(params) {
+                history.pushState(null, null, params);
             },
         }
     };

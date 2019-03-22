@@ -21,6 +21,16 @@ class RebrickableApiLegoController extends Controller
     protected $defaultPerPage = 30;
 
     /**
+     * Create a new RebrickableApiLegoController instance.
+     */
+    public function __construct()
+    {
+        if (request()->has('perpage')) {
+            $this->defaultPerPage = request('perpage');
+        }
+    }
+
+    /**
      * gets all colors
      *
      * @param ColorFilters $filters

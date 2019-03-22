@@ -72,16 +72,45 @@
                 allData: {},
                 loading: true,
                 sortedCol: '',
-                sortDesc: false
+                sortdesc: false,
+                defaultPage: 0,
+                location: null
             }
         },
 
         mounted() {
-            this.checkSorted();
+            let checkedUrl = this.checkUrl();
+            if (!checkedUrl) {
+                this.checkSorted();
+            } else {
+                this.updateSortedColumn();
+            }
+
             this.getResults();
         },
 
         methods: {
+            checkUrl() {
+                this.location = window.location;
+                let url = new URL(this.location.href);
+                let page = url.searchParams.get('page');
+                let sort = url.searchParams.get('sort');
+                let sortdesc = url.searchParams.get('sortdesc');
+                let updateSort = (sort != null || sortdesc != null) ? true : false;
+
+                if (sort != null) {
+                    this.sortedCol = sort;
+                } else if (sortdesc != null) {
+                    this.sortdesc = true;
+                    this.sortedCol = sortdesc;
+                }
+
+                if (page) {
+                    this.defaultPage = page;
+                }
+
+                return updateSort;
+            },
             checkSorted() {
                 let cols = this.colnames;
 
@@ -90,8 +119,8 @@
                         let element = document.getElementById('colnames').childNodes[index];
                         element.classList.add('sorted-col');
                         this.sortedCol = this.valnames[index];
-                        if (col.sortDesc) {
-                            this.sortDesc = true;
+                        if (col.sortdesc) {
+                            this.sortdesc = true;
                             element.classList.add('desc');
                         }
                     }
@@ -104,37 +133,49 @@
                 let cols = event.target.parentElement.childNodes;
 
                 if (classList.contains('sorted-col')) {
-                    if (classList.contains('desc')) {
-                        this.sortDesc = false;
-                        classList.remove('desc');
-                    } else {
-                        this.sortDesc = true;
-                        classList.add('desc');
-                    }
+                    this.sortdesc = (classList.contains('desc')) ? false : true;
                 } else {
-                    this.sortDesc = false;
+                    this.sortdesc = false;
 
                     cols.forEach((col, index) => {
-                        col.classList.remove('sorted-col', 'desc');
                         if (col == event.target) {
                             this.sortedCol = this.valnames[index];
-                            col.classList.add('sorted-col');
                         }
                     });
                 }
-
+                this.updateSortedColumn();
+                
                 this.getResults();
+            },
+            updateSortedColumn() {
+                let cols = this.colnames;
+                let trs = document.getElementById('colnames').childNodes;
+                let classList = [];
+
+                cols.forEach((col, index) => {
+                    classList = trs[index].classList;
+                    classList.remove('sorted-col','desc');
+                    if (this.valnames[index] == this.sortedCol && col.sortable) {
+                        classList.add('sorted-col');
+                        if (this.sortdesc) {
+                            classList.add('desc');
+                        }
+                    }
+                });
             },
             getResults(page = 1) {
                 this.loading = true;
 
-                if (!page) {
+                if (!page && this.defaultPage == 0) {
                     page = 1;
+                } else if (this.defaultPage != 0) {
+                    page = this.defaultPage;
+                    this.defaultPage = 0;
                 }
 
                 let params = '?page=' + page;
                 if (this.sortedCol != '') {
-                    params = params + '&sort' + (this.sortDesc ? 'desc' : '') + '=' + this.sortedCol;
+                    params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
                 }
 
                 axios.get(this.endpoint + params)
@@ -142,6 +183,7 @@
                         this.loading = false;
                         this.allData = response.data;
                         this.dataSet = response.data.data;
+                        this.updateUrl(params);
                     })
                     .catch(function(error) {
                         if (error.response) {
@@ -176,6 +218,9 @@
                     .then(response => {
                         this.getResults();
                     });
+            },
+            updateUrl(params) {
+                history.pushState(null, null, params);
             },
             showColor(rgb) {
                 return 'background-color: #' + rgb;

@@ -15,7 +15,11 @@
         @apply .border;
     }
 
-    &.is-small {
+    &.is-header-btn {
+        @apply .shadow .bg-white .text-sm .text-secondary-dark;
+    }
+
+    &.is-small, &.is-header-btn {
         @apply .text-xs .py-1 .px-3;
     }
 
@@ -23,7 +27,7 @@
         @apply .bg-secondary-dark .text-white;
     }
 
-    &.is-narrow {
+    &.is-narrow, &.is-header-btn {
         @apply .py-1 .px-2;
     }
 }
