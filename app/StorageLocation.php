@@ -39,4 +39,14 @@ class StorageLocation extends Model
     {
         return $this->hasMany(PartCategory::class);
     }
+
+    /**
+     * A storage location has many parts
+     *
+     * @return hasManyThrough
+     */
+    public function parts()
+    {
+        return $this->hasManyThrough(Part::class, PartCategory::class);
+    }
 }
