@@ -61,6 +61,8 @@ $factory->define(App\Set::class, function (Faker $faker) {
         'set_num' => $faker->unique()->word,
         'name' => $faker->unique()->word,
         'year' => $faker->year(),
+        'set_img_url' => $faker->url(),
+        'set_url' => $faker->url(),
         'theme_id' => function () {
             return factory(App\Theme::class);
         },
@@ -74,7 +76,9 @@ $factory->define(App\Part::class, function (Faker $faker) {
         'name' => $faker->word,
         'part_category_id' => function () {
             return factory(App\PartCategory::class);
-        }
+        },
+        'part_url' => $faker->url(),
+        'part_img_url' => $faker->url(),
     ];
 });
 

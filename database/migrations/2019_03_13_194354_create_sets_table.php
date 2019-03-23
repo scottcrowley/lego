@@ -18,6 +18,8 @@ class CreateSetsTable extends Migration
             $table->string('set_num');
             $table->string('name');
             $table->year('year');
+            $table->string('set_img_url')->nullable();
+            $table->string('set_url')->nullable();
             $table->unsignedInteger('theme_id')->nullable();
             $table->integer('num_parts');
             $table->timestamps();

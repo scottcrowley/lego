@@ -17,6 +17,8 @@ class CreatePartsTable extends Migration
             $table->increments('id');
             $table->string('part_num')->unique();
             $table->string('name');
+            $table->string('part_url')->nullable();
+            $table->string('part_img_url')->nullable();
             $table->unsignedInteger('part_category_id');
             $table->timestamps();
         });
