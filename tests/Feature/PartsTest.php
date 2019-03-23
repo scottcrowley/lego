@@ -21,16 +21,14 @@ class PartsTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_add_a_new_part()
+    public function an_authenticated_user_can_add_a_new_part()
     {
-        $this->withExceptionHandling();
-
         $this->signIn();
 
         $part = makeRaw('App\Part');
 
-        $this->post(route('parts.store'), $part)
-            ->assertRedirect(route('parts.index'));
+        $response = $this->json('post', route('parts.store'), $part);
+        $part = $response->json();
 
         $this->assertDatabaseHas('parts', $part);
     }

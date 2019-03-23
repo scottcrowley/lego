@@ -40,6 +40,8 @@ class SetsController extends Controller
             'set_num' => 'required|unique:sets',
             'name' => 'required|unique:sets',
             'year' => 'required',
+            'set_img_url' => 'url|nullable',
+            'set_url' => 'url|nullable',
             'theme_id' => 'nullable|exists:themes,id',
             'num_parts' => 'required'
         ]);

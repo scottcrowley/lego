@@ -29,4 +29,9 @@ class Part extends Model
     {
         return $this->belongsTo(PartCategory::class, 'part_category_id');
     }
+
+    public function storageLocationName()
+    {
+        return $this->category->storageLocation->name;
+    }
 }

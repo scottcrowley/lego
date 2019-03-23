@@ -67,7 +67,7 @@ class PartTest extends TestCase
     }
 
     /** @test */
-    public function it_can_have_access_to_part_category_storage_location_details()
+    public function it_can_have_access_to_part_category_storage_location_name_and_details()
     {
         $this->signIn();
 
@@ -77,6 +77,10 @@ class PartTest extends TestCase
 
         $part = create('App\Part', ['part_category_id' => $category->id]);
 
-        $this->assertEquals($part->fresh()->category->storageLocation->name, $location->name);
+        $part = $part->fresh();
+
+        $this->assertEquals($part->category->storageLocation->name, $location->name);
+
+        $this->assertEquals($part->storageLocationName(), $location->name);
     }
 }

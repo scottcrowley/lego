@@ -39,7 +39,9 @@ class PartsController extends Controller
         $data = request()->validate([
             'part_num' => 'required|unique:parts',
             'name' => 'required',
-            'part_category_id' => 'required|exists:part_categories,id'
+            'part_category_id' => 'required|exists:part_categories,id',
+            'part_url' => 'url|nullable',
+            'part_img_url' => 'url|nullable',
         ]);
 
         $part = Part::create($data);
