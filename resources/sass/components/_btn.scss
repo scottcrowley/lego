@@ -54,9 +54,9 @@
 }
 
 button.burger {
-        @apply .flex .items-center .px-3 .py-2 .border .rounded .text-primary-dark .border-primary-light;
+    @apply .flex .items-center .px-3 .py-2 .border .rounded .text-primary-dark .border-primary-light;
 
-        &:hover {
-            @apply .text-primary-dark .bg-primary-lightest .border-primary-dark;
-        }
+    &:hover {
+        @apply .text-primary-dark .bg-primary-lightest .border-primary-dark;
     }
+}
