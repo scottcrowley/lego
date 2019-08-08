@@ -11,27 +11,5 @@ class Part extends Model
      *
      * @var array
      */
-    protected $fillable = ['part_num', 'name', 'part_category_id'];
-
-    /**
-     * The relationships to always eager load
-     *
-     * @var array
-     */
-    protected $with = ['category'];
-
-    /**
-     * A part belongs to a part category
-     *
-     * @return belongsTo
-     */
-    public function category()
-    {
-        return $this->belongsTo(PartCategory::class, 'part_category_id');
-    }
-
-    public function storageLocationName()
-    {
-        return $this->category->storageLocation->name;
-    }
+    protected $guarded = [];
 }

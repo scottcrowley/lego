@@ -87,3 +87,11 @@ $factory->define(App\PartCategory::class, function (Faker $faker) {
         'name' => $faker->unique()->word,
     ];
 });
+
+$factory->define(App\Color::class, function (Faker $faker) {
+    return [
+        'name' => $faker->colorName,
+        'rgb' => $faker->rgbCssColor,
+        'is_trans' => $faker->boolean()
+    ];
+});

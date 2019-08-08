@@ -32,11 +32,12 @@ class PartCategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'name' => 'required|unique:part_categories'
         ]);
 
@@ -44,7 +45,7 @@ class PartCategoriesController extends Controller
 
         session()->flash('flash', ['message' => 'Part Category added successfully!', 'level' => 'success']);
 
-        if (request()->wantsJson()) {
+        if ($request->wantsJson()) {
             return response($category, 201);
         }
 

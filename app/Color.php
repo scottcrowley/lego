@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PartCategory extends Model
+class Color extends Model
 {
     /**
      * The attributes that are mass assignable.

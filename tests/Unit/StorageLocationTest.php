@@ -89,31 +89,31 @@ class StorageLocationTest extends TestCase
         $this->assertEquals($type->name, $location->type->name);
     }
 
-    /** @test */
-    public function it_can_access_details_about_associated_part_categories()
-    {
-        $this->signIn();
+    // /** @test */
+    // public function it_can_access_details_about_associated_part_categories()
+    // {
+    //     $this->signIn();
 
-        $location = create('App\StorageLocation');
+    //     $location = create('App\StorageLocation');
 
-        $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+    //     $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
 
-        $this->assertTrue($location->fresh()->partCategories->contains($category));
-    }
+    //     $this->assertTrue($location->fresh()->partCategories->contains($category));
+    // }
 
-    /** @test */
-    public function it_can_access_details_about_associated_parts()
-    {
-        $this->signIn();
+    // /** @test */
+    // public function it_can_access_details_about_associated_parts()
+    // {
+    //     $this->signIn();
 
-        $location = create('App\StorageLocation');
+    //     $location = create('App\StorageLocation');
 
-        $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+    //     $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
 
-        $parts = create('App\Part', ['part_category_id' => $category->id], 4);
+    //     $parts = create('App\Part', ['part_category_id' => $category->id], 4);
 
-        $partsRelation = $location->parts;
+    //     $partsRelation = $location->parts;
 
-        $this->assertCount(4, $partsRelation);
-    }
+    //     $this->assertCount(4, $partsRelation);
+    // }
 }

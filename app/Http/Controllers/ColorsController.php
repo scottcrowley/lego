@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Theme;
+use App\Color;
 use Illuminate\Http\Request;
 
-class ThemesController extends Controller
+class ColorsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class ThemesController extends Controller
      */
     public function index()
     {
-        $themes = Theme::all();
+        $colors = Color::all();
 
-        return view('themes.index', compact('themes'));
+        return view('colors.index', compact('colors'));
     }
 
     /**
@@ -38,27 +38,29 @@ class ThemesController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|unique:themes',
+            'name' => 'required|unique:colors',
+            'rgb' => 'nullable',
+            'is_trans' => 'required'
         ]);
 
-        $theme = Theme::create($data);
+        $color = Color::create($data);
 
-        session()->flash('flash', ['message' => 'Theme added successfully!', 'level' => 'success']);
+        session()->flash('flash', ['message' => 'Color added successfully!', 'level' => 'success']);
 
         if ($request->wantsJson()) {
-            return response($theme, 201);
+            return response($color, 201);
         }
 
-        return redirect(route('themes.index'));
+        return redirect(route('colors.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Color  $color
      * @return \Illuminate\Http\Response
      */
-    public function show(Theme $theme)
+    public function show(Color $color)
     {
         //
     }
@@ -66,10 +68,10 @@ class ThemesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Color  $color
      * @return \Illuminate\Http\Response
      */
-    public function edit(Theme $theme)
+    public function edit(Color $color)
     {
         //
     }
@@ -78,10 +80,10 @@ class ThemesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Theme  $theme
+     * @param  \App\Color  $color
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Theme $theme)
+    public function update(Request $request, Color $color)
     {
         //
     }
@@ -89,10 +91,10 @@ class ThemesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Color  $color
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Theme $theme)
+    public function destroy(Color $color)
     {
         //
     }

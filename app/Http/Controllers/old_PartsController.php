@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Theme;
+use App\Part;
 use Illuminate\Http\Request;
 
-class ThemesController extends Controller
+class PartsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class ThemesController extends Controller
      */
     public function index()
     {
-        $themes = Theme::all();
+        $parts = Part::all();
 
-        return view('themes.index', compact('themes'));
+        return view('parts.index', compact('parts'));
     }
 
     /**
@@ -32,33 +32,36 @@ class ThemesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $request->validate([
-            'name' => 'required|unique:themes',
+        $data = request()->validate([
+            'part_num' => 'required|unique:parts',
+            'name' => 'required',
+            'part_category_id' => 'required|exists:part_categories,id',
+            'part_url' => 'url|nullable',
+            'part_img_url' => 'url|nullable',
         ]);
 
-        $theme = Theme::create($data);
+        $part = Part::create($data);
 
-        session()->flash('flash', ['message' => 'Theme added successfully!', 'level' => 'success']);
+        session()->flash('flash', ['message' => 'The Part added successfully!', 'level' => 'success']);
 
-        if ($request->wantsJson()) {
-            return response($theme, 201);
+        if (request()->wantsJson()) {
+            return response($part, 201);
         }
 
-        return redirect(route('themes.index'));
+        return redirect(route('parts.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function show(Theme $theme)
+    public function show(Part $part)
     {
         //
     }
@@ -66,10 +69,10 @@ class ThemesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function edit(Theme $theme)
+    public function edit(Part $part)
     {
         //
     }
@@ -78,10 +81,10 @@ class ThemesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Theme  $theme
+     * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Theme $theme)
+    public function update(Request $request, Part $part)
     {
         //
     }
@@ -89,10 +92,10 @@ class ThemesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Theme  $theme
+     * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Theme $theme)
+    public function destroy(Part $part)
     {
         //
     }

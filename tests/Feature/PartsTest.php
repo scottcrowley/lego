@@ -26,9 +26,8 @@ class PartsTest extends TestCase
         $this->signIn();
 
         $part = makeRaw('App\Part');
-
-        $response = $this->json('post', route('parts.store'), $part);
-        $part = $response->json();
+        
+        $this->post(route('parts.store'), $part);
 
         $this->assertDatabaseHas('parts', $part);
     }

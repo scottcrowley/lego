@@ -13,13 +13,13 @@ class SetsTest extends TestCase
     public function an_authenticated_user_can_view_all_sets()
     {
         $this->signIn();
-
+        
         $set = create('App\Set');
-
+        
         $this->get(route('sets.index'))
-            ->assertSee($set->name);
+        ->assertSee($set->name);
     }
-
+    
     /** @test */
     public function an_authenticated_user_can_add_a_new_set()
     {

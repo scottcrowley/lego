@@ -32,11 +32,12 @@ class PartsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'part_num' => 'required|unique:parts',
             'name' => 'required',
             'part_category_id' => 'required|exists:part_categories,id',
@@ -45,10 +46,10 @@ class PartsController extends Controller
         ]);
 
         $part = Part::create($data);
-
+        
         session()->flash('flash', ['message' => 'The Part added successfully!', 'level' => 'success']);
 
-        if (request()->wantsJson()) {
+        if ($request->wantsJson()) {
             return response($part, 201);
         }
 

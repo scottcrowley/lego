@@ -15,7 +15,7 @@ class CreatePartsTable extends Migration
     {
         Schema::create('parts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('part_num', 20)->unique();
+            $table->string('part_num', 20)->unique()->index();
             $table->string('name', 250);
             $table->string('part_url')->nullable();
             $table->string('part_img_url')->nullable();

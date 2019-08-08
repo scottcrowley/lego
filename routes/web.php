@@ -11,7 +11,7 @@
 |
 */
 
-Auth::routes();
+Auth::routes(); 
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +22,9 @@ Route::group([
 ], function () {
     Route::get('/themes', 'ThemesController@index')->name('themes.index');
     Route::post('/themes', 'ThemesController@store')->name('themes.store');
+    
+    Route::get('/colors', 'ColorsController@index')->name('colors.index');
+    Route::post('/colors', 'ColorsController@store')->name('colors.store');
 
     Route::get('/sets', 'SetsController@index')->name('sets.index');
     Route::post('/sets', 'SetsController@store')->name('sets.store');

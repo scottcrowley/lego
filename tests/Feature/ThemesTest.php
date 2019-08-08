@@ -23,13 +23,12 @@ class ThemesTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_add_a_new_theme()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $theme = makeRaw('App\Theme');
 
-        $this->post(route('themes.store'), $theme);
+        $this->post(route('themes.store'), $theme)
+            ->assertRedirect(route('themes.index'));
 
         $this->get(route('themes.index'))
             ->assertSee($theme['name']);

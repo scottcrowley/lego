@@ -15,7 +15,7 @@ class CreateSetsTable extends Migration
     {
         Schema::create('sets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('set_num', 20);
+            $table->string('set_num', 20)->index();
             $table->string('name', 256);
             $table->year('year');
             $table->string('set_img_url')->nullable();

@@ -12,16 +12,4 @@ class Set extends Model
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * The relationships to always eager load
-     *
-     * @var array
-     */
-    protected $with = ['parent_theme'];
-
-    public function parent_theme()
-    {
-        return $this->belongsTo(Theme::class, 'theme_id', 'id');
-    }
 }

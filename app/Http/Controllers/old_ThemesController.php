@@ -32,12 +32,11 @@ class ThemesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $request->validate([
+        $data = request()->validate([
             'name' => 'required|unique:themes',
         ]);
 
@@ -45,7 +44,7 @@ class ThemesController extends Controller
 
         session()->flash('flash', ['message' => 'Theme added successfully!', 'level' => 'success']);
 
-        if ($request->wantsJson()) {
+        if (request()->wantsJson()) {
             return response($theme, 201);
         }
 

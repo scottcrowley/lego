@@ -32,11 +32,12 @@ class SetsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'set_num' => 'required|unique:sets',
             'name' => 'required|unique:sets',
             'year' => 'required',
@@ -47,10 +48,10 @@ class SetsController extends Controller
         ]);
 
         $set = Set::create($data);
-
+        
         session()->flash('flash', ['message' => 'Set added successfully!', 'level' => 'success']);
 
-        if (request()->wantsJson()) {
+        if ($request->wantsJson()) {
             return response($set, 201);
         }
 
