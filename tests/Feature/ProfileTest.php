@@ -43,10 +43,10 @@ class ProfileTest extends TestCase
 
         $user->name = 'New Name';
         $this->patch(route('profile.update'), $user->toArray())
-        ->assertRedirect(route('profile'));
+            ->assertRedirect(route('profile'));
 
         $this->get(route('profile'))
-        ->assertSee('New Name');
+            ->assertSee('New Name');
     }
 
     /** @test */
