@@ -14,8 +14,8 @@ class CreateStorageTypesTable extends Migration
     public function up()
     {
         Schema::create('storage_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
+            $table->bigIncrements('id');
+            $table->string('name', 200)->unique();
             $table->text('description');
             $table->timestamps();
         });

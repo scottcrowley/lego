@@ -14,9 +14,8 @@ class CreatePartCategoriesTable extends Migration
     public function up()
     {
         Schema::create('part_categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->unsignedInteger('storage_location_id')->nullable();
+            $table->bigIncrements('id');
+            $table->string('name', 200)->unique();
             $table->timestamps();
         });
     }

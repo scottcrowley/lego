@@ -14,15 +14,20 @@ class CreateSetsTable extends Migration
     public function up()
     {
         Schema::create('sets', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('set_num');
-            $table->string('name');
+            $table->bigIncrements('id');
+            $table->string('set_num', 20);
+            $table->string('name', 256);
             $table->year('year');
             $table->string('set_img_url')->nullable();
             $table->string('set_url')->nullable();
-            $table->unsignedInteger('theme_id')->nullable();
+            $table->unsignedBigInteger('theme_id')->nullable();
             $table->integer('num_parts');
             $table->timestamps();
+
+            $table->foreign('theme_id')
+                ->references('id')
+                ->on('themes')
+                ->onUpdate('cascade');
         });
     }
 
