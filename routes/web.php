@@ -34,6 +34,9 @@ Route::group([
 
     Route::get('/part_categories', 'PartCategoriesController@index')->name('part_categories.index');
     Route::post('/part_categories', 'PartCategoriesController@store')->name('part_categories.store');
+
+    Route::get('/part_relationships', 'PartRelationshipsController@index')->name('part_relationships.index');
+    Route::post('/part_relationships', 'PartRelationshipsController@store')->name('part_relationships.store');
 });
 
 Route::group([

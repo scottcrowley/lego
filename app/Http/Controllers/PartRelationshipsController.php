@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Part;
+use App\PartRelationship;
 use Illuminate\Http\Request;
 
-class PartsController extends Controller
+class PartRelationshipsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class PartsController extends Controller
      */
     public function index()
     {
-        $parts = Part::all();
+        $partRelationships = PartRelationship::all();
 
-        return view('parts.index', compact('parts'));
+        return view('part_relationships.index', compact('partRelationships'));
     }
 
     /**
@@ -38,31 +38,28 @@ class PartsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'part_num' => 'required|unique:parts',
-            'name' => 'required',
-            'part_url' => 'url|nullable',
-            'part_img_url' => 'url|nullable',
-            'part_category_id' => 'required|exists:part_categories,id',
+            'child_part_num' => 'required|exists:parts,part_num',
+            'parent_part_num' => 'required|exists:parts,part_num',
         ]);
 
-        $part = Part::create($data);
+        $partRelationship = PartRelationship::create($data);
 
-        session()->flash('flash', ['message' => 'The Part added successfully!', 'level' => 'success']);
+        session()->flash('flash', ['message' => 'Part Relationship added successfully!', 'level' => 'success']);
 
         if ($request->wantsJson()) {
-            return response($part, 201);
+            return response($partRelationship, 201);
         }
 
-        return redirect(route('parts.index'));
+        return redirect(route('part_relationships.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Part  $part
+     * @param  \App\PartRelationship  $partRelationship
      * @return \Illuminate\Http\Response
      */
-    public function show(Part $part)
+    public function show(PartRelationship $partRelationship)
     {
         //
     }
@@ -70,10 +67,10 @@ class PartsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Part  $part
+     * @param  \App\PartRelationship  $partRelationship
      * @return \Illuminate\Http\Response
      */
-    public function edit(Part $part)
+    public function edit(PartRelationship $partRelationship)
     {
         //
     }
@@ -82,10 +79,10 @@ class PartsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Part  $part
+     * @param  \App\PartRelationship  $partRelationship
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Part $part)
+    public function update(Request $request, PartRelationship $partRelationship)
     {
         //
     }
@@ -93,10 +90,10 @@ class PartsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Part  $part
+     * @param  \App\PartRelationship  $partRelationship
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Part $part)
+    public function destroy(PartRelationship $partRelationship)
     {
         //
     }

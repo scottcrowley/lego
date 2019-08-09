@@ -35,9 +35,7 @@ $factory->define(App\StorageLocation::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
         'description' => $faker->sentence(),
-        'storage_type_id' => function () {
-            return factory(App\StorageType::class);
-        }
+        'storage_type_id' => factory(App\StorageType::class)
     ];
 });
 
@@ -50,9 +48,7 @@ $factory->define(App\Theme::class, function (Faker $faker) {
 
 $factory->state(App\Theme::class, 'withParent', function (Faker $faker) {
     return [
-        'parent_id' => function () {
-            return factory(App\Theme::class);
-        }
+        'parent_id' => factory(App\Theme::class)
     ];
 });
 
@@ -63,9 +59,7 @@ $factory->define(App\Set::class, function (Faker $faker) {
         'year' => $faker->year(),
         'set_img_url' => $faker->url(),
         'set_url' => $faker->url(),
-        'theme_id' => function () {
-            return factory(App\Theme::class);
-        },
+        'theme_id' => factory(App\Theme::class),
         'num_parts' => $faker->randomNumber()
     ];
 });
@@ -74,11 +68,9 @@ $factory->define(App\Part::class, function (Faker $faker) {
     return [
         'part_num' => $faker->unique()->word(),
         'name' => $faker->word,
-        'part_category_id' => function () {
-            return factory(App\PartCategory::class);
-        },
         'part_url' => $faker->url(),
         'part_img_url' => $faker->url(),
+        'part_category_id' => factory(App\PartCategory::class),
     ];
 });
 
@@ -93,5 +85,16 @@ $factory->define(App\Color::class, function (Faker $faker) {
         'name' => $faker->colorName,
         'rgb' => $faker->rgbCssColor,
         'is_trans' => $faker->boolean()
+    ];
+});
+
+$factory->define(App\PartRelationship::class, function (Faker $faker) {
+    return [
+        'child_part_num' => function() {
+            return factory(App\Part::class)->create()->part_num;
+        },
+        'parent_part_num' => function() {
+            return factory(App\Part::class)->create()->part_num;
+        }
     ];
 });
