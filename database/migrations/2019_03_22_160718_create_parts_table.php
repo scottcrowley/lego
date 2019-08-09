@@ -14,13 +14,14 @@ class CreatePartsTable extends Migration
     public function up()
     {
         Schema::create('parts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('part_num', 20)->unique()->index();
+            $table->string('part_num', 20)->unique();
             $table->string('name', 250);
             $table->string('part_url')->nullable();
             $table->string('part_img_url')->nullable();
             $table->unsignedBigInteger('part_category_id');
             $table->timestamps();
+
+            $table->primary('part_num');
 
             $table->foreign('part_category_id')
                 ->references('id')

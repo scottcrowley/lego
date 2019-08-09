@@ -14,8 +14,7 @@ class CreatePartRelationshipsTable extends Migration
     public function up()
     {
         Schema::create('part_relationships', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('rel_type')->nullable();
+            $table->string('rel_type', 1)->nullable();
             $table->string('child_part_num', 20);
             $table->string('parent_part_num', 20);
 

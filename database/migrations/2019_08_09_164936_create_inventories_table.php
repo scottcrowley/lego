@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateColorsTable extends Migration
+class CreateInventoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateColorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('inventories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 200);
-            $table->string('rgb')->nullable();
-            $table->string('is_trans', 1)->default('f');
+            $table->integer('version');
+            $table->string('set_num', 20)->index();
             $table->timestamps();
+
+            $table->foreign('set_num')
+                ->references('set_num')
+                ->on('sets')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -29,6 +34,6 @@ class CreateColorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('inventories');
     }
 }
