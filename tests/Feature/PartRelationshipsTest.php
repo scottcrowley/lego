@@ -25,10 +25,9 @@ class PartRelationshipsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_add_a_new_relationship()
     {
-        $this->withoutExceptionHandling();
         $this->signIn();
 
-        $partRelationship = createRaw('App\PartRelationship');
+        $partRelationship = makeRaw('App\PartRelationship');
 
         $this->post(route('part_relationships.index'), $partRelationship)
             ->assertRedirect(route('part_relationships.index'));

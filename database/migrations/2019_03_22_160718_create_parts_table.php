@@ -16,10 +16,8 @@ class CreatePartsTable extends Migration
         Schema::create('parts', function (Blueprint $table) {
             $table->string('part_num', 20)->unique();
             $table->string('name', 250);
-            $table->string('part_url')->nullable();
-            $table->string('part_img_url')->nullable();
             $table->unsignedBigInteger('part_category_id');
-            $table->timestamps();
+            $table->unsignedBigInteger('part_material_id')->default(1);
 
             $table->primary('part_num');
 

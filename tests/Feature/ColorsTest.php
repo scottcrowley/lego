@@ -24,7 +24,6 @@ class ColorsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_add_a_new_color()
     {
-        $this->withoutExceptionHandling();
         $this->signIn();
 
         $color = makeRaw('App\Color');

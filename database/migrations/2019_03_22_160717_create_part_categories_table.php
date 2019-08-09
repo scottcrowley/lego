@@ -16,7 +16,6 @@ class CreatePartCategoriesTable extends Migration
         Schema::create('part_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 200)->unique();
-            $table->timestamps();
         });
     }
 

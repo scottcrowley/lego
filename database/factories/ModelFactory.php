@@ -57,8 +57,6 @@ $factory->define(App\Set::class, function (Faker $faker) {
         'set_num' => $faker->unique()->word,
         'name' => $faker->unique()->word,
         'year' => $faker->year(),
-        'set_img_url' => $faker->url(),
-        'set_url' => $faker->url(),
         'theme_id' => factory(App\Theme::class),
         'num_parts' => $faker->randomNumber()
     ];
@@ -68,8 +66,6 @@ $factory->define(App\Part::class, function (Faker $faker) {
     return [
         'part_num' => $faker->unique()->word(),
         'name' => $faker->word,
-        'part_url' => $faker->url(),
-        'part_img_url' => $faker->url(),
         'part_category_id' => factory(App\PartCategory::class),
     ];
 });
@@ -90,6 +86,7 @@ $factory->define(App\Color::class, function (Faker $faker) {
 
 $factory->define(App\PartRelationship::class, function (Faker $faker) {
     return [
+        'rel_type' => 'P',
         'child_part_num' => function() {
             return factory(App\Part::class)->create()->part_num;
         },

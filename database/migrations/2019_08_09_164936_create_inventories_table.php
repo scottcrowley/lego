@@ -17,7 +17,6 @@ class CreateInventoriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('version');
             $table->string('set_num', 20)->index();
-            $table->timestamps();
 
             $table->foreign('set_num')
                 ->references('set_num')

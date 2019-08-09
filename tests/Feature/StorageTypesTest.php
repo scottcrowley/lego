@@ -64,8 +64,6 @@ class StorageTypesTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_delete_a_storage_type()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $type = create('App\StorageType');

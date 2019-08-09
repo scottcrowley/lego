@@ -38,6 +38,7 @@ class PartRelationshipsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'rel_type' => 'nullable',
             'child_part_num' => 'required|exists:parts,part_num',
             'parent_part_num' => 'required|exists:parts,part_num',
         ]);
