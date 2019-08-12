@@ -10,6 +10,20 @@ class SetTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @test */
+    public function it_has_details_on_its_theme()
+    {
+        $this->signIn();
+
+        $theme = create('App\Theme');
+
+        create('App\Set', ['theme_id' => $theme->id]);
+
+        $set = Set::first();
+
+        $this->assertEquals($theme->name, $set->theme->name);
+    }
+
     // /** @test */
     // public function it_requires_a_unique_set_num()
     // {
@@ -82,19 +96,5 @@ class SetTest extends TestCase
 
     //     $this->post(route('sets.store'), $set)
     //         ->assertSessionHasErrors('theme_id');
-    // }
-
-    // /** @test */
-    // public function it_has_details_on_its_parent_theme()
-    // {
-    //     $this->signIn();
-
-    //     $theme = create('App\Theme');
-
-    //     create('App\Set', ['theme_id' => $theme->id]);
-
-    //     $set = Set::first();
-
-    //     $this->assertEquals($theme->name, $set->parent_theme->name);
     // }
 }

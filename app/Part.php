@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Part extends Model
 {
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     /**
      * no timestamps needed
      *
@@ -19,4 +21,24 @@ class Part extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * A part belongs to one part category 
+     *
+     * @return belongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(PartCategory::class, 'part_category_id');
+    }
+
+    /**
+     * A part belongs to a storage location
+     *
+     * @return hasOneDeepFromRelations
+     */
+    public function storageLocation()
+    {
+        return $this->hasOneDeepFromRelations($this->category(), (new PartCategory)->storageLocation());
+    }
 }

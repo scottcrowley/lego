@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ThemesController extends Controller
 {
@@ -39,6 +40,7 @@ class ThemesController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|unique:themes',
+            'parent_id' => 'nullable|exists:themes,id'
         ]);
 
         $theme = Theme::create($data);
@@ -83,7 +85,20 @@ class ThemesController extends Controller
      */
     public function update(Request $request, Theme $theme)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', Rule::unique('themes')->ignore($theme->id)],
+            'parent_id' => 'nullable|exists:themes,id'
+        ]);
+
+        $theme->update($data);
+        
+        session()->flash('flash', ['message' => 'Theme updated successfully!', 'level' => 'success']);
+
+        if ($request->wantsJson()) {
+            return response($theme);
+        }
+
+        return redirect(route('themes.index'));
     }
 
     /**

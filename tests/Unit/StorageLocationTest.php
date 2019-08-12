@@ -89,31 +89,53 @@ class StorageLocationTest extends TestCase
         $this->assertEquals($type->name, $location->type->name);
     }
 
-    // /** @test */
-    // public function it_can_access_details_about_associated_part_categories()
-    // {
-    //     $this->signIn();
+    /** @test */
+    public function it_can_access_details_about_associated_part_categories()
+    {
+        $this->signIn();
 
-    //     $location = create('App\StorageLocation');
+        $location = create('App\StorageLocation');
 
-    //     $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+        $partCategory = create('App\PartCategory');
 
-    //     $this->assertTrue($location->fresh()->partCategories->contains($category));
-    // }
+        $location->addPartCategory($partCategory);
 
-    // /** @test */
-    // public function it_can_access_details_about_associated_parts()
-    // {
-    //     $this->signIn();
+        $this->assertTrue($location->fresh()->partCategories->contains($partCategory));
+    }
 
-    //     $location = create('App\StorageLocation');
+    /** @test */
+    public function it_can_remove_an_associated_part_category()
+    {
+        $this->signIn();
 
-    //     $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+        $location = create('App\StorageLocation');
 
-    //     $parts = create('App\Part', ['part_category_id' => $category->id], 4);
+        $partCategory = create('App\PartCategory');
 
-    //     $partsRelation = $location->parts;
+        $location->addPartCategory($partCategory);
 
-    //     $this->assertCount(4, $partsRelation);
-    // }
+        $this->assertEquals(1, $location->fresh()->partCategories->count());
+
+        $location->removePartCategory($partCategory);
+
+        $this->assertFalse($location->fresh()->partCategories->contains($partCategory));
+    }
+
+    /** @test */
+    public function it_can_access_details_about_associated_parts()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $partCategory = create('App\PartCategory');
+
+        $location->addPartCategory($partCategory);
+
+        create('App\Part', ['part_category_id' => $partCategory->id], 4);
+
+        $partsRelation = $location->parts;
+
+        $this->assertCount(4, $partsRelation);
+    }
 }

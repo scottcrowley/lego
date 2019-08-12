@@ -9,33 +9,35 @@ class PartCategoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    // /** @test */
-    // public function it_requires_a_unique_name()
-    // {
-    //     $this->signIn();
+    /** @test */
+    public function it_requires_a_unique_name()
+    {
+        $this->signIn();
 
-    //     $category = makeRaw('App\PartCategory', ['name' => '']);
+        $category = makeRaw('App\PartCategory', ['name' => '']);
 
-    //     $this->post(route('part_categories.store'), $category)
-    //         ->assertSessionHasErrors('name');
+        $this->post(route('part_categories.store'), $category)
+            ->assertSessionHasErrors('name');
 
-    //     $category = createRaw('App\PartCategory');
+        $existingCategory = createRaw('App\PartCategory');
 
-    //     $newCategory = $category;
+        $category['name'] = $existingCategory['name'];
 
-    //     $this->post(route('part_categories.store'), $newCategory)
-    //         ->assertSessionHasErrors('name');
-    // }
+        $this->post(route('part_categories.store'), $category)
+            ->assertSessionHasErrors('name');
+    }
 
-    // /** @test */
-    // public function it_can_have_access_to_its_storage_location_details()
-    // {
-    //     $this->signIn();
+    /** @test */
+    public function it_can_access_details_about_its_storage_location()
+    {
+        $this->signIn();
 
-    //     $location = create('App\StorageLocation');
+        $location = create('App\StorageLocation');
+        
+        $partCategory = create('App\PartCategory');
 
-    //     $category = create('App\PartCategory', ['storage_location_id' => $location->id]);
+        $location->addPartCategory($partCategory);
 
-    //     $this->assertEquals($category->fresh()->storageLocation->name, $location->name);
-    // }
+        $this->assertEquals($partCategory->fresh()->storageLocation[0]->name, $location->name);
+    }
 }

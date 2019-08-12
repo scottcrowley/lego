@@ -19,4 +19,14 @@ class Set extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * A set belongs to one theme
+     *
+     * @return belongsTo
+     */
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class, 'theme_id');
+    }
 }

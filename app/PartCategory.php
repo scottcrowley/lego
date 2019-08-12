@@ -19,4 +19,9 @@ class PartCategory extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function storageLocation() 
+    {
+        return $this->belongsToMany(StorageLocation::class);
+    }
 }

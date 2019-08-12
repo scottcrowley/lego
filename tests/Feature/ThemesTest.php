@@ -33,4 +33,20 @@ class ThemesTest extends TestCase
         $this->get(route('themes.index'))
             ->assertSee($theme['name']);
     }
+
+    /** @test */
+    public function an_authenticated_user_can_update_a_theme()
+    {
+        $this->signIn();
+
+        $theme = createRaw('App\Theme');
+        
+        $theme['name'] = 'New Name';
+
+        $this->patch(route('themes.update', $theme['id']), $theme)
+            ->assertRedirect(route('themes.index'));
+
+        $this->get(route('themes.index'))
+            ->assertSee($theme['name']);
+    }
 }

@@ -22,6 +22,7 @@ Route::group([
 ], function () {
     Route::get('/themes', 'ThemesController@index')->name('themes.index');
     Route::post('/themes', 'ThemesController@store')->name('themes.store');
+    Route::patch('/themes/{theme}', 'ThemesController@update')->name('themes.update');
     
     Route::get('/colors', 'ColorsController@index')->name('colors.index');
     Route::post('/colors', 'ColorsController@store')->name('colors.store');
