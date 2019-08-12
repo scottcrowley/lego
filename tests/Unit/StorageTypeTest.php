@@ -50,4 +50,16 @@ class StorageTypeTest extends TestCase
         $this->post(route('storage.types.store'), $type)
             ->assertSessionHasErrors('description');
     }
+
+    /** @test */
+    public function it_can_get_details_about_its_storage_locations()
+    {
+        $this->signIn();
+
+        $type = create('App\StorageType');
+
+        $location = create('App\StorageLocation', ['storage_type_id' => $type->id]);
+
+        $this->assertEquals($type->fresh()->locations[0]->name, $location->name);
+    }
 }
