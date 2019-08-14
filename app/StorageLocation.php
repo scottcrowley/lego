@@ -28,7 +28,7 @@ class StorageLocation extends Model
      * @param PartCategory $partCategory
      * @return void
      */
-    public function addPartCategory(PartCategory $partCategory) 
+    public function addPartCategory(PartCategory $partCategory)
     {
         $this->partCategories()->attach($partCategory);
     }
@@ -39,7 +39,7 @@ class StorageLocation extends Model
      * @param PartCategory $partCategory
      * @return void
      */
-    public function removePartCategory(PartCategory $partCategory) 
+    public function removePartCategory(PartCategory $partCategory)
     {
         $this->partCategories()->detach($partCategory);
     }

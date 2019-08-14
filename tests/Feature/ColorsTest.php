@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ColorsTest extends TestCase
@@ -27,7 +26,7 @@ class ColorsTest extends TestCase
         $this->signIn();
 
         $white = create('App\Color', ['name' => 'white']);
-        
+
         $black = create('App\Color', ['name' => 'black']);
 
         $this->get(route('api.lego.colors', ['name' => 'black']))
@@ -47,7 +46,7 @@ class ColorsTest extends TestCase
         $this->get(route('api.lego.colors', ['sort' => 'name']))
             ->assertSeeInOrder([$colorA->name, $colorB->name, $colorC->name]);
     }
-    
+
     /** @test */
     public function an_authenticated_user_can_sort_colors_by_name_in_descending_order()
     {

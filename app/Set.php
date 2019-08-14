@@ -12,7 +12,7 @@ class Set extends Model
      * @var boolean
      */
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *

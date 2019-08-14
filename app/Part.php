@@ -14,7 +14,7 @@ class Part extends Model
      * @var boolean
      */
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +23,7 @@ class Part extends Model
     protected $guarded = [];
 
     /**
-     * A part belongs to one part category 
+     * A part belongs to one part category
      *
      * @return belongsTo
      */

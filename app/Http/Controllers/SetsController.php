@@ -48,7 +48,7 @@ class SetsController extends Controller
         ]);
 
         $set = Set::create($data);
-        
+
         session()->flash('flash', ['message' => 'Set added successfully!', 'level' => 'success']);
 
         if ($request->wantsJson()) {

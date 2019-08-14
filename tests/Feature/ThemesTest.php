@@ -28,7 +28,7 @@ class ThemesTest extends TestCase
         $this->signIn();
 
         $first = create('App\Theme', ['name' => 'First Theme']);
-        
+
         $second = create('App\Theme', ['name' => 'Second Theme']);
 
         $this->get(route('api.lego.themes', ['name' => 'Second Theme']))
@@ -44,7 +44,7 @@ class ThemesTest extends TestCase
         $parent = create('App\Theme');
 
         $first = create('App\Theme', ['parent_id' => $parent->id]);
-        
+
         $second = create('App\Theme');
 
         $this->get(route('api.lego.themes', ['parent_id' => $parent->id]))

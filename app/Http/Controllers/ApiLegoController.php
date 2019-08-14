@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\ColorFilters;
-use App\Color;
-use App\Filters\PartCategoryFilters;
-use App\PartCategory;
-use App\Filters\PartRelationshipFilters;
-use App\PartRelationship;
-use App\Filters\ThemeFilters;
-use App\Theme;
-use App\Filters\PartFilters;
-use App\Part;
-use App\Filters\SetFilters;
 use App\Set;
+use App\Part;
+use App\Color;
+use App\Theme;
+use App\PartCategory;
+use App\PartRelationship;
+use App\Filters\SetFilters;
+use App\Filters\PartFilters;
+use App\Filters\ColorFilters;
+use App\Filters\ThemeFilters;
+use App\Filters\PartCategoryFilters;
+use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
 {
-
     /**
      * default number of results to display
      *
@@ -41,7 +40,7 @@ class ApiLegoController extends Controller
      * @param ColorFilters $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getColors(ColorFilters $filters) 
+    public function getColors(ColorFilters $filters)
     {
         $colors = $filters->apply(Color::all());
 
@@ -54,7 +53,7 @@ class ApiLegoController extends Controller
      * @param PartCategoryFilters $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getPartCategories(PartCategoryFilters $filters) 
+    public function getPartCategories(PartCategoryFilters $filters)
     {
         $categories = $filters->apply(PartCategory::all());
 
@@ -67,7 +66,7 @@ class ApiLegoController extends Controller
      * @param PartRelationshipFilters $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getPartRelationships(PartRelationshipFilters $filters) 
+    public function getPartRelationships(PartRelationshipFilters $filters)
     {
         $relationships = $filters->apply(PartRelationship::all());
 
@@ -80,7 +79,7 @@ class ApiLegoController extends Controller
      * @param ThemeFilter $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getThemes(ThemeFilters $filters) 
+    public function getThemes(ThemeFilters $filters)
     {
         $themes = $filters->apply(Theme::all());
 
@@ -93,7 +92,7 @@ class ApiLegoController extends Controller
      * @param PartFilters $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getParts(PartFilters $filters) 
+    public function getParts(PartFilters $filters)
     {
         $parts = $filters->apply(Part::all());
 
@@ -106,7 +105,7 @@ class ApiLegoController extends Controller
      * @param SetFilters $filters
      * @return Illuminate\Pagination\Paginator
      */
-    public function getSets(SetFilters $filters) 
+    public function getSets(SetFilters $filters)
     {
         $sets = $filters->apply(Set::all());
 

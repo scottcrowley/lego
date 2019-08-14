@@ -15,9 +15,9 @@ class SetsTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->signIn();
-        
+
         $set = create('App\Set');
-        
+
         $this->get(route('api.lego.sets'))
             ->assertSee($set->name);
     }
@@ -28,7 +28,7 @@ class SetsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Set', ['name' => 'Set A']);
-        
+
         $second = create('App\Set', ['name' => 'Set B']);
 
         $this->get(route('api.lego.sets', ['name' => 'Set B']))
@@ -42,7 +42,7 @@ class SetsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Set');
-        
+
         $second = create('App\Set', ['set_num' => 'Set B']);
 
         $this->get(route('api.lego.sets', ['set_num' => 'Set B']))
@@ -58,7 +58,7 @@ class SetsTest extends TestCase
         $theme = create('App\Theme');
 
         $first = create('App\Set');
-        
+
         $second = create('App\Set', ['theme_id' => $theme->id]);
 
         $this->get(route('api.lego.sets', ['theme_id' => $theme->id]))
@@ -72,7 +72,7 @@ class SetsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Set', ['year' => '2004']);
-        
+
         $second = create('App\Set', ['year' => '2010']);
 
         $this->get(route('api.lego.sets', ['year' => '2010']))
@@ -86,7 +86,7 @@ class SetsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Set', ['year' => '2015']);
-        
+
         $second = create('App\Set', ['year' => '2010']);
 
         $this->get(route('api.lego.sets', ['beforeyear' => '2012']))
@@ -100,7 +100,7 @@ class SetsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Set', ['year' => '2000']);
-        
+
         $second = create('App\Set', ['year' => '2010']);
 
         $this->get(route('api.lego.sets', ['afteryear' => '2005']))

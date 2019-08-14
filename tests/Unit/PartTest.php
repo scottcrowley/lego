@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class PartTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function it_can_have_access_to_part_category_details()
     {
@@ -33,7 +33,7 @@ class PartTest extends TestCase
         $location->addPartCategory($partCategory);
 
         $part = create('App\Part', ['part_category_id' => $partCategory->id]);
-        
+
         $this->assertEquals($part->storageLocation->name, $location->name);
     }
 }

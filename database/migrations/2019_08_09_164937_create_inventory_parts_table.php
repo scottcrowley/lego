@@ -31,13 +31,12 @@ class CreateInventoryPartsTable extends Migration
                 ->on('colors')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-                
+
             $table->foreign('inventory_id')
                 ->references('id')
                 ->on('inventories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            
         });
     }
 

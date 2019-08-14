@@ -15,7 +15,7 @@ class PartCategoryTest extends TestCase
         $this->signIn();
 
         $location = create('App\StorageLocation');
-        
+
         $partCategory = create('App\PartCategory');
 
         $location->addPartCategory($partCategory);

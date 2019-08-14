@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PartRelationshipsTest extends TestCase
@@ -26,11 +25,11 @@ class PartRelationshipsTest extends TestCase
     public function an_authenticated_user_can_filter_results_by_parent_part_num()
     {
         $this->signIn();
-        
+
         $parent = create('App\Part', ['part_num' => 'parentXYZ']);
 
         $relationship1 = create('App\PartRelationship', ['parent_part_num' => $parent->part_num]);
-        
+
         $relationship2 = create('App\PartRelationship');
 
         $this->get(route('api.lego.part_relationships', ['parent_part_num' => 'parentXYZ']))
@@ -44,7 +43,7 @@ class PartRelationshipsTest extends TestCase
     public function an_authenticated_user_can_sort_results_by_parent_part_num()
     {
         $this->signIn();
-        
+
         $parentC = create('App\Part', ['part_num' => 'parentC']);
         $parentA = create('App\Part', ['part_num' => 'parentA']);
         $parentB = create('App\Part', ['part_num' => 'parentB']);
@@ -61,7 +60,7 @@ class PartRelationshipsTest extends TestCase
     public function an_authenticated_user_can_sort_results_by_parent_part_num_in_descending_order()
     {
         $this->signIn();
-        
+
         $parentC = create('App\Part', ['part_num' => 'parentC']);
         $parentA = create('App\Part', ['part_num' => 'parentA']);
         $parentB = create('App\Part', ['part_num' => 'parentB']);
@@ -78,7 +77,7 @@ class PartRelationshipsTest extends TestCase
     public function an_authenticated_user_can_sort_results_by_child_part_num()
     {
         $this->signIn();
-        
+
         $childC = create('App\Part', ['part_num' => 'childC']);
         $childA = create('App\Part', ['part_num' => 'childA']);
         $childB = create('App\Part', ['part_num' => 'childB']);
@@ -95,7 +94,7 @@ class PartRelationshipsTest extends TestCase
     public function an_authenticated_user_can_sort_results_by_child_part_num_in_descending_order()
     {
         $this->signIn();
-        
+
         $childC = create('App\Part', ['part_num' => 'childC']);
         $childA = create('App\Part', ['part_num' => 'childA']);
         $childB = create('App\Part', ['part_num' => 'childB']);

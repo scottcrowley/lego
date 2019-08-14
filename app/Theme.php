@@ -12,21 +12,21 @@ class Theme extends Model
      * @var boolean
      */
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $guarded = [];
-    
+
     /**
     * label for the theme's parent hierarchy
     *
     * @var string
     */
     public $parentsLabel = '';
-    
+
     /**
     * label for the entire theme's hierarchy
     *
@@ -54,7 +54,7 @@ class Theme extends Model
     /**
      * gets all parent themes of the current theme. Also calculates a string label representaion of the parent hierarchy
      *
-     * @return array 
+     * @return array
      */
     public function getAllParents()
     {
@@ -86,7 +86,7 @@ class Theme extends Model
 
             $this->parentsLabel = $label;
 
-            $this->themeLabel = $label . ' -> ' . $this->name;
+            $this->themeLabel = $label.' -> '.$this->name;
         }
 
         return $parents;

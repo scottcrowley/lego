@@ -91,7 +91,7 @@ class ThemesController extends Controller
         ]);
 
         $theme->update($data);
-        
+
         session()->flash('flash', ['message' => 'Theme updated successfully!', 'level' => 'success']);
 
         if ($request->wantsJson()) {

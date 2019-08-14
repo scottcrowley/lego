@@ -28,7 +28,7 @@ class PartCategoriesTest extends TestCase
         $this->signIn();
 
         $first = create('App\PartCategory', ['name' => 'First Category']);
-        
+
         $second = create('App\PartCategory', ['name' => 'Second Category']);
 
         $this->get(route('api.lego.part_categories', ['name' => 'Second Category']))
@@ -48,7 +48,7 @@ class PartCategoriesTest extends TestCase
         $this->get(route('api.lego.part_categories', ['sort' => 'name']))
             ->assertSeeInOrder([$categoriesA->name, $categoriesB->name, $categoriesC->name]);
     }
-    
+
     /** @test */
     public function an_authenticated_user_can_sort_categories_by_name_in_descending_order()
     {

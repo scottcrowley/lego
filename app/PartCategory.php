@@ -12,7 +12,7 @@ class PartCategory extends Model
      * @var boolean
      */
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +20,7 @@ class PartCategory extends Model
      */
     protected $guarded = [];
 
-    public function storageLocation() 
+    public function storageLocation()
     {
         return $this->belongsToMany(StorageLocation::class);
     }

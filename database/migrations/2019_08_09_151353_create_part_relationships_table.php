@@ -23,7 +23,7 @@ class CreatePartRelationshipsTable extends Migration
                 ->on('parts')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            
+
             $table->foreign('parent_part_num')
                 ->references('part_num')
                 ->on('parts')

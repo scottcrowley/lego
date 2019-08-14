@@ -87,10 +87,10 @@ $factory->define(App\Color::class, function (Faker $faker) {
 $factory->define(App\PartRelationship::class, function (Faker $faker) {
     return [
         'rel_type' => 'P',
-        'child_part_num' => function() {
+        'child_part_num' => function () {
             return factory(App\Part::class)->create()->part_num;
         },
-        'parent_part_num' => function() {
+        'parent_part_num' => function () {
             return factory(App\Part::class)->create()->part_num;
         }
     ];
