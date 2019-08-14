@@ -77,4 +77,19 @@ class ThemesTest extends TestCase
         $this->get(route('api.lego.themes', ['sortdesc' => 'name']))
             ->assertSeeInOrder([$themeC->name, $themeB->name, $themeA->name]);
     }
+
+    /** @test */
+    public function an_authenticated_user_can_view_the_heirarchy_name_of_a_theme()
+    {
+        $this->signIn();
+
+        $topParent = create('App\Theme', ['name' => 'top parent']);
+
+        $parent = create('App\Theme', ['name' => 'parent', 'parent_id' => $topParent->id]);
+
+        $child = create('App\Theme', ['name' => 'child', 'parent_id' => $parent->id]);
+
+        $this->get(route('api.lego.themes', ['name' => 'child']))
+            ->assertSee('top parent -> parent');
+    }
 }

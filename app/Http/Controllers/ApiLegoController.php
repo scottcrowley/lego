@@ -17,6 +17,8 @@ use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
 {
+    use ApiHelpers;
+
     /**
      * default number of results to display
      *
@@ -44,6 +46,8 @@ class ApiLegoController extends Controller
     {
         $colors = $filters->apply(Color::all());
 
+        $colors = $colors->values();
+
         return $colors->paginate($this->defaultPerPage);
     }
 
@@ -56,6 +60,8 @@ class ApiLegoController extends Controller
     public function getPartCategories(PartCategoryFilters $filters)
     {
         $categories = $filters->apply(PartCategory::all());
+
+        $categories = $categories->values();
 
         return $categories->paginate($this->defaultPerPage);
     }
@@ -83,7 +89,20 @@ class ApiLegoController extends Controller
     {
         $themes = $filters->apply(Theme::all());
 
-        return $themes->paginate($this->defaultPerPage);
+        $themes = $themes->values();
+
+        $page = ($themes->paginate($this->defaultPerPage))->toArray();
+
+        if (count($page['data'])) {
+            $allThemes = Theme::all();
+
+            foreach ($page['data'] as $k => $theme) {
+                $theme = $this->themeParentHierarchy($theme, $allThemes);
+                $page['data'][$k] = $theme;
+            }
+        }
+
+        return $page;
     }
 
     /**
@@ -95,6 +114,8 @@ class ApiLegoController extends Controller
     public function getParts(PartFilters $filters)
     {
         $parts = $filters->apply(Part::all());
+
+        $parts = $parts->values();
 
         return $parts->paginate($this->defaultPerPage);
     }
@@ -109,6 +130,30 @@ class ApiLegoController extends Controller
     {
         $sets = $filters->apply(Set::all());
 
-        return $sets->paginate($this->defaultPerPage);
+        $sets = $sets->values();
+
+        $page = ($sets->paginate($this->defaultPerPage))->toArray();
+
+        if (count($page['data'])) {
+            $themes = Theme::all();
+
+            foreach ($page['data'] as $k => $set) {
+                if (is_null($set['theme_id'])) {
+                    continue;
+                }
+
+                $setTheme = $themes->where('id', $set['theme_id'])->first();
+
+                $theme = ($this->themeParentHierarchy($setTheme->toArray(), $themes))->toArray();
+
+                $set['theme_details'] = $theme;
+
+                $set['theme_label'] = (is_null($theme['parent_id'])) ? $theme['name'] : $theme['parents_label'].' -> '.$theme['name'];
+
+                $page['data'][$k] = $set;
+            }
+        }
+
+        return $page;
     }
 }

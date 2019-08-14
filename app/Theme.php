@@ -35,6 +35,13 @@ class Theme extends Model
     public $themeLabel = '';
 
     /**
+     * The relationships to always eager load
+     *
+     * @var array
+     */
+    public $with = ['parent'];
+
+    /**
      * A parent belongs to one theme
      *
      * @return belongsTo
@@ -42,13 +49,6 @@ class Theme extends Model
     public function parent($theme = null)
     {
         return $this->belongsTo(Theme::class, 'parent_id');
-        // $parentId = (is_null($theme)) ? $this->parent_id : $theme->parent_id;
-
-        // if (is_null($parentId)) {
-        //     return null;
-        // }
-
-        // return Theme::find($parentId);
     }
 
     /**

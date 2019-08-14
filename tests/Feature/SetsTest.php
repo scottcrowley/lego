@@ -133,4 +133,21 @@ class SetsTest extends TestCase
         $this->get(route('api.lego.sets', ['sortdesc' => 'name']))
             ->assertSeeInOrder([$setC->name, $setB->name, $setA->name]);
     }
+
+    /** @test */
+    public function an_authenticated_user_can_view_a_theme_heirarchy_for_a_set()
+    {
+        $this->signIn();
+
+        $topParentTheme = create('App\Theme', ['name' => 'top parent theme']);
+
+        $parentTheme = create('App\Theme', ['name' => 'parent theme', 'parent_id' => $topParentTheme->id]);
+
+        $childTheme = create('App\Theme', ['name' => 'child theme', 'parent_id' => $parentTheme->id]);
+
+        $set = create('App\Set', ['theme_id' => $childTheme->id]);
+
+        $this->get(route('api.lego.sets'))
+            ->assertSee('top parent theme -> parent theme -> child theme');
+    }
 }
