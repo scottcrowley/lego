@@ -10,43 +10,71 @@ class ThemesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function an_authenticated_user_can_view_all_themes()
+    public function an_authenticated_user_can_retrieve_all_themes()
     {
+        $this->withoutExceptionHandling();
+
         $this->signIn();
 
         $theme = create('App\Theme');
 
-        $this->get(route('themes.index'))
+        $this->get(route('api.lego.themes'))
             ->assertSee($theme->name);
     }
 
     /** @test */
-    public function an_authenticated_user_can_add_a_new_theme()
+    public function an_authenticated_user_can_filter_results_by_name()
     {
         $this->signIn();
 
-        $theme = makeRaw('App\Theme');
+        $first = create('App\Theme', ['name' => 'First Theme']);
+        
+        $second = create('App\Theme', ['name' => 'Second Theme']);
 
-        $this->post(route('themes.store'), $theme)
-            ->assertRedirect(route('themes.index'));
-
-        $this->get(route('themes.index'))
-            ->assertSee($theme['name']);
+        $this->get(route('api.lego.themes', ['name' => 'Second Theme']))
+            ->assertSee($second->name)
+            ->assertDontSee($first->name);
     }
 
     /** @test */
-    public function an_authenticated_user_can_update_a_theme()
+    public function an_authenticated_user_can_filter_results_by_parent_theme()
     {
         $this->signIn();
 
-        $theme = createRaw('App\Theme');
+        $parent = create('App\Theme');
+
+        $first = create('App\Theme', ['parent_id' => $parent->id]);
         
-        $theme['name'] = 'New Name';
+        $second = create('App\Theme');
 
-        $this->patch(route('themes.update', $theme['id']), $theme)
-            ->assertRedirect(route('themes.index'));
+        $this->get(route('api.lego.themes', ['parent_id' => $parent->id]))
+            ->assertSee($first->name)
+            ->assertDontSee($second->name);
+    }
 
-        $this->get(route('themes.index'))
-            ->assertSee($theme['name']);
+    /** @test */
+    public function an_authenticated_user_can_sort_themes_by_name()
+    {
+        $this->signIn();
+
+        $themeC = create('App\Theme', ['name' => 'C Theme']);
+        $themeA = create('App\Theme', ['name' => 'A Theme']);
+        $themeB = create('App\Theme', ['name' => 'B Theme']);
+
+        $this->get(route('api.lego.themes', ['sort' => 'name']))
+            ->assertSeeInOrder([$themeA->name, $themeB->name, $themeC->name]);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_sort_themes_by_name_in_descending_order()
+    {
+        $this->signIn();
+
+        $themeC = create('App\Theme', ['name' => 'C Theme']);
+        $themeA = create('App\Theme', ['name' => 'A Theme']);
+        $themeB = create('App\Theme', ['name' => 'B Theme']);
+
+        $this->get(route('api.lego.themes', ['sortdesc' => 'name']))
+            ->assertSeeInOrder([$themeC->name, $themeB->name, $themeA->name]);
     }
 }

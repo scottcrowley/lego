@@ -18,29 +18,6 @@ Route::get('/', function () {
 });
 
 Route::group([
-    'middleware' => 'auth'
-], function () {
-    Route::get('/themes', 'ThemesController@index')->name('themes.index');
-    Route::post('/themes', 'ThemesController@store')->name('themes.store');
-    Route::patch('/themes/{theme}', 'ThemesController@update')->name('themes.update');
-    
-    Route::get('/colors', 'ColorsController@index')->name('colors.index');
-    Route::post('/colors', 'ColorsController@store')->name('colors.store');
-
-    Route::get('/sets', 'SetsController@index')->name('sets.index');
-    Route::post('/sets', 'SetsController@store')->name('sets.store');
-
-    Route::get('/parts', 'PartsController@index')->name('parts.index');
-    Route::post('/parts', 'PartsController@store')->name('parts.store');
-
-    Route::get('/part_categories', 'PartCategoriesController@index')->name('part_categories.index');
-    Route::post('/part_categories', 'PartCategoriesController@store')->name('part_categories.store');
-
-    Route::get('/part_relationships', 'PartRelationshipsController@index')->name('part_relationships.index');
-    Route::post('/part_relationships', 'PartRelationshipsController@store')->name('part_relationships.store');
-});
-
-Route::group([
     'prefix' => 'profile',
     'middleware' => 'auth'
 ], function () {
@@ -80,43 +57,21 @@ Route::group([
     Route::group([
         'prefix' => 'lego',
     ], function () {
-        Route::get('/sets', function () {
-            return view('lego.sets.index');
-        })->name('lego.sets.index');
-        Route::get('/sets-grid', function () {
-            return view('lego.sets.grid');
-        })->name('lego.sets.grid');
-        Route::get('/themes', function () {
-            return view('lego.themes');
-        })->name('lego.themes');
-        Route::get('/part_categories', function () {
-            return view('lego.part_categories');
-        })->name('lego.part_categories');
-        Route::get('/parts', function () {
-            return view('lego.parts');
-        })->name('lego.parts');
-        Route::get('/colors', function () {
-            return view('lego.colors');
-        })->name('lego.colors');
+        Route::view('/colors', 'lego.colors')->name('lego.colors');
+        Route::view('/part_categories', 'lego.part_categories')->name('lego.part_categories');
+        Route::view('/parts', 'lego.parts')->name('lego.parts');
+        Route::view('/sets', 'lego.sets.index')->name('lego.sets.index');
+        Route::view('/sets-grid', 'lego.sets.grid')->name('lego.sets.grid');
+        Route::view('/themes', 'lego.themes')->name('lego.themes');
     });
     Route::group([
         'prefix' => 'legouser',
     ], function () {
-        Route::get('/setlists', function () {
-            return view('legouser.setlists');
-        })->name('legouser.setlists');
-        Route::get('/sets', function () {
-            return view('legouser.sets');
-        })->name('legouser.sets');
-        Route::get('/parts', function () {
-            return view('legouser.parts');
-        })->name('legouser.parts');
-        Route::get('/loose_parts', function () {
-            return view('legouser.loose_parts');
-        })->name('legouser.loose_parts');
-        Route::get('/lost_parts', function () {
-            return view('legouser.lost_parts');
-        })->name('legouser.lost_parts');
+        Route::view('/setlists', 'legouser.setlists')->name('legouser.setlists');
+        Route::view('/sets', 'legouser.sets')->name('legouser.sets');
+        Route::view('/parts', 'legouser.parts')->name('legouser.parts');
+        Route::view('/loose_parts', 'legouser.loose_parts')->name('legouser.loose_parts');
+        Route::view('/lost_parts', 'legouser.lost_parts')->name('legouser.lost_parts');
     });
 });
 
@@ -124,15 +79,15 @@ Route::group([
     'prefix' => 'api/lego',
     'middleware' => 'rebrickable'
 ], function () {
-    Route::get('/clear/{type}', 'RebrickableApiLegoController@clearCache')->name('api.lego.clear');
-    Route::get('/colors', 'RebrickableApiLegoController@getColors')->name('api.lego.colors');
-    Route::get('/themes', 'RebrickableApiLegoController@getThemes')->name('api.lego.themes');
-    Route::get('/themes/{id}', 'RebrickableApiLegoController@getTheme')->name('api.lego.themes.show');
-    Route::get('/part_categories', 'RebrickableApiLegoController@getPartCategories')->name('api.lego.part_categories');
-    Route::get('/sets', 'RebrickableApiLegoController@getSets')->name('api.lego.sets');
-    Route::get('/sets/{setNum}', 'RebrickableApiLegoController@getSet')->name('api.lego.sets.show');
-    Route::get('/parts', 'RebrickableApiLegoController@getParts')->name('api.lego.parts');
-    Route::get('/parts/{partNum}', 'RebrickableApiLegoController@getPart')->name('api.lego.parts.show');
+    Route::get('/colors', 'ApiLegoController@getColors')->name('api.lego.colors');
+    Route::get('/part_categories', 'ApiLegoController@getPartCategories')->name('api.lego.part_categories');
+    Route::get('/part_relationships', 'ApiLegoController@getPartRelationships')->name('api.lego.part_relationships');
+    Route::get('/parts', 'ApiLegoController@getParts')->name('api.lego.parts');
+    // Route::get('/parts/{partNum}', 'ApiLegoController@getPart')->name('api.lego.parts.show');
+    Route::get('/sets', 'ApiLegoController@getSets')->name('api.lego.sets');
+    // Route::get('/sets/{setNum}', 'ApiLegoController@getSet')->name('api.lego.sets.show');
+    Route::get('/themes', 'ApiLegoController@getThemes')->name('api.lego.themes');
+    // Route::get('/themes/{id}', 'ApiLegoController@getTheme')->name('api.lego.themes.show');
 });
 
 Route::group([
@@ -145,12 +100,4 @@ Route::group([
     Route::get('/sets', 'RebrickableApiUserController@getSets')->name('api.users.sets');
     Route::get('/allparts', 'RebrickableApiUserController@getAllParts')->name('api.users.allparts');
     Route::get('/profile', 'RebrickableApiUserController@getProfile')->name('api.users.profile');
-});
-
-Route::group([
-    'prefix' => 'csv',
-    'middleware' => 'rebrickable'
-], function () {
-    Route::get('/clear/{type}', 'RebrickableCsvController@clearCache');
-    Route::get('/{type}', 'RebrickableCsvController@getType');
 });

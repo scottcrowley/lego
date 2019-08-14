@@ -10,25 +10,85 @@ class PartsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function an_authenticated_user_can_view_all_parts()
+    public function an_authenticated_user_can_retrieve_all_parts()
     {
+        $this->withoutExceptionHandling();
+
         $this->signIn();
 
         $part = create('App\Part');
 
-        $this->get(route('parts.index'))
+        $this->get(route('api.lego.parts'))
             ->assertSee($part->name);
     }
 
     /** @test */
-    public function an_authenticated_user_can_add_a_new_part()
+    public function an_authenticated_user_can_filter_results_by_name()
     {
         $this->signIn();
 
-        $part = makeRaw('App\Part');
+        $first = create('App\Part', ['name' => 'Part 1']);
         
-        $this->post(route('parts.store'), $part);
+        $second = create('App\Part', ['name' => 'Part 2']);
 
-        $this->assertDatabaseHas('parts', $part);
+        $this->get(route('api.lego.parts', ['name' => 'Part 2']))
+            ->assertSee($second->name)
+            ->assertDontSee($first->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_by_part_num()
+    {
+        $this->signIn();
+
+        $first = create('App\Part', ['part_num' => 'Part 1']);
+        
+        $second = create('App\Part', ['part_num' => 'Part 2']);
+
+        $this->get(route('api.lego.parts', ['part_num' => 'Part 2']))
+            ->assertSee($second->name)
+            ->assertDontSee($first->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_by_part_category()
+    {
+        $this->signIn();
+
+        $category = create('App\PartCategory');
+
+        $first = create('App\Part');
+        
+        $second = create('App\Part', ['part_category_id' => $category->id]);
+
+        $this->get(route('api.lego.parts', ['part_category_id' => $category->id]))
+            ->assertSee($second->name)
+            ->assertDontSee($first->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_sort_parts_by_name()
+    {
+        $this->signIn();
+
+        $partC = create('App\Part', ['name' => 'C Part']);
+        $partA = create('App\Part', ['name' => 'A Part']);
+        $partB = create('App\Part', ['name' => 'B Part']);
+
+        $this->get(route('api.lego.parts', ['sort' => 'name']))
+            ->assertSeeInOrder([$partA->name, $partB->name, $partC->name]);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_sort_parts_by_name_in_descending_order()
+    {
+        $this->signIn();
+
+        $partC = create('App\Part', ['name' => 'C Part']);
+        $partA = create('App\Part', ['name' => 'A Part']);
+        $partB = create('App\Part', ['name' => 'B Part']);
+
+        $this->get(route('api.lego.parts', ['sortdesc' => 'name']))
+            ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
 }

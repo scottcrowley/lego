@@ -11,25 +11,53 @@ class ColorsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function an_authenticated_user_can_view_all_colors()
+    public function an_authenticated_user_can_retrieve_all_colors()
     {
         $this->signIn();
 
         $color = create('App\Color');
 
-        $this->get(route('colors.index'))
+        $this->get(route('api.lego.colors'))
             ->assertSee($color->name);
     }
 
     /** @test */
-    public function an_authenticated_user_can_add_a_new_color()
+    public function an_authenticated_user_can_filter_results_by_color_name()
     {
         $this->signIn();
 
-        $color = makeRaw('App\Color');
+        $white = create('App\Color', ['name' => 'white']);
+        
+        $black = create('App\Color', ['name' => 'black']);
 
-        $this->post(route('colors.store'), $color);
+        $this->get(route('api.lego.colors', ['name' => 'black']))
+            ->assertSee($black->name)
+            ->assertDontSee($white->name);
+    }
 
-        $this->assertDatabaseHas('colors', $color);
+    /** @test */
+    public function an_authenticated_user_can_sort_colors_by_name()
+    {
+        $this->signIn();
+
+        $colorC = create('App\Color', ['name' => 'C Color']);
+        $colorA = create('App\Color', ['name' => 'A Color']);
+        $colorB = create('App\Color', ['name' => 'B Color']);
+
+        $this->get(route('api.lego.colors', ['sort' => 'name']))
+            ->assertSeeInOrder([$colorA->name, $colorB->name, $colorC->name]);
+    }
+    
+    /** @test */
+    public function an_authenticated_user_can_sort_colors_by_name_in_descending_order()
+    {
+        $this->signIn();
+
+        $colorC = create('App\Color', ['name' => 'C Color']);
+        $colorA = create('App\Color', ['name' => 'A Color']);
+        $colorB = create('App\Color', ['name' => 'B Color']);
+
+        $this->get(route('api.lego.colors', ['sortdesc' => 'name']))
+            ->assertSeeInOrder([$colorC->name, $colorB->name, $colorA->name]);
     }
 }
