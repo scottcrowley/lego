@@ -22,7 +22,7 @@
                     {label: 'Year', field: 'year', title: false, sortable: true, sorted: true, sortdesc: true, boolean: false},
                     {label: 'Pieces', field: 'num_parts', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
-                :allowedparams="['name', 'set_num', 'theme_id', 'year', 'beforeyear', 'afteryear']"
+                :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear']"
                 endpoint="/api/lego/sets"></data-grid>
         </div>
     </div>

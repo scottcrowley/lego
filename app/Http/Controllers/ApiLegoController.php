@@ -40,7 +40,7 @@ class ApiLegoController extends Controller
      * get all colors
      *
      * @param ColorFilters $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getColors(ColorFilters $filters)
     {
@@ -55,7 +55,7 @@ class ApiLegoController extends Controller
      * get all part categories
      *
      * @param PartCategoryFilters $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPartCategories(PartCategoryFilters $filters)
     {
@@ -70,7 +70,7 @@ class ApiLegoController extends Controller
      * get all part relationships
      *
      * @param PartRelationshipFilters $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPartRelationships(PartRelationshipFilters $filters)
     {
@@ -83,7 +83,7 @@ class ApiLegoController extends Controller
      * get all part relationships
      *
      * @param ThemeFilter $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getThemes(ThemeFilters $filters)
     {
@@ -109,7 +109,7 @@ class ApiLegoController extends Controller
      * get all parts
      *
      * @param PartFilters $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getParts(PartFilters $filters)
     {
@@ -124,7 +124,7 @@ class ApiLegoController extends Controller
      * get all sets
      *
      * @param SetFilters $filters
-     * @return Illuminate\Pagination\Paginator
+     * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function getSets(SetFilters $filters)
     {

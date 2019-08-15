@@ -48,12 +48,12 @@ class PartCategory extends Model
     }
 
     /**
-     * Custom getter for part count
+     * Custom getter for part count. DO NOT USE parts RELATIONSHIP
      *
      * @return int
      */
     public function getPartCountAttribute()
     {
-        return $this->parts->count();
+        return Part::where('part_category_id', $this->id)->count();
     }
 }

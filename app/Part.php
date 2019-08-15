@@ -50,12 +50,12 @@ class Part extends Model
     }
 
     /**
-     * Custom getter for category name
+     * Custom getter for category name. DO NOT USE THE category RELATIONSHIP
      *
      * @return string
      */
     public function getCategoryLabelAttribute()
     {
-        return $this->category->name;
+        return PartCategory::find($this->part_category_id)->name;
     }
 }

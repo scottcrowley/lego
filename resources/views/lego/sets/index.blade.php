@@ -17,7 +17,7 @@
                     {name: 'Year', sortable: true, sorted: false, sortDesc: false, boolean: false}, 
                     {name: 'Pieces', sortable: true, sorted: false, sortDesc: false, boolean: false}]"
                 :valnames="['set_num', 'name', 'theme_label', 'year', 'num_parts']"
-                :allowedparams="['name', 'set_num', 'theme_id', 'year', 'beforeyear', 'afteryear']"
+                :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear']"
                 endpoint="/api/lego/sets"></data-table>
         </div>
     </div>

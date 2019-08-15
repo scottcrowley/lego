@@ -9,7 +9,7 @@ class SetFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'set_num', 'theme_id', 'year', 'beforeyear', 'afteryear'];
+    protected $filters = ['sort', 'sortdesc', 'name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear'];
 
     /**
      * Search the collection for a given theme id.
@@ -45,24 +45,24 @@ class SetFilters extends Filters
     }
 
     /**
-     * Search the collection for a results before a given year.
+     * Search the collection for a results before or equal to a given year.
      *
      * @param  string $value
      * @return \Illuminate\Support\Collection
      */
-    protected function beforeyear($value)
+    protected function minyear($value)
     {
-        return $this->collection = $this->collection->where('year', '<', $value);
+        return $this->collection = $this->collection->where('year', '<=', $value);
     }
 
     /**
-     * Search the collection for a results before a given year.
+     * Search the collection for a results before or equal to a given year.
      *
      * @param  string $value
      * @return \Illuminate\Support\Collection
      */
-    protected function afteryear($value)
+    protected function maxyear($value)
     {
-        return $this->collection = $this->collection->where('year', '>', $value);
+        return $this->collection = $this->collection->where('year', '>=', $value);
     }
 }

@@ -12,8 +12,6 @@ class PartsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_retrieve_all_parts()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $part = create('App\Part');
@@ -28,7 +26,7 @@ class PartsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Part', ['name' => 'Part 1']);
-        
+
         $second = create('App\Part', ['name' => 'Part 2']);
 
         $this->get(route('api.lego.parts', ['name' => 'Part 2']))
@@ -42,7 +40,7 @@ class PartsTest extends TestCase
         $this->signIn();
 
         $first = create('App\Part', ['part_num' => 'Part 1']);
-        
+
         $second = create('App\Part', ['part_num' => 'Part 2']);
 
         $this->get(route('api.lego.parts', ['part_num' => 'Part 2']))
@@ -58,7 +56,7 @@ class PartsTest extends TestCase
         $category = create('App\PartCategory');
 
         $first = create('App\Part');
-        
+
         $second = create('App\Part', ['part_category_id' => $category->id]);
 
         $this->get(route('api.lego.parts', ['part_category_id' => $category->id]))

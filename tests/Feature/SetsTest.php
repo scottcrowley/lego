@@ -89,7 +89,7 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['year' => '2010']);
 
-        $this->get(route('api.lego.sets', ['beforeyear' => '2012']))
+        $this->get(route('api.lego.sets', ['minyear' => '2012']))
             ->assertSee($second->name)
             ->assertDontSee($first->name);
     }
@@ -103,7 +103,7 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['year' => '2010']);
 
-        $this->get(route('api.lego.sets', ['afteryear' => '2005']))
+        $this->get(route('api.lego.sets', ['maxyear' => '2005']))
             ->assertSee($second->name)
             ->assertDontSee($first->name);
     }
