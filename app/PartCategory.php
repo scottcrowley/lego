@@ -20,8 +20,40 @@ class PartCategory extends Model
      */
     protected $guarded = [];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['part_count'];
+
+    /**
+     * A part category belongs to many storage locations
+     *
+     * @return belongsToMany
+     */
     public function storageLocation()
     {
         return $this->belongsToMany(StorageLocation::class);
+    }
+
+    /**
+     * A part category has many parts
+     *
+     * @return hasMany
+     */
+    public function parts()
+    {
+        return $this->hasMany(Part::class);
+    }
+
+    /**
+     * Custom getter for part count
+     *
+     * @return int
+     */
+    public function getPartCountAttribute()
+    {
+        return $this->parts->count();
     }
 }

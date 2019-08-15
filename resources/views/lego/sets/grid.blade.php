@@ -10,16 +10,19 @@
         <div class="bg-white p-4 py-6 rounded-b">
             <data-grid 
                 label="Sets" 
-                image_field="set_img_url" 
+                image_base_url="https://cdn.rebrickable.com/media/sets/"
+                image_extension=".jpg"
+                image_field="set_num" 
                 image_label_field="name" 
                 per_page="25" 
                 :valnames="[
-                    {label: 'Set Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false},
-                    {label: 'Set Number', field: 'set_num', title: false, sortable: true, sorted: false, sortdesc: false},
-                    {label: 'Theme', field: 'theme_label', title: false, sortable: false, sorted: false, sortdesc: false},
-                    {label: 'Year', field: 'year', title: false, sortable: true, sorted: true, sortdesc: true},
-                    {label: 'Pieces', field: 'num_parts', title: false, sortable: true, sorted: false, sortdesc: false},
+                    {label: 'Set Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Set Number', field: 'set_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Theme', field: 'theme_label', title: false, sortable: false, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Year', field: 'year', title: false, sortable: true, sorted: true, sortdesc: true, boolean: false},
+                    {label: 'Pieces', field: 'num_parts', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
+                :allowedparams="['name', 'set_num', 'theme_id', 'year', 'beforeyear', 'afteryear']"
                 endpoint="/api/lego/sets"></data-grid>
         </div>
     </div>

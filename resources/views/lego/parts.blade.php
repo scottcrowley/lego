@@ -10,10 +10,11 @@
             <data-table 
                 label="Parts" 
                 :colnames="[
-                    {name: 'Part Number', sortable: true, sorted: false, sortDesc: false}, 
-                    {name: 'Name', sortable: true, sorted: true, sortDesc: false}, 
-                    {name: 'Category', sortable: false, sorted: false, sortDesc: false}]"
-                :valnames="['part_num', 'name', 'category_label']" 
+                    {name: 'Part Number', sortable: true, sorted: false, sortDesc: false, boolean: false}, 
+                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false}, 
+                    {name: 'Category', sortable: false, sorted: false, sortDesc: false, boolean: false}]"
+                :valnames="['part_num', 'name', 'category_label']"
+                :allowedparams="['name', 'part_num', 'part_category_id']"
                 endpoint="/api/lego/parts"></data-table>
         </div>
     </div>

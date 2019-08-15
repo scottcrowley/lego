@@ -10,10 +10,11 @@
             <data-table 
                 label="Colors" 
                 :colnames="[
-                    {name: 'Name', sortable: true, sorted: true, sortDesc: false}, 
-                    {name: 'RGB Value', sortable: true, sorted: false, sortDesc: false}, 
-                    {name: 'Transparenet', sortable: true, sorted: false, sortDesc: false}]"
+                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false}, 
+                    {name: 'RGB Value', sortable: true, sorted: false, sortDesc: false, boolean: false}, 
+                    {name: 'Transparent', sortable: true, sorted: false, sortDesc: false, boolean: true}]"
                 :valnames="['name', 'rgb', 'is_trans']" 
+                :allowedparams="['name']"
                 endpoint="/api/lego/colors"></data-table>
         </div>
     </div>

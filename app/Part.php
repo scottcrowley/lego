@@ -23,6 +23,13 @@ class Part extends Model
     protected $guarded = [];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['category_label'];
+
+    /**
      * A part belongs to one part category
      *
      * @return belongsTo
@@ -40,5 +47,15 @@ class Part extends Model
     public function storageLocation()
     {
         return $this->hasOneDeepFromRelations($this->category(), (new PartCategory)->storageLocation());
+    }
+
+    /**
+     * Custom getter for category name
+     *
+     * @return string
+     */
+    public function getCategoryLabelAttribute()
+    {
+        return $this->category->name;
     }
 }

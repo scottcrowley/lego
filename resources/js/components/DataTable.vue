@@ -14,20 +14,17 @@
                     <td colspan="4" class="h-8 loader loader-lg"></td>
                 </tr>
                 <tr v-for="(data, index) in dataSet" :key="index" v-show="!loading">
-                    <td v-for="valname in valnames">
+                    <td v-for="(valname, vIndex) in valnames">
                         <span v-if="valname == 'rgb'" class="mr-1 -mb-px inline-block border border-secondary-darker w-3 h-3" :style="showColor(data[valname])"></span>
-                        {{ (data[valname] == true) ? 'Yes' : ((data[valname] == false) ? 'No' : data[valname]) }}
+                        {{ ((colnames[vIndex].boolean === true) ? ((data[valname] == true || data[valname] == 't') ? 'Yes' : 'No') : data[valname]) }}
                     </td>
                 </tr>
             </tbody>
         </table>
         <div class="mt-4 flex items-center" v-show="!loading">
             <p class="text-sm flex-1">
-                <span v-text="allData.total"></span> <span v-text="label"></span> found on Rebrickable
+                <span v-text="allData.total"></span> <span v-text="label"></span> found
             </p>
-            <div>
-                <a href="" class="text-xs text-right block" @click.prevent="clearCache">Clear Cache</a>
-            </div>
             <div class="page-navigation ml-2">
                 <pagination
                         class="mb-0"
@@ -56,11 +53,15 @@
             valnames: {
                 type: Array,
                 default: []
-            }, 
+            },
+            allowedparams: {
+                type: Array,
+                default: []
+            },
             endpoint: {
                 type: String,
                 default: ''
-            }
+            },
         },
         data() {
             return {
@@ -73,6 +74,7 @@
                 loading: true,
                 sortedCol: '',
                 sortdesc: false,
+                presentParamsString: '',
                 defaultPage: 0,
                 location: null
             }
@@ -93,6 +95,8 @@
             checkUrl() {
                 this.location = window.location;
                 let url = new URL(this.location.href);
+                this.checkAllowedParams(url.search);
+                
                 let page = url.searchParams.get('page');
                 let sort = url.searchParams.get('sort');
                 let sortdesc = url.searchParams.get('sortdesc');
@@ -110,6 +114,26 @@
                 }
 
                 return updateSort;
+            },
+            checkAllowedParams(search) {
+                if (search.startsWith('?')) {
+                    search = search.substr(1);
+                }
+                if (search) {
+                    let urlParams = search.split('&');
+                    urlParams.forEach(this.processParam);
+                }
+            },
+            processParam(param) {
+                let details = param.split('=');
+                if (
+                    details[0] != 'page'
+                    && details[0] != 'sort'
+                    && details[0] != 'sortdesc'
+                    && this.allowedparams.includes(details[0])
+                ) {
+                    this.presentParamsString = this.presentParamsString + '&' + param;
+                }
             },
             checkSorted() {
                 let cols = this.colnames;
@@ -178,6 +202,8 @@
                     params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
                 }
 
+                params = params + this.presentParamsString;
+
                 axios.get(this.endpoint + params)
                     .then(response => {
                         this.loading = false;
@@ -205,18 +231,6 @@
                             console.log('Error', error.message);
                         }
                         console.log('Config', error.config);
-                    });
-            },
-            clearCache() {
-                let types = this.endpoint.split('/');
-                let type = types[types.length-1];
-                this.dataSet = [];
-                this.allData = {};
-                this.loading = true;
-
-                axios.get('/api/lego/clear/' + type)
-                    .then(response => {
-                        this.getResults();
                     });
             },
             updateUrl(params) {

@@ -21,6 +21,13 @@ class Theme extends Model
     protected $guarded = [];
 
     /**
+     * The relationships to always eager load
+     *
+     * @var array
+     */
+    protected $with = ['parent'];
+
+    /**
     * label for the theme's parent hierarchy
     *
     * @var string
@@ -33,13 +40,6 @@ class Theme extends Model
     * @var string
     */
     public $themeLabel = '';
-
-    /**
-     * The relationships to always eager load
-     *
-     * @var array
-     */
-    public $with = ['parent'];
 
     /**
      * A parent belongs to one theme

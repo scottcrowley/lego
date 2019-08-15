@@ -46,7 +46,7 @@
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content">
                     <div class="card-image" v-if="data[image_field] != ''">
-                        <img class="" :src="data[image_field]" :alt="data[image_label_field]">
+                        <img class="" :src="getImageSrc(data[image_field])" :alt="data[image_label_field]">
                     </div>
                     <div class="card-body">
                         <p v-for="valname in valnames" :class="(valname['title']) ? 'title' : ''">
@@ -59,11 +59,8 @@
 
         <div class="mt-4 flex flex-col md:flex-row items-center" v-show="!loading">
             <p class="text-sm flex-1 mb-2 md:mb-0">
-                <span v-text="allData.total"></span> <span v-text="label"></span> found on Rebrickable
+                <span v-text="allData.total"></span> <span v-text="label"></span> found
             </p>
-            <div class="mb-2 md:mb-0">
-                <a href="" class="text-xs text-right block" @click.prevent="clearCache">Clear Cache</a>
-            </div>
             <div class="page-navigation ml-2">
                 <pagination
                         class="mb-0"
@@ -85,6 +82,14 @@
                 type: String,
                 default: ''
             }, 
+            image_base_url: {
+                type: String,
+                default: ''
+            },
+            image_extension: {
+                type: String,
+                default: ''
+            },
             image_field: {
                 type: String,
                 default: ''
@@ -101,6 +106,10 @@
                 type: Array,
                 default: [{}]
             }, 
+            allowedparams: {
+                type: Array,
+                default: []
+            },
             endpoint: {
                 type: String,
                 default: ''
@@ -117,6 +126,7 @@
                 loading: true,
                 sortedCol: '',
                 sortdesc: false,
+                presentParamsString: '',
                 perpage: this.per_page,
                 currentPage: 1,
                 defaultPage: 0,
@@ -139,6 +149,8 @@
             checkUrl() {
                 this.location = window.location;
                 let url = new URL(this.location.href);
+                this.checkAllowedParams(url.search);
+
                 let page = url.searchParams.get('page');
                 let sort = url.searchParams.get('sort');
                 let sortdesc = url.searchParams.get('sortdesc');
@@ -160,6 +172,26 @@
                 document.getElementById('selectPerPage').value = this.perpage;
 
                 return updateSort;
+            },
+            checkAllowedParams(search) {
+                if (search.startsWith('?')) {
+                    search = search.substr(1);
+                }
+                if (search) {
+                    let urlParams = search.split('&');
+                    urlParams.forEach(this.processParam);
+                }
+            },
+            processParam(param) {
+                let details = param.split('=');
+                if (
+                    details[0] != 'page'
+                    && details[0] != 'sort'
+                    && details[0] != 'sortdesc'
+                    && this.allowedparams.includes(details[0])
+                ) {
+                    this.presentParamsString = this.presentParamsString + '&' + param;
+                }
             },
             checkSorted() {
                 let cols = this.valnames;
@@ -221,6 +253,8 @@
                     params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
                 }
 
+                params = params + this.presentParamsString;
+
                 axios.get(this.endpoint + params)
                     .then(response => {
                         this.loading = false;
@@ -250,21 +284,12 @@
                         console.log('Config', error.config);
                     });
             },
-            clearCache() {
-                let types = this.endpoint.split('/');
-                let type = types[types.length-1];
-                this.dataSet = [];
-                this.allData = {};
-                this.loading = true;
-
-                axios.get('/api/lego/clear/' + type)
-                    .then(response => {
-                        this.getResults();
-                    });
-            },
             updateUrl(params) {
                 history.pushState(null, null, params);
             },
+            getImageSrc(img) {
+                return this.image_base_url + img + this.image_extension;
+            }
         }
     };
 </script>
