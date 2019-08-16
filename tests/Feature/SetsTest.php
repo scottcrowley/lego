@@ -130,9 +130,10 @@ class SetsTest extends TestCase
 
         $childTheme = create('App\Theme', ['name' => 'child theme', 'parent_id' => $parentTheme->id]);
 
-        $set = create('App\Set', ['theme_id' => $childTheme->id]);
+        create('App\Set', ['theme_id' => $childTheme->id]);
 
-        $this->get(route('api.lego.sets'))
-            ->assertSee('top parent theme -> parent theme -> child theme');
+        $response = $this->get(route('api.lego.sets'));
+
+        $this->assertEquals($response->getData()->data[0]->theme_label, 'top parent theme -> parent theme -> child theme');
     }
 }

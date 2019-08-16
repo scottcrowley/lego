@@ -21,13 +21,6 @@ class Theme extends Model
     protected $guarded = [];
 
     /**
-     * The relationships to always eager load
-     *
-     * @var array
-     */
-    protected $with = ['parent'];
-
-    /**
     * label for the theme's parent hierarchy
     *
     * @var string

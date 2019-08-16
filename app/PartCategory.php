@@ -21,13 +21,6 @@ class PartCategory extends Model
     protected $guarded = [];
 
     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['part_count'];
-
-    /**
      * A part category belongs to many storage locations
      *
      * @return belongsToMany
@@ -48,12 +41,12 @@ class PartCategory extends Model
     }
 
     /**
-     * Custom getter for part count. DO NOT USE parts RELATIONSHIP
+     * Custom getter for part count.
      *
      * @return int
      */
     public function getPartCountAttribute()
     {
-        return Part::where('part_category_id', $this->id)->count();
+        return $this->parts->count();
     }
 }

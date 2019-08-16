@@ -23,6 +23,13 @@ class Part extends Model
     protected $guarded = [];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $with = ['category'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
@@ -50,12 +57,12 @@ class Part extends Model
     }
 
     /**
-     * Custom getter for category name. DO NOT USE THE category RELATIONSHIP
+     * Custom getter for category name.
      *
      * @return string
      */
     public function getCategoryLabelAttribute()
     {
-        return PartCategory::find($this->part_category_id)->name;
+        return $this->category->name;
     }
 }
