@@ -16,8 +16,7 @@ class PartsTest extends TestCase
 
         $part = create('App\Part');
 
-        $this->get(route('api.lego.parts'))
-            ->assertSee($part->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.parts')), $part->name));
     }
 
     /** @test */
@@ -29,9 +28,7 @@ class PartsTest extends TestCase
 
         $second = create('App\Part', ['name' => 'Part 2']);
 
-        $this->get(route('api.lego.parts', ['name' => 'Part 2']))
-            ->assertSee($second->name)
-            ->assertDontSee($first->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.parts', ['name' => 'Part 2'])), $second->name));
     }
 
     /** @test */
@@ -43,9 +40,7 @@ class PartsTest extends TestCase
 
         $second = create('App\Part', ['part_num' => 'Part 2']);
 
-        $this->get(route('api.lego.parts', ['part_num' => 'Part 2']))
-            ->assertSee($second->name)
-            ->assertDontSee($first->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.parts', ['part_num' => 'Part 2'])), $second->name));
     }
 
     /** @test */
@@ -59,9 +54,7 @@ class PartsTest extends TestCase
 
         $second = create('App\Part', ['part_category_id' => $category->id]);
 
-        $this->get(route('api.lego.parts', ['part_category_id' => $category->id]))
-            ->assertSee($second->name)
-            ->assertDontSee($first->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.parts', ['part_category_id' => $category->id])), $second->name));
     }
 
     /** @test */

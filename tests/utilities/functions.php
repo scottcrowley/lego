@@ -20,3 +20,10 @@ function createRaw($class, $attributes = [], $times = null)
     $f = factory($class, $times)->create($attributes);
     return $f->toArray();
 }
+
+function checkName($response, $name)
+{
+    $data = $response->getData()->data;
+
+    return (count($data) == 1 && $name == $data[0]->name);
+}

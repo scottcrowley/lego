@@ -16,24 +16,19 @@ class PartCategoriesTest extends TestCase
 
         $category = create('App\PartCategory');
 
-        $this->get(route('api.lego.part_categories'))
-            ->assertSee($category->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.part_categories')), $category->name));
     }
 
     /** @test */
     public function an_authenticated_user_can_filter_results_by_name()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $first = create('App\PartCategory', ['name' => 'First Category']);
 
         $second = create('App\PartCategory', ['name' => 'Second Category']);
 
-        $this->get(route('api.lego.part_categories', ['name' => 'Second Category']))
-            ->assertSee($second->name)
-            ->assertDontSee($first->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.part_categories', ['name' => 'Second Category'])), $second->name));
     }
 
     /** @test */

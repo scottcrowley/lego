@@ -18,8 +18,7 @@ class ThemesTest extends TestCase
 
         $theme = create('App\Theme');
 
-        $this->get(route('api.lego.themes'))
-            ->assertSee($theme->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.themes')), $theme->name));
     }
 
     /** @test */
@@ -31,9 +30,7 @@ class ThemesTest extends TestCase
 
         $second = create('App\Theme', ['name' => 'Second Theme']);
 
-        $this->get(route('api.lego.themes', ['name' => 'Second Theme']))
-            ->assertSee($second->name)
-            ->assertDontSee($first->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.themes', ['name' => 'Second Theme'])), $second->name));
     }
 
     /** @test */
@@ -43,13 +40,11 @@ class ThemesTest extends TestCase
 
         $parent = create('App\Theme');
 
-        $first = create('App\Theme', ['parent_id' => $parent->id]);
+        $first = create('App\Theme');
 
-        $second = create('App\Theme');
+        $second = create('App\Theme', ['parent_id' => $parent->id]);
 
-        $this->get(route('api.lego.themes', ['parent_id' => $parent->id]))
-            ->assertSee($first->name)
-            ->assertDontSee($second->name);
+        $this->assertTrue(checkName($this->get(route('api.lego.themes', ['parent_id' => $parent->id])), $second->name));
     }
 
     /** @test */
