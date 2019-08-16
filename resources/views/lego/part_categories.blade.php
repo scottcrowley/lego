@@ -11,8 +11,8 @@
                 <data-table 
                     label="Part Categories" 
                     :colnames="[
-                        {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false}, 
-                        {name: 'Part Count', sortable: true, sorted: false, sortDesc: false, boolean: false}]"
+                        {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-3/4'}, 
+                        {name: 'Part Count', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-1/4'}]"
                     :valnames="['name', 'part_count']"
                     :allowedparams="['name']"
                     endpoint="/api/lego/part_categories"></data-table>

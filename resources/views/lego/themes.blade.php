@@ -10,8 +10,8 @@
             <data-table 
                 label="Themes" 
                 :colnames="[
-                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false},
-                    {name: 'Parent Themes', sortable: false, sorted: false, sortDesc: false, boolean: false}]"
+                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-3/5'},
+                    {name: 'Parent Themes', sortable: false, sorted: false, sortDesc: false, boolean: false, width: 'w-2/5'}]"
                 :valnames="['name', 'parents_label']"
                 :allowedparams="['name', 'parent_id']"
                 endpoint="/api/lego/themes"></data-table>

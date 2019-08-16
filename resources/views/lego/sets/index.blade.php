@@ -11,11 +11,11 @@
             <data-table 
                 label="Sets" 
                 :colnames="[
-                    {name: 'Set Number', sortable: true, sorted: false, sortDesc: false, boolean: false}, 
-                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false}, 
-                    {name: 'Theme', sortable: false, sorted: false, sortDesc: false, boolean: false},
-                    {name: 'Year', sortable: true, sorted: false, sortDesc: false, boolean: false}, 
-                    {name: 'Pieces', sortable: true, sorted: false, sortDesc: false, boolean: false}]"
+                    {name: 'Set Number', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-24'}, 
+                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-3/5'}, 
+                    {name: 'Theme', sortable: false, sorted: false, sortDesc: false, boolean: false, width: 'w-2/5'},
+                    {name: 'Year', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-16'}, 
+                    {name: 'Pieces', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-16'}]"
                 :valnames="['set_num', 'name', 'theme_label', 'year', 'num_parts']"
                 :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear']"
                 endpoint="/api/lego/sets"></data-table>

@@ -1,26 +1,36 @@
 <template>
     <div>
-        <table class="table">
-            <thead class="" v-show="!loading">
-                <tr id="colnames">
-                    <th v-for="colname in colnames" 
-                        :class="(colname.sortable) ? 'sortable-col' : ''" 
+        <div class="w-full">
+            <div class="" v-show="!loading">
+                <div id="colnames" class="flex">
+                    <div v-for="colname in colnames" 
+                        class="px-1 py-0 text-xs text-secondary-darker font-semibold text-left"
+                        :class="calculateClass(colname)" 
                         v-text="colname.name" 
-                        @click.prevent="updateSort($event)"></th>
-                </tr>
-            </thead>
-            <tbody class="">
-                <tr v-show="loading">
-                    <td colspan="4" class="h-8 loader loader-lg"></td>
-                </tr>
-                <tr v-for="(data, index) in dataSet" :key="index" v-show="!loading">
-                    <td v-for="(valname, vIndex) in valnames">
-                        <span v-if="valname == 'rgb'" class="mr-1 -mb-px inline-block border border-secondary-darker w-3 h-3" :style="showColor(data[valname])"></span>
-                        {{ ((colnames[vIndex].boolean === true) ? ((data[valname] == true || data[valname] == 't') ? 'Yes' : 'No') : data[valname]) }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        @click.prevent="updateSort($event)"></div>
+                </div>
+            </div>
+            <div>
+                <div class="" v-show="loading">
+                    <div class="h-8 w-8 mx-auto loader loader-lg"></div>
+                </div>
+                <div class="flex" v-for="(data, index) in dataSet" :key="index" v-show="!loading">
+                    <div 
+                        class="p-1 text-xs text-secondary-dark font-hairline text-left"
+                        :class="(colnames[vIndex].width != '') ? colnames[vIndex].width : ''" 
+                        v-for="(valname, vIndex) in valnames">
+                        <span v-if="valname == 'rgb'" 
+                            class="mr-1 -mb-px inline-block border border-secondary-darker w-3 h-3" 
+                            :style="showColor(data[valname])"></span>
+                        {{ (
+                            (colnames[vIndex].boolean === true) ? (
+                                (data[valname] == true || data[valname] == 't') ? 'Yes' : 'No'
+                            ) : data[valname]
+                        ) }}
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="mt-4 flex items-center" v-show="!loading">
             <p class="text-sm flex-1">
                 <span v-text="allData.total"></span> <span v-text="label"></span> found
@@ -238,6 +248,12 @@
             },
             showColor(rgb) {
                 return 'background-color: #' + rgb;
+            },
+            calculateClass(colname) {
+                let classList = '';
+                classList += (colname.sortable) ? 'sortable-col' : '';
+                classList += (colname.width != '') ? ' ' + colname.width : '';
+                return classList; 
             }
         }
     };
