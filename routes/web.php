@@ -32,6 +32,7 @@ Route::group([
 ], function () {
     Route::get('', 'StorageTypesController@index')->name('storage.types.index');
     Route::get('/create', 'StorageTypesController@create')->name('storage.types.create');
+    Route::get('/{type}/copy', 'StorageTypesController@create')->name('storage.types.copy');
     Route::post('', 'StorageTypesController@store')->name('storage.types.store');
     Route::get('/{type}', 'StorageTypesController@show')->name('storage.types.show');
     Route::get('/{type}/edit', 'StorageTypesController@edit')->name('storage.types.edit');
@@ -45,6 +46,7 @@ Route::group([
 ], function () {
     Route::get('', 'StorageLocationsController@index')->name('storage.locations.index');
     Route::get('/create', 'StorageLocationsController@create')->name('storage.locations.create');
+    Route::get('/{location}/copy', 'StorageLocationsController@create')->name('storage.locations.copy');
     Route::post('', 'StorageLocationsController@store')->name('storage.locations.store');
     Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
     Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');

@@ -12,8 +12,9 @@
         <div class="bg-white p-3 pb-6 rounded-b">
             @forelse ($types as $type)
                 <div class="py-2 px-1 border rounded mt-3 flex text-secondary-darker">
-                    <span>{{ $type->name }}</span>
-                    <a href="{{ route('storage.types.edit', $type->id) }}" class="ml-auto text-sm">edit</a>
+                    <span class="flex-1">{{ $type->name }}</span>
+                    <a href="{{ route('storage.types.copy', $type->id) }}" class="text-sm mr-2">copy</a>
+                    <a href="{{ route('storage.types.edit', $type->id) }}" class="text-sm">edit</a>
                 </div>
             @empty
                 <p>There are currently no container types in the database.</p>

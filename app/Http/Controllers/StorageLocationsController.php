@@ -25,9 +25,9 @@ class StorageLocationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(StorageLocation $location = null)
     {
-        $location = new StorageLocation;
+        $location = $location ?? new StorageLocation;
         $types = \App\StorageType::orderBy('name')->get();
         return view('storage.locations.create', compact('location', 'types'));
     }

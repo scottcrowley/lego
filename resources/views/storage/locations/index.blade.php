@@ -12,8 +12,9 @@
         <div class="bg-white p-3 pb-6 rounded-b">
             @forelse ($locations as $location)
                 <div class="py-2 px-1 border rounded mt-3 flex text-secondary-darker">
-                    <span>{{ $location->name }}</span>
-                    <a href="{{ route('storage.locations.edit', $location->id) }}" class="ml-auto text-sm">edit</a>
+                    <span class="flex-1">{{ $location->name }}</span>
+                    <a href="{{ route('storage.locations.copy', $location->id) }}" class="text-sm mr-2">copy</a>
+                    <a href="{{ route('storage.locations.edit', $location->id) }}" class="text-sm">edit</a>
                 </div>
             @empty
                 <p>There are currently no storage locations in the database.</p>

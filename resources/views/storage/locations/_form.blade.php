@@ -23,7 +23,7 @@
                     <option value="">Choose a Container Type</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" 
-                            {{ (($formType == 'create' && old('storage_type_id') == $type->id) || 
+                            {{ (($formType == 'create' && (old('storage_type_id') == $type->id || $location->storage_type_id == $type->id)) || 
                                 ($formType == 'edit' && $location->storage_type_id == $type->id)) ? 'selected' : '' 
                             }}>{{ $type->name }}</option>
                     @endforeach

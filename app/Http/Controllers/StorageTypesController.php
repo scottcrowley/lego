@@ -25,9 +25,9 @@ class StorageTypesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(StorageType $type = null)
     {
-        $type = new StorageType;
+        $type = $type ?? new StorageType;
         return view('storage.types.create', compact('type'));
     }
 

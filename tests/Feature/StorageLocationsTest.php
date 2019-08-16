@@ -70,4 +70,17 @@ class StorageLocationsTest extends TestCase
         $this->get(route('storage.locations.index'))
             ->assertSee('Some new name');
     }
+
+    /** @test */
+    public function an_authenticated_user_can_copy_an_existing_storage_location()
+    {
+        $this->signIn();
+
+        $originalLocation = create('App\StorageLocation');
+
+        $this->get(route('storage.locations.copy', $originalLocation->id))
+            ->assertSee($originalLocation->name)
+            ->assertSee($originalLocation->description)
+            ->assertSee($originalLocation->fresh()->type->name);
+    }
 }

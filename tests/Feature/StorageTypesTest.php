@@ -72,4 +72,16 @@ class StorageTypesTest extends TestCase
 
         $this->assertDatabaseMissing('storage_types', $type->toArray());
     }
+
+    /** @test */
+    public function an_authenticated_user_can_copy_an_existing_storage_type()
+    {
+        $this->signIn();
+
+        $originalType = create('App\StorageType');
+
+        $this->get(route('storage.types.copy', $originalType->id))
+            ->assertSee($originalType->name)
+            ->assertSee($originalType->description);
+    }
 }
