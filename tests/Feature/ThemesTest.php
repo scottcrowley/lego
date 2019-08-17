@@ -12,8 +12,6 @@ class ThemesTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_retrieve_all_themes()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $theme = create('App\Theme');

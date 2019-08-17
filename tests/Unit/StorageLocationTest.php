@@ -90,17 +90,17 @@ class StorageLocationTest extends TestCase
     }
 
     /** @test */
-    public function it_can_access_details_about_associated_part_categories()
+    public function it_can_access_details_about_associated_parts()
     {
         $this->signIn();
 
         $location = create('App\StorageLocation');
 
-        $partCategory = create('App\PartCategory');
+        $part = create('App\Part');
 
-        $location->addPartCategory($partCategory);
+        $location->addPart($part);
 
-        $this->assertTrue($location->fresh()->partCategories->contains($partCategory));
+        $this->assertEquals($part->part_num, $location->fresh()->parts->first()->part_num);
     }
 
     /** @test */
@@ -110,32 +110,32 @@ class StorageLocationTest extends TestCase
 
         $location = create('App\StorageLocation');
 
-        $partCategory = create('App\PartCategory');
+        $part = create('App\Part');
 
-        $location->addPartCategory($partCategory);
+        $location->addPart($part);
 
-        $this->assertEquals(1, $location->fresh()->partCategories->count());
+        $this->assertEquals(1, $location->fresh()->parts->count());
 
-        $location->removePartCategory($partCategory);
+        $location->removePart($part);
 
-        $this->assertFalse($location->fresh()->partCategories->contains($partCategory));
+        $this->assertEquals(0, $location->fresh()->parts->count());
     }
 
-    /** @test */
-    public function it_can_access_details_about_associated_parts()
-    {
-        $this->signIn();
+    // /** @test */
+    // public function it_can_access_details_about_associated_parts()
+    // {
+    //     $this->signIn();
 
-        $location = create('App\StorageLocation');
+    //     $location = create('App\StorageLocation');
 
-        $partCategory = create('App\PartCategory');
+    //     $partCategory = create('App\PartCategory');
 
-        $location->addPartCategory($partCategory);
+    //     $location->addPartCategory($partCategory);
 
-        create('App\Part', ['part_category_id' => $partCategory->id], 4);
+    //     create('App\Part', ['part_category_id' => $partCategory->id], 4);
 
-        $partsRelation = $location->parts;
+    //     $partsRelation = $location->parts;
 
-        $this->assertCount(4, $partsRelation);
-    }
+    //     $this->assertCount(4, $partsRelation);
+    // }
 }

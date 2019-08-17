@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePartCategoryStorageLocationTable extends Migration
+class CreatePartStorageLocationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreatePartCategoryStorageLocationTable extends Migration
      */
     public function up()
     {
-        Schema::create('part_category_storage_location', function (Blueprint $table) {
-            $table->unsignedBigInteger('part_category_id');
+        Schema::create('part_storage_location', function (Blueprint $table) {
+            $table->string('part_num', 20);
             $table->unsignedBigInteger('storage_location_id');
 
-            $table->primary(['part_category_id', 'storage_location_id'], 'category_storage_id');
+            $table->primary(['part_num', 'storage_location_id'], 'part_storage_id');
 
-            $table->foreign('part_category_id', 'fk_part_category_id')
-                ->references('id')
-                ->on('part_categories');
+            $table->foreign('part_num', 'fk_part_num')
+                ->references('part_num')
+                ->on('parts');
 
             $table->foreign('storage_location_id', 'fk_storage_location_id')
                 ->references('id')
@@ -36,6 +36,6 @@ class CreatePartCategoryStorageLocationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('part_category_storage_location');
+        Schema::dropIfExists('part_storage_location');
     }
 }

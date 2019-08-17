@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class StorageLocation extends Model
 {
-    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -23,25 +21,25 @@ class StorageLocation extends Model
     protected $with = ['type'];
 
     /**
-     * Add a part category to the storage location
+     * Add a part to the storage location
      *
-     * @param PartCategory $partCategory
+     * @param Part $part
      * @return void
      */
-    public function addPartCategory(PartCategory $partCategory)
+    public function addPart(Part $part)
     {
-        $this->partCategories()->attach($partCategory);
+        $this->parts()->attach($part);
     }
 
     /**
-     * Removes a part category to the storage location
+     * Removes a part from the storage location
      *
-     * @param PartCategory $partCategory
+     * @param Part $part
      * @return void
      */
-    public function removePartCategory(PartCategory $partCategory)
+    public function removePart(Part $part)
     {
-        $this->partCategories()->detach($partCategory);
+        $this->parts()->detach($part);
     }
 
     /**
@@ -55,22 +53,12 @@ class StorageLocation extends Model
     }
 
     /**
-     * A storage location belongs to many part categories
+     * A storage location has many parts
      *
      * @return belongsToMany
      */
-    public function partCategories()
-    {
-        return $this->belongsToMany(PartCategory::class);
-    }
-
-    /**
-     * A storage location has many parts
-     *
-     * @return hasManyDeep
-     */
     public function parts()
     {
-        return $this->hasManyDeep(Part::class, ['part_category_storage_location', PartCategory::class]);
+        return $this->belongsToMany(Part::class, 'part_storage_location', 'storage_location_id', 'part_num', 'id', 'part_num');
     }
 }
