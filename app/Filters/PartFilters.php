@@ -19,7 +19,11 @@ class PartFilters extends Filters
      */
     protected function part_num($value)
     {
-        return $this->collection = $this->collection->where('part_num', $value);
+        return $this->collection = $this->collection->filter(
+            function ($item) use ($value) {
+                return false !== stristr($item['part_num'], $value);
+            }
+        );
     }
 
     /**
