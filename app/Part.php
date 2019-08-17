@@ -25,7 +25,7 @@ class Part extends Model
      *
      * @var array
      */
-    protected $with = ['category'];
+    protected $with = ['category', 'storageLocation'];
 
     /**
      * The accessors to append to the model's array form.
@@ -62,5 +62,15 @@ class Part extends Model
     public function getCategoryLabelAttribute()
     {
         return $this->category->name;
+    }
+
+    /**
+     * Custom getter for storage location.
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->storageLocation->first();
     }
 }

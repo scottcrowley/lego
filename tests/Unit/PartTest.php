@@ -32,6 +32,6 @@ class PartTest extends TestCase
 
         $location->addPart($part);
 
-        $this->assertEquals($part->storageLocation->first()->name, $location->name);
+        $this->assertEquals($part->location->name, $location->name);
     }
 }
