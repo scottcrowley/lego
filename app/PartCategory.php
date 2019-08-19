@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class PartCategory extends Model
@@ -21,13 +22,21 @@ class PartCategory extends Model
     protected $guarded = [];
 
     /**
-     * A part category belongs to many storage locations
+     * A part category has many storage locations
      *
-     * @return belongsToMany
+     * @return Collection
      */
-    public function storageLocation()
+    public function storageLocations()
     {
-        return $this->belongsToMany(StorageLocation::class);
+        return DB::table('part_categories')
+            ->select('part_categories.name as category', 'parts.name as part_name', 'parts.part_num', 'storage_locations.id as storage_location_id', 'storage_locations.name as location')
+            ->join('parts', 'part_categories.id', '=', 'parts.part_category_id')
+            ->join('part_storage_location', 'parts.part_num', '=', 'part_storage_location.part_num')
+            ->join('storage_locations', 'part_storage_location.storage_location_id', '=', 'storage_locations.id')
+            ->where('part_categories.id', $this->id)
+            ->get()
+            ->unique('location')
+            ->pluck('location', 'storage_location_id');
     }
 
     /**

@@ -16,10 +16,30 @@ class PartCategoryTest extends TestCase
 
         $partCategory = create('App\PartCategory');
 
-        $parts = create('App\Part', ['part_category_id' => $partCategory->id], 4);
+        create('App\Part', ['part_category_id' => $partCategory->id], 4);
 
         $this->assertCount(4, $partCategory->fresh()->parts);
 
         $this->assertEquals(4, $partCategory->part_count);
+    }
+
+    /** @test */
+    public function it_can_access_details_about_all_related_part_storage_locations()
+    {
+        $this->signIn();
+
+        $partCategory = create('App\PartCategory');
+
+        $part = create('App\Part', ['part_category_id' => $partCategory->id]);
+
+        $storageLocation = create('App\StorageLocation');
+
+        $storageLocation->addPart($part);
+
+        $partLocations = $partCategory->storageLocations();
+
+        $this->assertCount(1, $partLocations);
+
+        $this->assertEquals($storageLocation->name, $partLocations[$partCategory->id]);
     }
 }
