@@ -22,6 +22,17 @@ class PartCategory extends Model
     protected $guarded = [];
 
     /**
+     * Update the category part count table
+     *
+     * @param int $count
+     * @return void
+     */
+    public function addPartCount($count)
+    {
+        $this->categoryPartCount()->create(['part_count' => $count]);
+    }
+
+    /**
      * A part category has many storage locations
      *
      * @return Collection
@@ -50,12 +61,22 @@ class PartCategory extends Model
     }
 
     /**
+     * A part category has one part count
+     *
+     * @return hasOne
+     */
+    public function categoryPartCount()
+    {
+        return $this->hasOne(CategoryPartCount::class, 'part_category_id')->withDefault(['part_count' => 0]);
+    }
+
+    /**
      * Custom getter for part count.
      *
      * @return int
      */
     public function getPartCountAttribute()
     {
-        return $this->parts->count();
+        return $this->categoryPartCount->part_count;
     }
 }

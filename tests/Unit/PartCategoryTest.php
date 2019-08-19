@@ -19,8 +19,6 @@ class PartCategoryTest extends TestCase
         create('App\Part', ['part_category_id' => $partCategory->id], 4);
 
         $this->assertCount(4, $partCategory->fresh()->parts);
-
-        $this->assertEquals(4, $partCategory->part_count);
     }
 
     /** @test */

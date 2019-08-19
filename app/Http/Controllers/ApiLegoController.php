@@ -59,10 +59,7 @@ class ApiLegoController extends Controller
      */
     public function getPartCategories(PartCategoryFilters $filters)
     {
-        // $partCategory = new PartCategory;
-        // $categories = $partCategory->setAppends(['part_count'])->with('parts')->get();
-
-        $categories = $filters->apply(PartCategory::with('parts')->get());
+        $categories = $filters->apply(PartCategory::with('categoryPartCount')->get());
 
         $categories = $categories->each->append('part_count')->values();
 
@@ -116,7 +113,7 @@ class ApiLegoController extends Controller
      */
     public function getParts(PartFilters $filters)
     {
-        $parts = $filters->apply(Part::all());
+        $parts = $filters->apply(Part::with('category')->get());
 
         $parts = $parts->values();
 
