@@ -10,8 +10,7 @@
         <div class="bg-white p-4 py-6 rounded-b">
             <data-grid 
                 label="Sets" 
-                image_base_url="https://cdn.rebrickable.com/media/sets/"
-                image_extension=".jpg"
+                image_base_url="https://cdn.rebrickable.com/media/sets/{set_num}.jpg"
                 image_field="set_num" 
                 image_label_field="name" 
                 per_page="25" 

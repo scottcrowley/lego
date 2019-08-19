@@ -25,7 +25,7 @@ class Part extends Model
      *
      * @var array
      */
-    protected $with = ['category', 'storageLocation'];
+    protected $with = ['category'];
 
     /**
      * The accessors to append to the model's array form.

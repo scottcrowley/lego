@@ -50,7 +50,7 @@
                         <a href="{{ route('lego.sets.index') }}">Sets</a>
                         <a href="{{ route('lego.themes') }}">Themes</a>
                         <a href="{{ route('lego.part_categories') }}">Part Categories</a>
-                        <a href="{{ route('lego.parts') }}">Parts</a>
+                        <a href="{{ route('lego.parts.index') }}">Parts</a>
                         <a href="{{ route('lego.colors') }}">Colors</a>
                     </div>
                 </dropdown>

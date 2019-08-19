@@ -86,10 +86,6 @@
                 type: String,
                 default: ''
             },
-            image_extension: {
-                type: String,
-                default: ''
-            },
             image_field: {
                 type: String,
                 default: ''
@@ -288,7 +284,8 @@
                 history.pushState(null, null, params);
             },
             getImageSrc(img) {
-                return this.image_base_url + img + this.image_extension;
+                let placeholder = '{' + this.image_field + '}'
+                return this.image_base_url.replace(placeholder, img);
             }
         }
     };

@@ -61,7 +61,8 @@ Route::group([
     ], function () {
         Route::view('/colors', 'lego.colors')->name('lego.colors');
         Route::view('/part_categories', 'lego.part_categories')->name('lego.part_categories');
-        Route::view('/parts', 'lego.parts')->name('lego.parts');
+        Route::view('/parts', 'lego.parts.index')->name('lego.parts.index');
+        Route::view('/parts-grid', 'lego.parts.grid')->name('lego.parts.grid');
         Route::view('/sets', 'lego.sets.index')->name('lego.sets.index');
         Route::view('/sets-grid', 'lego.sets.grid')->name('lego.sets.grid');
         Route::view('/themes', 'lego.themes')->name('lego.themes');
