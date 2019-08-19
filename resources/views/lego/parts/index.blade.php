@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-3/4">
+<div class="w-full">
     <div class="rounded shadow">
         <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
             <div>Lego Parts</div>
