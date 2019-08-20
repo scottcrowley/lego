@@ -99,10 +99,10 @@ Route::group([
     'prefix' => 'api/users',
     'middleware' => 'rebrickable'
 ], function () {
-    Route::get('/clear/{type}', 'RebrickableApiUserController@clearCache')->name('api.users.clear');
-    Route::get('/token', 'RebrickableApiUserController@getToken')->name('api.user.token');
-    Route::get('/setlists', 'RebrickableApiUserController@getSetLists')->name('api.users.setlists');
-    Route::get('/sets', 'RebrickableApiUserController@getSets')->name('api.users.sets');
-    Route::get('/allparts', 'RebrickableApiUserController@getAllParts')->name('api.users.allparts');
-    Route::get('/profile', 'RebrickableApiUserController@getProfile')->name('api.users.profile');
+    Route::get('/token', 'ApiUserController@getToken')->name('api.users.token');
+    Route::get('/profile', 'ApiUserController@getProfile')->name('api.users.profile');
+    Route::get('/sets', 'ApiUserController@getSets')->name('api.users.sets');
+    Route::get('/parts', 'ApiUserController@getParts')->name('api.users.parts');
+    // Route::get('/clear/{type}', 'ApiUserController@clearCache')->name('api.users.clear');
+    // Route::get('/setlists', 'ApiUserController@getSetLists')->name('api.users.setlists');
 });

@@ -111,16 +111,27 @@ $factory->define(App\InventoryPart::class, function (Faker $faker) {
         'part_num' => function () {
             return factory(App\Part::class)->create()->part_num;
         },
-        'color_id' => factory(App\Color::class)->create(),
+        'color_id' => factory(App\Color::class),
         'quantity' => $faker->numberBetween(1, 10),
         'is_spare' => 'f'
     ];
 });
 
-// $factory->state(App\Inventory::class, 'withSetAndParts', function (Faker $faker) {
-//     $parts = factory(App\Part::class, 4)->create();
+$factory->define(App\UserSet::class, function (Faker $faker) {
+    return [
+        'set_num' => function () {
+            return factory(App\Set::class)->create()->set_num;
+        },
+        'quantity' => $faker->numberBetween(1, 10)
+    ];
+});
 
-//     return [
-//         'parent_id' => factory(App\Theme::class)
-//     ];
-// });
+$factory->define(App\UserPart::class, function (Faker $faker) {
+    return [
+        'part_num' => function () {
+            return factory(App\Part::class)->create()->part_num;
+        },
+        'color_id' => factory(App\Color::class),
+        'quantity' => $faker->numberBetween(1, 10)
+    ];
+});
