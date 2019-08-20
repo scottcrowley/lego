@@ -91,6 +91,8 @@ Route::group([
     // Route::get('/sets/{setNum}', 'ApiLegoController@getSet')->name('api.lego.sets.show');
     Route::get('/themes', 'ApiLegoController@getThemes')->name('api.lego.themes');
     // Route::get('/themes/{id}', 'ApiLegoController@getTheme')->name('api.lego.themes.show');
+    Route::get('/inventories', 'ApiLegoController@getInventories')->name('api.lego.inventories');
+    Route::get('/inventory_parts/{inventory}', 'ApiLegoController@getInventoryParts')->name('api.lego.inventory_parts');
 });
 
 Route::group([

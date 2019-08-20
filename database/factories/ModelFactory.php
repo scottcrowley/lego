@@ -95,3 +95,32 @@ $factory->define(App\PartRelationship::class, function (Faker $faker) {
         }
     ];
 });
+
+$factory->define(App\Inventory::class, function (Faker $faker) {
+    return [
+        'set_num' => function () {
+            return factory(App\Set::class)->create()->set_num;
+        },
+        'version' => 1
+    ];
+});
+
+$factory->define(App\InventoryPart::class, function (Faker $faker) {
+    return [
+        'inventory_id' => factory(App\Inventory::class)->create(),
+        'part_num' => function () {
+            return factory(App\Part::class)->create()->part_num;
+        },
+        'color_id' => factory(App\Color::class)->create(),
+        'quantity' => $faker->numberBetween(1, 10),
+        'is_spare' => 'f'
+    ];
+});
+
+// $factory->state(App\Inventory::class, 'withSetAndParts', function (Faker $faker) {
+//     $parts = factory(App\Part::class, 4)->create();
+
+//     return [
+//         'parent_id' => factory(App\Theme::class)
+//     ];
+// });

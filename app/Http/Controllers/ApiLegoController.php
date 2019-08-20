@@ -6,13 +6,17 @@ use App\Set;
 use App\Part;
 use App\Color;
 use App\Theme;
+use App\Inventory;
 use App\PartCategory;
+use App\InventoryPart;
 use App\PartRelationship;
 use App\Filters\SetFilters;
 use App\Filters\PartFilters;
 use App\Filters\ColorFilters;
 use App\Filters\ThemeFilters;
+use App\Filters\InventoryFilters;
 use App\Filters\PartCategoryFilters;
+use App\Filters\InventoryPartFilters;
 use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
@@ -155,5 +159,36 @@ class ApiLegoController extends Controller
         }
 
         return $page;
+    }
+
+    /**
+     * get all inventories
+     *
+     * @param InventoryFilters $filters
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getInventories(InventoryFilters $filters)
+    {
+        $inventories = $filters->apply(Inventory::all());
+
+        $inventories = $inventories->values();
+
+        return $inventories->paginate($this->defaultPerPage);
+    }
+
+    /**
+     * get all inventories
+     *
+     * @param Inventory $inventory
+     * @param InventoryFilters $filters
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getInventoryParts(Inventory $inventory, InventoryPartFilters $filters)
+    {
+        $parts = $filters->apply(InventoryPart::whereInventoryId($inventory->id)->get());
+
+        $parts = $parts->values();
+
+        return $parts->paginate($this->defaultPerPage);
     }
 }
