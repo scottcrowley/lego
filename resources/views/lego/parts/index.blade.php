@@ -4,7 +4,8 @@
 <div class="w-full">
     <div class="rounded shadow">
         <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
-            <div>Lego Parts</div>
+            <div class="flex-1">Lego Parts</div>
+            <a href="{{ route('lego.parts.grid') }}" class="btn is-outlined is-header-btn text-sm">View as grid</a>
         </div>
         <div class="bg-white p-4 py-6 rounded-b">
             <data-table 

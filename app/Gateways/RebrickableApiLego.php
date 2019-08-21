@@ -27,9 +27,11 @@ class RebrickableApiLego extends ApiCore
 
         $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
 
-        $baseUrl = $this->baseUrl."sets/?ordering=name&page_size=$this->max&page=";
+        $this->removeUrlParam('page');
 
-        $all = $this->executePool($totalPages, $baseUrl, $firstPage);
+        $url = $this->getRequestUrl().'&page=';
+
+        $all = $this->executePool($totalPages, $url, $firstPage);
 
         $unique = collect($all)->uniqueStrict(function ($item) {
             return $item['set_num'].$item['name'].$item['year'];
