@@ -117,7 +117,7 @@ class ApiLegoController extends Controller
      */
     public function getParts(PartFilters $filters)
     {
-        $parts = $filters->apply(Part::with('category')->get());
+        $parts = $filters->apply(Part::all());
 
         $parts = $parts->values();
 

@@ -2,38 +2,14 @@
 
 namespace App\Gateways;
 
-class RebrickableApiUser
+class RebrickableApiUser extends ApiCore
 {
-    use ApiCore;
-
     /**
      * base url for all api calls
      *
      * @var string
      */
     protected $baseUrl = 'https://rebrickable.com/api/v3/users/';
-
-    /**
-     * generate user token
-     *
-     * @return array
-     */
-    public function generateToken()
-    {
-        $this->url = 'https://rebrickable.com/api/v3/users/_token/';
-        $this->addPostParam('username', $this->credentials['email']);
-        $this->addPostParam('password', $this->credentials['password']);
-
-        $this->executePost();
-
-        $results = $this->getResults();
-
-        if ($results === false) {
-            $results = $this->getErrors();
-        }
-
-        return $results;
-    }
 
     /**
      * Get details about a specific user.
@@ -55,26 +31,25 @@ class RebrickableApiUser
      * gets all of an allowed type
      *
      * @param string $type
+     * @param int $totalPages
      * @return Illuminate\Support\Collection
      */
-    public function getAll($type)
+    public function getAll($type, $totalPages = null)
     {
         $allowedTypes = ['setlists', 'sets', 'allparts'];
 
         abort_if(! in_array($type, $allowedTypes), 400, 'Request Type is not allowed!');
 
-        $all = $this->getType($type, 1, 1000, '');
+        $all = $this->getType($type, 1, $this->max, '');
 
         if ($all === false) {
             return $this->getErrors();
         }
 
-        $response = $this->parseResponse();
-
-        $totalPages = ceil($response['count'] / 1000);
+        $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
 
         for ($i = 2; $i <= $totalPages; $i++) {
-            $page = $this->getType($type, $i, 1000, '');
+            $page = $this->getType($type, $i, $this->max, '');
 
             if ($page === false) {
                 return $this->getErrors();
@@ -84,5 +59,108 @@ class RebrickableApiUser
         }
 
         return collect($all);
+    }
+
+    /**
+     * Adds a set to the default Rebrickable set list
+     *
+     * @param string $setNum
+     * @param int $qty
+     * @param bool $incSpares
+     * @return int
+     */
+    public function addSet($setNum, $qty = 1, bool $incSpares = true)
+    {
+        $setNum = $this->normalizeSetNumber($setNum);
+
+        if ($qty < 1) {
+            $qty = 1;
+        }
+
+        $this->appendUrl('sets');
+        $this->addPostParam('set_num', $setNum);
+        $this->addPostParam('quantity', $qty);
+        $this->addPostParam('include_spares', $incSpares);
+
+        $this->executePost();
+
+        $results = $this->getResults();
+
+        if ($results === false) {
+            return $this->getErrors();
+        }
+
+        return $this->getStatus();
+    }
+
+    /**
+     * Deletes a set
+     *
+     * @param string $setNum
+     * @return int
+     */
+    public function deleteSet($setNum)
+    {
+        $setNum = $this->normalizeSetNumber($setNum);
+
+        $this->appendUrl("sets/$setNum");
+        $this->appendUrlParam('set_num', $setNum);
+
+        $this->executeDelete();
+
+        $results = $this->getResults();
+
+        if ($results === false) {
+            return $this->getErrors();
+        }
+
+        return $this->getStatus();
+    }
+
+    /**
+     * Get details about building a given set
+     *
+     * @param mixed $setNum
+     * @return Illuminate\Support\Collection
+     */
+    public function buildSet($setNum)
+    {
+        $setNum = $this->normalizeSetNumber($setNum);
+
+        $this->appendUrl("build/$setNum");
+
+        $this->executeGet();
+
+        $results = $this->getResults();
+
+        if ($results === false) {
+            return $this->getErrors();
+        }
+
+        return collect($results);
+    }
+
+    /**
+     * Get details about a given set from a given set list
+     *
+     * @param int $listId
+     * @param string $setNum
+     * @return Illuminate\Support\Collection
+     */
+    public function getSetListSet($listId, $setNum)
+    {
+        $setNum = $this->normalizeSetNumber($setNum);
+
+        $this->appendUrl("setlists/$listId/sets/$setNum");
+
+        $this->executeGet();
+
+        $results = $this->getResults();
+
+        if ($results === false) {
+            return $this->getErrors();
+        }
+
+        return collect($results);
     }
 }

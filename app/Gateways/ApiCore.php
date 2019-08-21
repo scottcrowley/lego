@@ -2,33 +2,16 @@
 
 namespace App\Gateways;
 
-use Zttp\Zttp;
-use GuzzleHttp\Pool;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-
-trait ApiCore
+class ApiCore
 {
-    /**
-     * additional url path requirements based on the api action requested
-     *
-     * @var string
-     */
-    protected $url = '';
+    use GuzzleWrapper;
 
     /**
-     * optional url parameters for the api action
+     * Maximum number of items to get per page.
      *
-     * @var string
+     * @var integer
      */
-    protected $urlParams = '';
-
-    /**
-     * optional post parameters for the api action
-     *
-     * @var array
-     */
-    protected $postParams = [];
+    protected $max = 1000;
 
     /**
      * array of credentials from the .env file
@@ -36,34 +19,6 @@ trait ApiCore
      * @var array
      */
     protected $credentials;
-
-    /**
-     * header information for the Guzzle request
-     *
-     * @var array
-     */
-    protected $header = [];
-
-    /**
-     * The entire response from the Guzzle request. GuzzleHttp\Psr7\Response
-     *
-     * @var null
-     */
-    public $response;
-
-    /**
-     * array containing the specific results from the response object
-     *
-     * @var null
-     */
-    public $results;
-
-    /**
-     * array containing error details regarding the Zttp or Guzzle request
-     *
-     * @var array
-     */
-    public $errors = [];
 
     /**
      * constructor that sets & verifies the proper credentials
@@ -79,6 +34,44 @@ trait ApiCore
         if (class_basename($this) == 'RebrickableApiUser') {
             $this->baseUrl = $this->baseUrl.$this->credentials['token'].'/';
         }
+    }
+
+    /**
+     * Updates the credentials
+     *
+     * @param string $type
+     * @param mixed $value
+     * @return void
+     */
+    public function updateCredentials($type, $value)
+    {
+        if (isset($this->credentials[$type])) {
+            $this->credentials[$type] = $value;
+        }
+    }
+
+    /**
+     * generate user token
+     *
+     * @return array
+     */
+    public function generateToken()
+    {
+        $this->resetRequest();
+
+        $this->url = 'https://rebrickable.com/api/v3/users/_token/';
+        $this->addPostParam('username', $this->credentials['email']);
+        $this->addPostParam('password', $this->credentials['password']);
+
+        $this->executePost();
+
+        $results = $this->getResults();
+
+        if ($results === false) {
+            return $this->getErrors();
+        }
+
+        return $results['user_token'];
     }
 
     /**
@@ -99,77 +92,33 @@ trait ApiCore
                     $this->credentials['token'] == ''
                 )
             ),
-            400,
-            'Rebrickable Credentials are invalid or do not exist'
+            403,
+            'The Rebrickable Credentials, from the .env file, are invalid or do not exist.'
         );
 
         return true;
     }
 
     /**
-     * appends to given param to the urlParams string
+     * verifies the credentials on rebrickable site. Also compares the token in the .env file with what is return from rebrickable
      *
-     * @param string $param
-     * @return void
-     */
-    protected function appendUrlParam($param)
-    {
-        if ($param == '') {
-            return;
-        }
-
-        $urlParams = $this->urlParams;
-
-        $this->urlParams = ($urlParams == '') ? '?'.$param : $urlParams.'&'.$param;
-    }
-
-    /**
-     * appends the given path to the url
-     *
-     * @param string $path
-     * @return void
-     */
-    protected function appendUrl($path = '')
-    {
-        if ($path == '') {
-            return;
-        }
-
-        if (! is_null($this->response)) {
-            $this->resetUrl();
-        }
-
-        $this->url = $this->baseUrl.$path;
-    }
-
-    /**
-     * Resets the url & urlParams properties
-     *
-     * @return void
-     */
-    protected function resetUrl()
-    {
-        $this->url = $this->urlParams = '';
-    }
-
-    /**
-     * adds the given param to postParams array to be used in post requests
-     *
-     * @param string $param
-     * @param string $value
      * @return bool
      */
-    protected function addPostParam($param, $value)
+    public function verifyRemoteCredentials()
     {
-        if ($param == '' || $value == '') {
-            return false;
-        }
+        $token = $this->generateToken();
 
-        if (! is_null($this->response)) {
-            $this->postParams = [];
-        }
+        abort_if(
+            $this->hasErrors(),
+            403,
+            'The Rebrickable Credentials, from the .env file, do not match the credentials on the Rebrickable site.'
+        );
 
-        $this->postParams = array_merge($this->postParams, [$param => $value]);
+        abort_if(
+            $token != $this->credentials['token'],
+            403,
+            'The Rebrickable token, from the .env file, does not match the token on the Rebrickable site.'
+        );
 
         return true;
     }
@@ -196,180 +145,28 @@ trait ApiCore
     }
 
     /**
-     * constructs the header for the Guzzle request with credentials
+     * Makes sure that a set number has the trailing -1 on it
      *
-     * @return bool
+     * @param string $setNum
+     * @return string
      */
-    protected function prepareExecution()
+    public function normalizeSetNumber($setNum)
     {
-        $this->header = ['Accept' => 'application/json', 'Authorization' => 'key '.$this->credentials['key']];
-
-        return true;
-    }
-
-    /**
-     * execute a Guzzle POST request
-     *
-     * @return void
-     */
-    protected function executePost()
-    {
-        $this->prepareExecution();
-
-        $this->response = Zttp::withHeaders($this->header)->asFormParams()->post($this->url, $this->postParams);
-    }
-
-    /**
-     * execute a Guzzle GET request
-     *
-     * @return void
-     */
-    protected function executeGet()
-    {
-        $this->prepareExecution();
-
-        $this->response = Zttp::withHeaders($this->header)->get($this->url.$this->urlParams);
-    }
-
-    /**
-     * convert Guzzle response to json
-     *
-     * @return void
-     */
-    protected function parseResponse()
-    {
-        return $this->response->json();
-    }
-
-    /**
-     * parses the Guzzle response and either returns a collection or an array of the results
-     *
-     * @param bool $collection
-     * @return mixed
-     */
-    public function getResults($collection = false)
-    {
-        if (! $this->validateResponse()) {
-            return false;
+        if (substr($setNum, -2, 2) != '-1') {
+            $setNum = $setNum .= '-1';
         }
-
-        $json = $this->parseResponse();
-
-        $this->results = (isset($json['results'])) ? $json['results'] : $json;
-
-        return ($collection) ? collect($this->results) : $this->results;
+        return $setNum;
     }
 
     /**
-     * validates the response
+     * Public setter for a url param
      *
-     * @return bool
-     */
-    protected function validateResponse()
-    {
-        if (is_null($this->response)) {
-            $this->generateErrors(0);
-        } elseif ($this->response->isOK()) {
-            return true;
-        } else {
-            $this->generateErrors($this->response->status());
-        }
-        return false;
-    }
-
-    /**
-     * generates details based on a given status code
-     *
-     * @param int $status
+     * @param string $name
+     * @param mixed $value
      * @return void
      */
-    protected function generateErrors($status)
+    public function setUrlParam($name, $value)
     {
-        $errors = [
-            0 => 'No request has been made yet',
-            400 => 'Something was wrong with the format of your request',
-            401 => 'Unauthorized - your API key is invalid',
-            403 => 'Forbidden - you do not have access to operate on the requested item(s)',
-            404 => 'Item not found',
-            429 => 'Request was throttled',
-        ];
-
-        $detail = (isset($errors[$status])) ? $errors[$status] : 'An unknown error occurred';
-
-        $this->errors = [
-            'status' => $status,
-            'detail' => $detail
-        ];
-    }
-
-    /**
-     * getter for errors array
-     *
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    /**
-     * generates a new Guzzle Client
-     *
-     * @return Client
-     */
-    protected function generateGuzzleClient()
-    {
-        return new Client([
-            'base_uri' => $this->baseUrl,
-            'timeout' => 120.0,
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'key '.$this->credentials['key']
-            ]
-        ]);
-    }
-
-    /**
-     * generates a Guzzle Request for each page
-     *
-     * @param int $totalPages
-     * @param string $baseUrl
-     * @return Request
-     */
-    protected function generateGuzzleRequests($totalPages, $baseUrl)
-    {
-        return function () use ($totalPages, $baseUrl) {
-            for ($i = 2; $i <= $totalPages; $i++) {
-                $uri = $baseUrl.$i;
-                yield new Request('GET', $uri);
-            }
-        };
-    }
-
-    /**
-     * executeGuzzlePool
-     *
-     * @param Client $client
-     * @param Request $requests
-     * @param array $data
-     * @return array
-     */
-    protected function executeGuzzlePool($client, $requests, $data)
-    {
-        $pool = new Pool($client, $requests(), [
-            'concurrency' => 5,
-            'fulfilled' => function ($response, $index) use (&$data) {
-                $page = json_decode($response->getBody(), true);
-                $data = array_merge($data, $page['results']);
-            },
-            'rejected' => function ($reason, $index) {
-                abort(400, 'An error occurred while retrieving all of the requested data. Reason: '.$reason);
-            },
-        ]);
-
-        $promise = $pool->promise();
-        $promise->wait();
-
-        return $data;
+        $this->appendUrlParam($name.'='.$value);
     }
 }

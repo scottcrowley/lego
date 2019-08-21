@@ -2,10 +2,8 @@
 
 namespace App\Gateways;
 
-class RebrickableApiLego
+class RebrickableApiLego extends ApiCore
 {
-    use ApiCore;
-
     /**
      * base url for all api calls
      *
@@ -16,51 +14,50 @@ class RebrickableApiLego
     /**
      * special getter for all sets since the amount of data needs to be throttled
      *
+     * @param int $totalPages
      * @return Illuminate\Support\Collection
      */
-    public function getAllSets()
+    public function getAllSets($totalPages = null)
     {
-        $firstPage = $this->getType('sets', 1, 1000, '');
+        $firstPage = $this->getType('sets', 1, $this->max, '');
 
         if ($firstPage === false) {
             return $this->getErrors();
         }
 
-        $response = $this->parseResponse();
+        $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
 
-        $totalPages = ceil($response['count'] / 1000);
+        $baseUrl = $this->baseUrl."sets/?ordering=name&page_size=$this->max&page=";
 
-        $baseUrl = $this->baseUrl.'sets/?ordering=name&page_size=1000&page=';
+        $all = $this->executePool($totalPages, $baseUrl, $firstPage);
 
-        $client = $this->generateGuzzleClient();
-        $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
-        $all = $this->executeGuzzlePool($client, $requests, $firstPage);
-
-        return collect($all);
+        $unique = collect($all)->uniqueStrict(function ($item) {
+            return $item['set_num'].$item['name'].$item['year'];
+        });
+        return $unique;
     }
 
     /**
      * special getter for all parts since the amount of data needs to be throttled
      *
+     * @param int $totalPages
      * @return Illuminate\Support\Collection
      */
-    public function getAllParts()
+    public function getAllParts($totalPages = null)
     {
-        $firstPage = $this->getType('parts', 1, 1000, '');
+        $firstPage = $this->getType('parts', 1, $this->max, 'name');
 
         if ($firstPage === false) {
             return $this->getErrors();
         }
 
-        $response = $this->parseResponse();
+        $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
 
-        $totalPages = ceil($response['count'] / 1000);
+        $this->removeUrlParam('page');
 
-        $baseUrl = $this->baseUrl.'parts/?ordering=name&page_size=1000&page=';
+        $url = $this->getRequestUrl().'&page=';
 
-        $client = $this->generateGuzzleClient();
-        $requests = $this->generateGuzzleRequests($totalPages, $baseUrl);
-        $all = $this->executeGuzzlePool($client, $requests, $firstPage);
+        $all = $this->executePool($totalPages, $url, $firstPage);
 
         return collect($all);
     }
@@ -69,32 +66,56 @@ class RebrickableApiLego
      * gets all of an allowed type
      *
      * @param string $type
+     * @param int $totalPages
      * @return Illuminate\Support\Collection
      */
-    public function getAll($type)
+    public function getAll($type, $totalPages = null)
     {
         $allowedTypes = ['colors', 'themes', 'part_categories', 'sets'];
 
         abort_if(! in_array($type, $allowedTypes), 400, 'Request Type is not allowed!');
 
-        $all = $this->getType($type, 1, 1000, '');
+        $all = $this->getType($type, 1, $this->max, '');
 
         if ($all === false) {
             return $this->getErrors();
         }
 
-        $response = $this->parseResponse();
-
-        $totalPages = ceil($response['count'] / 1000);
+        $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
 
         for ($i = 2; $i <= $totalPages; $i++) {
-            $page = $this->getType($type, $i, 1000, '');
+            $page = $this->getType($type, $i, $this->max, '');
 
             if ($page === false) {
                 return $this->getErrors();
             }
 
             $all = array_merge($all, $page);
+        }
+
+        return collect($all);
+    }
+
+    public function getSetInventory($setNum)
+    {
+        $setNum = $this->normalizeSetNumber($setNum);
+
+        $url = "sets/$setNum/parts/";
+
+        $firstPage = $this->getType($url);
+
+        if ($firstPage === false) {
+            return $this->getErrors();
+        }
+
+        $totalPages = (int) ceil($this->jsonResponse['count'] / $this->max);
+
+        if ($totalPages == 1) {
+            $all = $firstPage;
+        } else {
+            $baseUrl = $this->baseUrl.$url."?page_size=$this->max&page=";
+
+            $all = $this->executePool($totalPages, $baseUrl, $firstPage);
         }
 
         return collect($all);
