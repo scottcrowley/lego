@@ -45,8 +45,9 @@
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content">
-                    <div class="card-image" v-if="data[image_field] != ''">
-                        <img class="" :src="getImageSrc(data[image_field])" :alt="data[image_label_field]">
+                    <div class="card-image">
+                        <img class="" :src="data[image_field]" :alt="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null">
+                        <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
                     </div>
                     <div class="card-body">
                         <p v-for="valname in valnames" :class="(valname['title']) ? 'title' : ''">
@@ -82,10 +83,6 @@
                 type: String,
                 default: ''
             }, 
-            image_base_url: {
-                type: String,
-                default: ''
-            },
             image_field: {
                 type: String,
                 default: ''
@@ -282,10 +279,6 @@
             },
             updateUrl(params) {
                 history.pushState(null, null, params);
-            },
-            getImageSrc(img) {
-                let placeholder = '{' + this.image_field + '}'
-                return this.image_base_url.replace(placeholder, img);
             }
         }
     };
