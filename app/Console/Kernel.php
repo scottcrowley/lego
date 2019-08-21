@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CalculateCategoryPartCount::class
+        Commands\CalculateCategoryPartCount::class,
+        Commands\UpdatePartImageUrl::class
     ];
 
     /**

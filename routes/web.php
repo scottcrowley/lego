@@ -106,3 +106,10 @@ Route::group([
     // Route::get('/clear/{type}', 'ApiUserController@clearCache')->name('api.users.clear');
     // Route::get('/setlists', 'ApiUserController@getSetLists')->name('api.users.setlists');
 });
+
+Route::group([
+    'prefix' => 'api/rebrickable',
+    'middleware' => 'rebrickable'
+], function () {
+    Route::get('/part_categories/{category}/parts', 'RebrickableApiController@getPartsByCategory')->name('api.rebrickable.parts_by_category');
+});
