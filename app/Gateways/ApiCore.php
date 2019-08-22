@@ -71,7 +71,7 @@ class ApiCore
             return $this->getErrors();
         }
 
-        return $results['user_token'];
+        return $results;
     }
 
     /**

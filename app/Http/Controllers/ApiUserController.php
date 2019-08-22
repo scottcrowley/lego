@@ -25,6 +25,7 @@ class ApiUserController extends Controller
     public function getToken()
     {
         $api = new RebrickableApiUser();
+
         return $api->generateToken();
     }
 
