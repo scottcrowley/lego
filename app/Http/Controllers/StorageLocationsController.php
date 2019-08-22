@@ -41,6 +41,7 @@ class StorageLocationsController extends Controller
     {
         $data = request()->validate([
             'name' => 'required|unique:storage_locations',
+            'nickname' => 'nullable',
             'description' => 'required',
             'storage_type_id' => 'exists:storage_types,id'
         ]);
@@ -85,6 +86,7 @@ class StorageLocationsController extends Controller
     {
         $data = request()->validate([
             'name' => ['required', Rule::unique('storage_locations')->ignore($location->id)],
+            'nickname' => 'nullable',
             'description' => 'required',
             'storage_type_id' => 'exists:storage_types,id'
         ]);

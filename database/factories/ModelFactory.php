@@ -34,6 +34,7 @@ $factory->define(App\StorageType::class, function (Faker $faker) {
 $factory->define(App\StorageLocation::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
+        'nickname' => $faker->word,
         'description' => $faker->sentence(),
         'storage_type_id' => factory(App\StorageType::class)
     ];

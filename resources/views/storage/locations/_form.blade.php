@@ -7,6 +7,13 @@
     </div>
 </div>
 <div class="field-group">
+    <label for="nickname">Nickname:</label>
+    <div class="field">
+        <input type="text" name="nickname" id="nickname" value="{{ old('nickname', $location->nickname) }}" class="{{ $errors->has('nickname') ? 'danger' : '' }}">
+        {!! $errors->first('nickname', '<span class="danger">:message</span>') !!}
+    </div>
+</div>
+<div class="field-group">
     <label for="description">Description:</label>
     <div class="field">
         <input type="text" name="description" id="description" value="{{ old('description', $location->description) }}" class="{{ $errors->has('description') ? 'danger' : '' }}" required>
