@@ -14,6 +14,13 @@ class InventoryPart extends Model
     public $timestamps = false;
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['name', 'category_label', 'image_url', 'color_name'];
+
+    /**
      * An inventory part_num has one part
      *
      * @return hasOne
@@ -30,7 +37,7 @@ class InventoryPart extends Model
      */
     public function color()
     {
-        return $this->hasOne(Color::class, 'id');
+        return $this->hasOne(Color::class, 'id', 'color_id');
     }
 
     /**
@@ -41,5 +48,57 @@ class InventoryPart extends Model
     public function inventory()
     {
         return $this->belongsTo(Inventory::class, 'id');
+    }
+
+    /**
+     * Getter for part->name
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->part->name;
+    }
+
+    /**
+     * Getter for part->category_label
+     *
+     * @return string
+     */
+    public function getCategoryLabelAttribute()
+    {
+        return $this->part->categoryLabel;
+    }
+
+    /**
+     * Getter for part->image_url
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->part->imageUrl;
+    }
+
+    /**
+     * Getter for color->name
+     *
+     * @return string
+     */
+    public function getColorNameAttribute()
+    {
+        return $this->color->name;
+    }
+
+    /**
+     * Getter for part->location
+     *
+     * @return string
+     */
+    public function getLocationNameAttribute()
+    {
+        $location = $this->part->storageLocation;
+        // dd($location->count());
+        return ($location->count()) ? $location->first()->name : 'None';
     }
 }

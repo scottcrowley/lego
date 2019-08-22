@@ -10,7 +10,7 @@ class InventoriesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function an_authorized_user_can_view_all_inventories()
+    public function an_authorized_user_can_retrieve_all_inventories()
     {
         $this->signIn();
 

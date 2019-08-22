@@ -169,7 +169,9 @@ class ApiLegoController extends Controller
      */
     public function getInventories(InventoryFilters $filters)
     {
-        $inventories = $filters->apply(Inventory::all());
+        $inventories = $filters->apply(Inventory::with('set')->get());
+
+        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name']);
 
         $inventories = $inventories->values();
 
@@ -185,7 +187,14 @@ class ApiLegoController extends Controller
      */
     public function getInventoryParts(Inventory $inventory, InventoryPartFilters $filters)
     {
-        $parts = $filters->apply(InventoryPart::whereInventoryId($inventory->id)->get());
+        $parts = $filters->apply(
+            InventoryPart::whereInventoryId($inventory->id)
+            ->with('part.storageLocation')
+            ->with('color')
+            ->get()
+        );
+
+        $parts->each->append('location_name');
 
         $parts = $parts->values();
 

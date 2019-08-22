@@ -32,4 +32,44 @@ class Inventory extends Model
     {
         return $this->belongsTo(Set::class, 'set_num', 'set_num');
     }
+
+    /**
+     * Getter for set->name
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->set->name;
+    }
+
+    /**
+     * Getter for set->year
+     *
+     * @return string
+     */
+    public function getYearAttribute()
+    {
+        return $this->set->year;
+    }
+
+    /**
+     * Getter for set->image_url
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->set->image_url;
+    }
+
+    /**
+     * Getter for set->num_parts
+     *
+     * @return string
+     */
+    public function getNumPartsAttribute()
+    {
+        return $this->set->num_parts;
+    }
 }

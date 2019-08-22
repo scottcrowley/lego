@@ -5,7 +5,7 @@
             <div class="relative">
                 <select id="selectSort" @change="updateSort($event)">
                     <option value="">Sort By</option>
-                    <option v-for="valname in valnames" :value="valname['field']" v-if="valname['sortable']">{{ valname['label'] }}</option>
+                    <option v-for="valname in valnames" :value="valname.field" v-if="valname.sortable">{{ valname.label }}</option>
                 </select>
                 <div class="select-menu-icon">
                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -50,8 +50,8 @@
                         <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
                     </div>
                     <div class="card-body">
-                        <p v-for="valname in valnames" :class="(valname['title']) ? 'title' : ''">
-                            <span class="font-bold" v-if="!valname['title']">{{ valname['label'] }}:</span> {{ data[valname['field']] }}
+                        <p v-for="valname in valnames" :class="(valname.title) ? 'title' : ''">
+                            <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> {{ data[valname.field] }}
                         </p>
                     </div>
                 </div>
