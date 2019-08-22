@@ -61,4 +61,9 @@ class StorageLocation extends Model
     {
         return $this->belongsToMany(Part::class, 'part_storage_location', 'storage_location_id', 'part_num', 'id', 'part_num');
     }
+
+    public function getLocationNameAttribute()
+    {
+        return (! is_null($this->nickname)) ? $this->nickname : $this->name;
+    }
 }
