@@ -70,6 +70,9 @@ Route::group([
         Route::get('/inventory-parts-grid/{inventory}', function (Inventory $inventory) {
             return view('lego.inventory_parts.grid', compact('inventory'));
         })->name('lego.inventory_parts.grid');
+        Route::get('/inventory-parts/{inventory}', function (Inventory $inventory) {
+            return view('lego.inventory_parts.index', compact('inventory'));
+        })->name('lego.inventory_parts.index');
         Route::view('/sets', 'lego.sets.index')->name('lego.sets.index');
         Route::view('/sets-grid', 'lego.sets.grid')->name('lego.sets.grid');
         Route::view('/themes', 'lego.themes')->name('lego.themes');

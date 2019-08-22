@@ -94,4 +94,15 @@ class Theme extends Model
     {
         return $this->getAllParents();
     }
+
+    /**
+     * Attribute getter for theme_label
+     *
+     * @return array
+     */
+    public function getThemeLabelAttribute()
+    {
+        $this->getAllParents();
+        return $this->themeLabel;
+    }
 }

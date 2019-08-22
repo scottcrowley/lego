@@ -46,12 +46,20 @@
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content">
                     <div class="card-image">
-                        <img class="" :src="data[image_field]" :alt="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null">
+                        <img class="" :src="data[image_field]" :alt="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null" @click.prevent="swapImageUrl($event)">
                         <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
                     </div>
                     <div class="card-body">
                         <p v-for="valname in valnames" :class="(valname.title) ? 'title' : ''">
-                            <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> {{ data[valname.field] }}
+                            <span v-if="!valname.link">
+                                <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
+                                {{ (
+                                    (valname.boolean === true) ? (
+                                        (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
+                                    ) : data[valname.field]
+                                ) }}
+                            </span>
+                            <a :href="generateLinkUrl(valname.linkUrl, index)" v-if="valname.link">{{ data[valname.field] }}</a>
                         </p>
                     </div>
                 </div>
@@ -279,6 +287,29 @@
             },
             updateUrl(params) {
                 history.pushState(null, null, params);
+            },
+            generateLinkUrl(url, index) {
+                let token = url.match(/\{.+\}/ig);
+
+                if (token == null) {
+                    return url;
+                }
+
+                let key = token[0].substr(1, token[0].length - 2);
+                let value = this.dataSet[index][key];
+                
+                if (value) {
+                    return url.replace(token[0], value);
+                }
+
+                return url;
+            },
+            swapImageUrl(e) {
+                let src = e.target.src;
+                let alt = e.target.alt;
+
+                e.target.src = alt;
+                e.target.alt = src;
             }
         }
     };

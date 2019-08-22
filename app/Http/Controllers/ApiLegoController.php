@@ -171,7 +171,7 @@ class ApiLegoController extends Controller
     {
         $inventories = $filters->apply(Inventory::with('set')->get());
 
-        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name']);
+        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name', 'theme_id']);
 
         $inventories = $inventories->values();
 

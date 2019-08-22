@@ -18,7 +18,9 @@ class InventoryPart extends Model
      *
      * @var array
      */
-    protected $appends = ['name', 'category_label', 'image_url', 'color_name'];
+    protected $appends = ['name', 'category_label', 'image_url', 'color_name', 'ldraw_image_url'];
+
+    protected $ldrawBaseUrl = 'https://cdn.rebrickable.com/media/thumbs/parts/ldraw/{color_id}/{part_num}.png/250x250p.png';
 
     /**
      * An inventory part_num has one part
@@ -100,5 +102,10 @@ class InventoryPart extends Model
         $location = $this->part->storageLocation;
         // dd($location->count());
         return ($location->count()) ? $location->first()->location_name : 'None';
+    }
+
+    public function getLdrawImageUrlAttribute()
+    {
+        return str_replace(['{color_id}', '{part_num}'], [$this->color_id, $this->part_num], $this->ldrawBaseUrl);
     }
 }
