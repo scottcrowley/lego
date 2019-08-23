@@ -15,8 +15,8 @@ class CreatePartRelationshipsTable extends Migration
     {
         Schema::create('part_relationships', function (Blueprint $table) {
             $table->string('rel_type', 1)->nullable();
-            $table->string('child_part_num', 20);
-            $table->string('parent_part_num', 20);
+            $table->string('child_part_num', 20)->index();
+            $table->string('parent_part_num', 20)->index();
 
             $table->foreign('child_part_num')
                 ->references('part_num')

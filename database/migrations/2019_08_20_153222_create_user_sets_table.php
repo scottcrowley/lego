@@ -14,7 +14,7 @@ class CreateUserSetsTable extends Migration
     public function up()
     {
         Schema::create('user_sets', function (Blueprint $table) {
-            $table->string('set_num', 20);
+            $table->string('set_num', 20)->index();
             $table->unsignedInteger('quantity')->default(1);
 
             $table->foreign('set_num')

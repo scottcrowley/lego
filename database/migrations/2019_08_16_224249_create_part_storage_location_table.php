@@ -14,10 +14,10 @@ class CreatePartStorageLocationTable extends Migration
     public function up()
     {
         Schema::create('part_storage_location', function (Blueprint $table) {
-            $table->string('part_num', 20);
+            $table->string('part_num', 20)->index();
             $table->unsignedBigInteger('storage_location_id');
 
-            $table->primary(['part_num', 'storage_location_id'], 'part_storage_id');
+            $table->unique(['part_num', 'storage_location_id'], 'part_storage_id');
 
             $table->foreign('part_num', 'fk_part_num')
                 ->references('part_num')

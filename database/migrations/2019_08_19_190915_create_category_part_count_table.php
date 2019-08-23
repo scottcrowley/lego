@@ -14,7 +14,7 @@ class CreateCategoryPartCountTable extends Migration
     public function up()
     {
         Schema::create('category_part_count', function (Blueprint $table) {
-            $table->unsignedBigInteger('part_category_id');
+            $table->unsignedBigInteger('part_category_id')->index();
             $table->unsignedInteger('part_count');
 
             $table->foreign('part_category_id')

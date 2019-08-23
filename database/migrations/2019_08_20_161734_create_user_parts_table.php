@@ -14,8 +14,8 @@ class CreateUserPartsTable extends Migration
     public function up()
     {
         Schema::create('user_parts', function (Blueprint $table) {
-            $table->string('part_num', 20);
-            $table->bigInteger('color_id');
+            $table->string('part_num', 20)->index();
+            $table->bigInteger('color_id')->index();
             $table->unsignedInteger('quantity');
 
             $table->foreign('part_num')

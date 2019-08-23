@@ -14,13 +14,11 @@ class CreateSetsTable extends Migration
     public function up()
     {
         Schema::create('sets', function (Blueprint $table) {
-            $table->string('set_num', 20);
+            $table->string('set_num', 20)->unique()->index();
             $table->string('name', 256);
             $table->year('year');
-            $table->unsignedBigInteger('theme_id')->nullable();
+            $table->unsignedBigInteger('theme_id')->nullable()->index();
             $table->integer('num_parts');
-
-            $table->primary('set_num');
 
             $table->foreign('theme_id')
                 ->references('id')

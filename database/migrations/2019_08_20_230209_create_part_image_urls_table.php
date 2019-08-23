@@ -14,10 +14,10 @@ class CreatePartImageUrlsTable extends Migration
     public function up()
     {
         Schema::create('part_image_urls', function (Blueprint $table) {
-            $table->string('part_num', 20);
+            $table->string('part_num', 20)->index();
             $table->string('image_url');
 
-            $table->primary(['part_num', 'image_url']);
+            $table->unique(['part_num', 'image_url']);
 
             $table->foreign('part_num')
                 ->references('part_num')

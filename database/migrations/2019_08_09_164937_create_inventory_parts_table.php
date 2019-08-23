@@ -14,9 +14,9 @@ class CreateInventoryPartsTable extends Migration
     public function up()
     {
         Schema::create('inventory_parts', function (Blueprint $table) {
-            $table->unsignedBigInteger('inventory_id');
-            $table->string('part_num');
-            $table->bigInteger('color_id');
+            $table->unsignedBigInteger('inventory_id')->index();
+            $table->string('part_num')->index();
+            $table->bigInteger('color_id')->index();
             $table->integer('quantity');
             $table->string('is_spare', 1);
 

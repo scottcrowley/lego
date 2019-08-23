@@ -14,10 +14,10 @@ class CreateSetImageUrlsTable extends Migration
     public function up()
     {
         Schema::create('set_image_urls', function (Blueprint $table) {
-            $table->string('set_num', 20);
+            $table->string('set_num', 20)->index();
             $table->string('image_url');
 
-            $table->primary(['set_num', 'image_url']);
+            $table->unique(['set_num', 'image_url']);
 
             $table->foreign('set_num')
                 ->references('set_num')
