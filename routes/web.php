@@ -52,6 +52,7 @@ Route::group([
     Route::post('', 'StorageLocationsController@store')->name('storage.locations.store');
     Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
     Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');
+    Route::patch('/{location}/parts', 'StorageLocationsController@showParts')->name('storage.locations.parts');
 });
 
 Route::group([

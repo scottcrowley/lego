@@ -53,6 +53,16 @@ class InventoryPart extends Model
     }
 
     /**
+     * Simple getter for the LDraw base url
+     *
+     * @return string
+     */
+    public function getLdrawBaseUrl()
+    {
+        return $this->ldrawBaseUrl;
+    }
+
+    /**
      * Getter for part->name
      *
      * @return string
@@ -100,7 +110,7 @@ class InventoryPart extends Model
     public function getLocationNameAttribute()
     {
         $location = $this->part->storageLocation;
-        // dd($location->count());
+
         return ($location->count()) ? $location->first()->location_name : 'None';
     }
 

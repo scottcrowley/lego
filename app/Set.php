@@ -35,6 +35,17 @@ class Set extends Model
     protected $hidden = ['setImageUrl'];
 
     /**
+     * Add a new url to the setImageUrl relation
+     *
+     * @param string $url
+     * @return void
+     */
+    public function addImageUrl($url)
+    {
+        $this->setImageUrl()->create(['image_url' => $url]);
+    }
+
+    /**
      * A set belongs to one theme
      *
      * @return belongsTo

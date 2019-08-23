@@ -138,25 +138,7 @@ class ApiLegoController extends Controller
 
         $page = ($sets->paginate($this->defaultPerPage))->toArray();
 
-        if (count($page['data'])) {
-            $themes = Theme::all();
-
-            foreach ($page['data'] as $k => $set) {
-                if (is_null($set['theme_id'])) {
-                    continue;
-                }
-
-                $setTheme = $themes->where('id', $set['theme_id'])->first();
-
-                $theme = ($this->themeParentHierarchy($setTheme->toArray(), $themes))->toArray();
-
-                $set['theme_details'] = $theme;
-
-                $set['theme_label'] = (is_null($theme['parent_id'])) ? $theme['name'] : $theme['parents_label'].' -> '.$theme['name'];
-
-                $page['data'][$k] = $set;
-            }
-        }
+        $page = $this->getThemeHeirarchy($page, Theme::all());
 
         return $page;
     }
@@ -169,13 +151,17 @@ class ApiLegoController extends Controller
      */
     public function getInventories(InventoryFilters $filters)
     {
-        $inventories = $filters->apply(Inventory::with('set')->get());
+        $inventories = $filters->apply(Inventory::with('set.theme')->get());
 
-        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name', 'theme_id']);
+        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name', 'theme_id', 'theme_label']);
 
         $inventories = $inventories->values();
 
-        return $inventories->paginate($this->defaultPerPage);
+        $page = ($inventories->paginate($this->defaultPerPage))->toArray();
+
+        $page = $this->getThemeHeirarchy($page, Theme::all());
+
+        return $page;
     }
 
     /**

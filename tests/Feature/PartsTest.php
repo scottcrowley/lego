@@ -82,4 +82,35 @@ class PartsTest extends TestCase
         $this->get(route('api.lego.parts', ['sortdesc' => 'name']))
             ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
+
+    /** @test */
+    public function an_authorized_user_can_access_the_parts_image_url()
+    {
+        $this->signIn();
+
+        $part = create('App\Part');
+
+        $part->addImageUrl('http://www.example.com');
+
+        $response = $this->get(route('api.lego.parts'));
+
+        $data = $response->getData()->data[0];
+
+        $this->assertEquals($part->partImageUrl->first()->image_url, $data->image_url);
+    }
+
+    /** @test */
+    public function an_authorized_user_can_access_the_parts_category_label()
+    {
+        $this->signIn();
+
+        $category = create('App\PartCategory');
+        $part = create('App\Part', ['part_category_id' => $category->id]);
+
+        $response = $this->get(route('api.lego.parts'));
+
+        $data = $response->getData()->data[0];
+
+        $this->assertEquals($category->name, $data->category_label);
+    }
 }

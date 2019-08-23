@@ -43,4 +43,26 @@ trait ApiHelpers
 
         return collect($theme);
     }
+
+    protected function getThemeHeirarchy($page, $themes)
+    {
+        if (count($page['data'])) {
+            foreach ($page['data'] as $k => $set) {
+                if (is_null($set['theme_id'])) {
+                    continue;
+                }
+
+                $setTheme = $themes->where('id', $set['theme_id'])->first();
+
+                $theme = ($this->themeParentHierarchy($setTheme->toArray(), $themes))->toArray();
+
+                $set['theme_details'] = $theme;
+
+                $set['theme_label'] = (is_null($theme['parent_id'])) ? $theme['name'] : $theme['parents_label'].' -> '.$theme['name'];
+
+                $page['data'][$k] = $set;
+            }
+        }
+        return $page;
+    }
 }

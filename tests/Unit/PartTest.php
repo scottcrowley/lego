@@ -34,4 +34,16 @@ class PartTest extends TestCase
 
         $this->assertEquals($part->location->name, $location->name);
     }
+
+    /** @test */
+    public function it_can_add_an_image_url()
+    {
+        $this->signIn();
+
+        $part = create('App\Part');
+
+        $part->addImageUrl('http://www.example.com');
+
+        $this->assertEquals($part->partImageUrl->first()->image_url, 'http://www.example.com');
+    }
 }

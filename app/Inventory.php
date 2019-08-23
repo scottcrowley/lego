@@ -82,4 +82,14 @@ class Inventory extends Model
     {
         return $this->set->theme_id;
     }
+
+    /**
+     * Getter for set->theme_label
+     *
+     * @return string
+     */
+    public function getThemeLabelAttribute()
+    {
+        return $this->set->theme->theme_label;
+    }
 }

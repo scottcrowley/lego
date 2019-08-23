@@ -136,4 +136,20 @@ class SetsTest extends TestCase
 
         $this->assertEquals($response->getData()->data[0]->theme_label, 'top parent theme -> parent theme -> child theme');
     }
+
+    /** @test */
+    public function an_authorized_user_can_access_the_sets_image_url()
+    {
+        $this->signIn();
+
+        $set = create('App\Set');
+
+        $set->addImageUrl('http://www.example.com');
+
+        $response = $this->get(route('api.lego.sets'));
+
+        $data = $response->getData()->data[0];
+
+        $this->assertEquals($set->setImageUrl->first()->image_url, $data->image_url);
+    }
 }

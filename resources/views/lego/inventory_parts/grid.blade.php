@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="w-full px-3 sm:px-0">
+    <div class="mb-4">
+        <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back to Inventories</a>
+    </div>
     <div class="flex mb-3 mb-8 mx-auto" style="width: 90%;">
         <div class="w-3/5">
             <img src="{{ $inventory->set->image_url }}" alt="{{ $inventory->set->name }}" class="shadow-lg rounded-lg">

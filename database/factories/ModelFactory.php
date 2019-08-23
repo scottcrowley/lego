@@ -136,3 +136,12 @@ $factory->define(App\UserPart::class, function (Faker $faker) {
         'quantity' => $faker->numberBetween(1, 10)
     ];
 });
+
+$factory->define(App\SetImageUrl::class, function (Faker $faker) {
+    return [
+        'set_num' => function () {
+            return factory(App\Set::class)->create()->set_num;
+        },
+        'image_url' => $faker->url
+    ];
+});

@@ -23,4 +23,16 @@ class SetTest extends TestCase
 
         $this->assertEquals($theme->name, $set->theme->name);
     }
+
+    /** @test */
+    public function it_can_add_an_image_url()
+    {
+        $this->signIn();
+
+        $set = create('App\Set');
+
+        $set->addImageUrl('http://www.example.com');
+
+        $this->assertEquals($set->setImageUrl->first()->image_url, 'http://www.example.com');
+    }
 }

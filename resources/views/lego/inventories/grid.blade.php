@@ -16,6 +16,7 @@
                 :valnames="[
                     {label: 'Set Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false, link: true, linkUrl: '/lego/inventory-parts-grid/{id}'},
                     {label: 'Set Number', field: 'set_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false, link: false, linkUrl: ''},
+                    {label: 'Theme', field: 'theme_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false, link: false, linkUrl: ''},
                     {label: 'Year', field: 'year', title: false, sortable: true, sorted: true, sortdesc: true, boolean: false, link: false, linkUrl: ''},
                     {label: 'Pieces', field: 'num_parts', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false, link: false, linkUrl: ''},
                     ]"
