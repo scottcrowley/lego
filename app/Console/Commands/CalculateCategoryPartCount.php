@@ -8,6 +8,8 @@ use Illuminate\Console\Command;
 
 class CalculateCategoryPartCount extends Command
 {
+    use CommandHelpers;
+
     /**
      * The name and signature of the console command.
      *
@@ -39,13 +41,16 @@ class CalculateCategoryPartCount extends Command
      */
     public function handle()
     {
+        $this->processStart = microtime(true);
+
         $this->start();
 
+        $this->info('');
         $this->truncateTable();
-
         $this->updateCount();
 
         $this->info('');
+        $this->goodbye();
     }
 
     protected function start()
@@ -55,15 +60,18 @@ class CalculateCategoryPartCount extends Command
 
     protected function truncateTable()
     {
+        $this->updateStatus('Truncating table...');
+
         CategoryPartCount::truncate();
     }
 
     protected function updateCount()
     {
-        $categories = PartCategory::with('parts')->get();
+        $categories = $this->getPartCategories();
+
+        $this->updateStatus('Updating category part count...');
 
         $progress = $this->output->createProgressBar($categories->count());
-
         $progress->start();
 
         foreach ($categories as $category) {
@@ -72,6 +80,15 @@ class CalculateCategoryPartCount extends Command
             $progress->advance();
         }
 
+        $this->processed = $categories->count();
+
         $progress->finish();
+    }
+
+    protected function getPartCategories()
+    {
+        $this->updateStatus('Getting part categories...');
+
+        return PartCategory::with('parts')->get();
     }
 }

@@ -9,6 +9,8 @@ use App\Gateways\RebrickableApiLego;
 
 class UpdateSetImageUrl extends Command
 {
+    use CommandHelpers;
+
     /**
      * The name and signature of the console command.
      *
@@ -76,20 +78,6 @@ class UpdateSetImageUrl extends Command
     protected $end = 0;
 
     /**
-     * Process start time
-     *
-     * @var float
-     */
-    protected $processStart = 0;
-
-    /**
-     * Process end time
-     *
-     * @var float
-     */
-    protected $processEnd = 0;
-
-    /**
      * Create a new command instance.
      *
      * @return void
@@ -115,6 +103,7 @@ class UpdateSetImageUrl extends Command
         $this->start = ($this->option('start')) ? ((int) $this->option('start')) - 1 : 0;
         $this->end = ($this->option('end')) ? ((int) $this->option('end')) - 1 : 0;
 
+        $this->info('');
         $this->getCurrentSetImages();
         $this->setupApiInstance();
         $this->getRebrickableSets();
@@ -133,11 +122,15 @@ class UpdateSetImageUrl extends Command
 
     protected function getCurrentSetImages()
     {
+        $this->updateStatus('Getting current set images...');
+
         $this->setImageUrls = SetImageUrl::all();
     }
 
     protected function setupApiInstance()
     {
+        $this->updateStatus('Setting up api instance...');
+
         $this->api = new RebrickableApiLego;
     }
 
@@ -150,9 +143,13 @@ class UpdateSetImageUrl extends Command
             $this->goodbye();
         }
 
+        $this->processed = $sets->count();
+
         $allDbSets = $this->getAllDbSets();
 
         $images = $this->setImageUrls;
+
+        $this->updateStatus('Processing new set images...');
 
         $setsProgress = $this->output->createProgressBar($sets->count());
         $setsProgress->start();
@@ -195,17 +192,10 @@ class UpdateSetImageUrl extends Command
         }
     }
 
-    protected function goodbye()
-    {
-        $processLabel = $this->calculateProcessTime();
-
-        $this->info('');
-        $this->info('>>>> Process completed in '.$processLabel.'! <<<<');
-        die();
-    }
-
     protected function getAllDbSets()
     {
+        $this->updateStatus('Getting sets from database...');
+
         if ($this->option('theme')) {
             return $this->allDbSets = Set::whereThemeId($this->option('theme'))->get()->pluck('set_num');
         }
@@ -214,6 +204,8 @@ class UpdateSetImageUrl extends Command
 
     protected function getRebrickableSets()
     {
+        $this->updateStatus('Getting sets from Rebrickable...');
+
         if ($this->option('theme')) {
             $this->api->setUrlParam('theme_id', $this->option('theme'));
         }
@@ -244,19 +236,5 @@ class UpdateSetImageUrl extends Command
         if ($this->start > 0 || $this->end > 0) {
             $this->sets = $this->sets->splice($this->start, $this->end);
         }
-    }
-
-    protected function calculateProcessTime()
-    {
-        $this->processEnd = microtime(true);
-
-        $processTime = $this->processEnd - $this->processStart;
-        $processLabel = ' seconds';
-        if ($processTime > 90) {
-            $processTime = $processTime / 60;
-            $processLabel = ' minutes';
-        }
-
-        return round($processTime, 2).$processLabel;
     }
 }

@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\CalculateCategoryPartCount::class,
-        Commands\UpdatePartImageUrl::class
+        Commands\UpdatePartImageUrl::class,
+        Commands\UpdateSetImageUrl::class,
+        Commands\UpdateThemeHierarchy::class,
     ];
 
     /**

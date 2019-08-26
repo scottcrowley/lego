@@ -10,6 +10,8 @@ use App\Gateways\RebrickableApiLego;
 
 class UpdatePartImageUrl extends Command
 {
+    use CommandHelpers;
+
     /**
      * The name and signature of the console command.
      *
@@ -77,20 +79,6 @@ class UpdatePartImageUrl extends Command
     protected $end = 0;
 
     /**
-     * Process start time
-     *
-     * @var float
-     */
-    protected $processStart = 0;
-
-    /**
-     * Process end time
-     *
-     * @var float
-     */
-    protected $processEnd = 0;
-
-    /**
      * Create a new command instance.
      *
      * @return void
@@ -116,6 +104,7 @@ class UpdatePartImageUrl extends Command
         $this->start = ($this->option('start')) ? ((int) $this->option('start')) - 1 : 0;
         $this->end = ($this->option('end')) ? ((int) $this->option('end')) - 1 : 0;
 
+        $this->info('');
         $this->getCurrentPartImages();
         $this->getPartCategories();
         $this->setupApiInstance();
@@ -133,11 +122,15 @@ class UpdatePartImageUrl extends Command
 
     protected function getCurrentPartImages()
     {
+        $this->updateStatus('Getting current part images...');
+
         $this->partImageUrls = PartImageUrl::all();
     }
 
     protected function getPartCategories()
     {
+        $this->updateStatus('Getting part categories...');
+
         if ($this->option('category')) {
             $this->partCategories = PartCategory::findOrFail($this->option('category'));
             return;
@@ -154,11 +147,15 @@ class UpdatePartImageUrl extends Command
 
     protected function getAllParts()
     {
+        $this->updateStatus('Getting all parts...');
+
         $this->allParts = Part::all()->pluck('part_num');
     }
 
     protected function setupApiInstance()
     {
+        $this->updateStatus('Setting up api instance...');
+
         $this->api = new RebrickableApiLego;
     }
 
@@ -169,14 +166,19 @@ class UpdatePartImageUrl extends Command
             $this->goodbye();
         }
 
+        $this->processed = 0;
+
         $this->getAllParts();
+
+        $this->updateStatus('Getting parts from Rebrickable...');
 
         if ($this->option('category')) {
             return $this->getRebrickableParts($this->option('category'));
         }
 
-        $categoryProgress = $this->output->createProgressBar($this->partCategories->count());
+        $this->updateStatus('Processing new part images...');
 
+        $categoryProgress = $this->output->createProgressBar($this->partCategories->count());
         $categoryProgress->start();
 
         foreach ($this->partCategories as $category) {
@@ -198,15 +200,6 @@ class UpdatePartImageUrl extends Command
             $missing = implode(', ', $this->missingParts);
             $this->warn('The following parts are missing from the database: '.$missing);
         }
-    }
-
-    protected function goodbye()
-    {
-        $processLabel = $this->calculateProcessTime();
-
-        $this->info('');
-        $this->info('>>>> Process completed in '.$processLabel.'! <<<<');
-        die();
     }
 
     protected function getRebrickableParts($category)
@@ -240,11 +233,12 @@ class UpdatePartImageUrl extends Command
 
     protected function processParts($parts)
     {
+        $this->processed = $this->processed + count($parts);
+
         $images = $this->partImageUrls;
         $allParts = $this->allParts;
 
         $partsProgress = $this->output->createProgressBar(count($parts));
-
         $partsProgress->start();
 
         foreach ($parts as $part) {
@@ -273,19 +267,5 @@ class UpdatePartImageUrl extends Command
         $partsProgress->finish();
 
         return true;
-    }
-
-    protected function calculateProcessTime()
-    {
-        $this->processEnd = microtime(true);
-
-        $processTime = $this->processEnd - $this->processStart;
-        $processLabel = ' seconds';
-        if ($processTime > 90) {
-            $processTime = $processTime / 60;
-            $processLabel = ' minutes';
-        }
-
-        return round($processTime, 2).$processLabel;
     }
 }
