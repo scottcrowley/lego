@@ -20,18 +20,4 @@ class ThemeTest extends TestCase
 
         $this->assertEquals($themeParent->id, $parent->id);
     }
-
-    /** @test */
-    public function it_can_have_multiple_parent_themes()
-    {
-        $topParent = create('App\Theme', ['name' => 'top parent']);
-
-        $parent = create('App\Theme', ['name' => 'parent', 'parent_id' => $topParent->id]);
-
-        $theme = create('App\Theme', ['name' => 'theme', 'parent_id' => $parent->id]);
-
-        $this->assertCount(2, $theme->parents);
-
-        $this->assertEquals('top parent -> parent', $theme->parentsLabel);
-    }
 }

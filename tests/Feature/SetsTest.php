@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\ThemeLabel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -129,6 +130,8 @@ class SetsTest extends TestCase
         $parentTheme = create('App\Theme', ['name' => 'parent theme', 'parent_id' => $topParentTheme->id]);
 
         $childTheme = create('App\Theme', ['name' => 'child theme', 'parent_id' => $parentTheme->id]);
+
+        ThemeLabel::create(['theme_id' => $childTheme->id, 'parents_label' => $topParentTheme->name.' -> '.$parentTheme->name, 'theme_label' => $topParentTheme->name.' -> '.$parentTheme->name.' -> '.$childTheme->name]);
 
         create('App\Set', ['theme_id' => $childTheme->id]);
 

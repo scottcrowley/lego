@@ -101,4 +101,14 @@ class Set extends Model
 
         return $setImageUrl->first()->image_url;
     }
+
+    /**
+     * Getter for theme label
+     *
+     * @return string
+     */
+    public function getThemeLabelAttribute()
+    {
+        return $this->theme->theme_label;
+    }
 }

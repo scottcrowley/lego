@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\ThemeLabel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -97,6 +98,8 @@ class InventoriesTest extends TestCase
         $parentTheme = create('App\Theme', ['name' => 'The Parent Theme']);
 
         $theme = create('App\Theme', ['name' => 'The New Theme', 'parent_id' => $parentTheme->id]);
+
+        ThemeLabel::create(['theme_id' => $theme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' -> '.$theme->name]);
 
         $set = create('App\Set', ['theme_id' => $theme->id]);
 

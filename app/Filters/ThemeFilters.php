@@ -19,10 +19,6 @@ class ThemeFilters extends Filters
      */
     protected function parent_id($value)
     {
-        return $this->collection = $this->collection->filter(
-            function ($item) use ($value) {
-                return false !== stristr($item['parent_id'], $value);
-            }
-        );
+        return $this->collection = $this->collection->where('parent_id', $value);
     }
 }

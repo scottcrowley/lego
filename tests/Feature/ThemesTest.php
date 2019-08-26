@@ -76,13 +76,10 @@ class ThemesTest extends TestCase
     {
         $this->signIn();
 
-        $topParent = create('App\Theme', ['name' => 'top parent']);
+        $themeLabel = create('App\ThemeLabel');
 
-        $parent = create('App\Theme', ['name' => 'parent', 'parent_id' => $topParent->id]);
+        $data = ($this->get(route('api.lego.themes')))->getData()->data;
 
-        $child = create('App\Theme', ['name' => 'child', 'parent_id' => $parent->id]);
-
-        $this->get(route('api.lego.themes', ['name' => 'child']))
-            ->assertSee('top parent -> parent');
+        $this->assertEquals($themeLabel->theme_label, $data[2]->theme_label);
     }
 }

@@ -21,8 +21,6 @@ use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
 {
-    use ApiHelpers;
-
     /**
      * default number of results to display
      *
@@ -91,22 +89,12 @@ class ApiLegoController extends Controller
      */
     public function getThemes(ThemeFilters $filters)
     {
-        $themes = $filters->apply(Theme::all());
+        $allThemes = Theme::all();
+        $themes = $filters->apply($allThemes);
 
         $themes = $themes->values();
 
-        $page = ($themes->paginate($this->defaultPerPage))->toArray();
-
-        if (count($page['data'])) {
-            $allThemes = Theme::all();
-
-            foreach ($page['data'] as $k => $theme) {
-                $theme = $this->themeParentHierarchy($theme, $allThemes);
-                $page['data'][$k] = $theme;
-            }
-        }
-
-        return $page;
+        return $themes->paginate($this->defaultPerPage);
     }
 
     /**
@@ -132,15 +120,11 @@ class ApiLegoController extends Controller
      */
     public function getSets(SetFilters $filters)
     {
-        $sets = $filters->apply(Set::all());
+        $sets = $filters->apply(Set::with('theme')->get());
 
-        $sets = $sets->values();
+        $sets = $sets->each->append('theme_label')->values();
 
-        $page = ($sets->paginate($this->defaultPerPage))->toArray();
-
-        $page = $this->getThemeHeirarchy($page, Theme::all());
-
-        return $page;
+        return $sets->paginate($this->defaultPerPage);
     }
 
     /**
@@ -157,11 +141,7 @@ class ApiLegoController extends Controller
 
         $inventories = $inventories->values();
 
-        $page = ($inventories->paginate($this->defaultPerPage))->toArray();
-
-        $page = $this->getThemeHeirarchy($page, Theme::all());
-
-        return $page;
+        return $inventories->paginate($this->defaultPerPage);
     }
 
     /**
