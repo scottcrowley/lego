@@ -2,16 +2,23 @@
 
 @section('content')
 <div class="w-full">
-    <div class="flex mb-3 mb-8 mx-auto" style="width: 90%;">
-        <div class="w-3/5">
-            <img src="{{ $inventory->set->image_url }}" alt="{{ $inventory->set->name }}" class="shadow-lg rounded-lg">
+    <div class="flex mb-3 mb-8 mx-auto border rounded-lg p-6 bg-white shadow-md" style="width: 95%;">
+        <div class="w-auto max-w-md">
+            <img src="{{ $inventory->set->image_url }}" alt="{{ $inventory->set->name }}">
         </div>
-        <div class="flex-1 ml-3 pt-6">
-            <p class="title text-2xl mb-4">{{ $inventory->set->name }}</p>
-            <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Set Number:</span> {{ $inventory->set->set_num }}</p>
-            <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Theme:</span> {{ $inventory->set->theme->theme_label }}</p>
-            <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Year:</span> {{ $inventory->set->year }}</p>
-            <p class="font-hairline tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
+        <div class="flex-1 ml-5 pt-6">
+            <div class="flex flex-col h-full">
+                <div>
+                    <p class="title text-2xl mb-4">{{ $inventory->set->name }}</p>
+                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Set Number:</span> {{ $inventory->set->set_num }}</p>
+                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Theme:</span> {{ $inventory->set->theme->theme_label }}</p>
+                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Year:</span> {{ $inventory->set->year }}</p>
+                    <p class="font-hairline tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
+                </div>
+                <div class="mt-auto self-end">
+                    <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back to Inventories</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="rounded shadow">

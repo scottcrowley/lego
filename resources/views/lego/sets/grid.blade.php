@@ -12,7 +12,7 @@
                 label="Sets" 
                 image_field="image_url" 
                 image_label_field="name" 
-                per_page="25" 
+                per_page="50" 
                 :valnames="[
                     {label: 'Set Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Set Number', field: 'set_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},

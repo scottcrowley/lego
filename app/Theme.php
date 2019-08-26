@@ -41,20 +41,6 @@ class Theme extends Model
      */
     protected $hidden = ['label'];
 
-    // /**
-    // * label for the theme's parent hierarchy
-    // *
-    // * @var string
-    // */
-    // public $parentsLabel = '';
-
-    // /**
-    // * label for the entire theme's hierarchy
-    // *
-    // * @var string
-    // */
-    // public $themeLabel = '';
-
     /**
      * A parent belongs to one theme
      *

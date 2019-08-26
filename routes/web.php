@@ -12,6 +12,7 @@
 */
 
 use App\Inventory;
+use App\StorageLocation;
 
 Auth::routes();
 
@@ -52,7 +53,9 @@ Route::group([
     Route::post('', 'StorageLocationsController@store')->name('storage.locations.store');
     Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
     Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');
-    Route::patch('/{location}/parts', 'StorageLocationsController@showParts')->name('storage.locations.parts');
+    Route::get('/{location}/parts', function (StorageLocation $location) {
+        return view('storage.locations.parts', compact('location'));
+    })->name('storage.locations.parts');
 });
 
 Route::group([

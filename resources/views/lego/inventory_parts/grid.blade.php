@@ -31,14 +31,14 @@
                 label="Parts" 
                 image_field="ldraw_image_url" 
                 image_label_field="image_url" 
-                per_page="50" 
+                per_page="100" 
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Quantity', field: 'quantity', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Color', field: 'color_name', title: false, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
-                    {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
+                    {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color']"

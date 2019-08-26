@@ -109,7 +109,11 @@ class ApiLegoController extends Controller
 
         $parts = $parts->values();
 
-        return $parts->paginate($this->defaultPerPage);
+        $page = $parts->paginate($this->defaultPerPage);
+
+        $page->load('partImageUrl');
+
+        return $page;
     }
 
     /**
@@ -124,7 +128,11 @@ class ApiLegoController extends Controller
 
         $sets = $sets->each->append('theme_label')->values();
 
-        return $sets->paginate($this->defaultPerPage);
+        $page = $sets->paginate($this->defaultPerPage);
+
+        $page->load('setImageUrl');
+
+        return $page;
     }
 
     /**
@@ -135,13 +143,23 @@ class ApiLegoController extends Controller
      */
     public function getInventories(InventoryFilters $filters)
     {
-        $inventories = $filters->apply(Inventory::with('set.theme')->get());
+        // $inventories = $filters->apply(Inventory::all()); //doesnt allow for sorting with any of the additional fields
+        $inventories = $filters->apply(Inventory::with('set')->with('theme')->get());
 
-        $inventories->each->setAppends(['image_url', 'year', 'num_parts', 'name', 'theme_id', 'theme_label']);
+        $inventories->each->setAppends([
+            'image_url',
+            'year',
+            'num_parts',
+            'name',
+            'theme_id',
+            'theme_label'
+        ])->values();
 
-        $inventories = $inventories->values();
+        $page = $inventories->paginate($this->defaultPerPage);
 
-        return $inventories->paginate($this->defaultPerPage);
+        // $page->load('set')->load('theme'); //doesnt allow for sorting with any of the additional fields
+
+        return $page;
     }
 
     /**
@@ -156,6 +174,7 @@ class ApiLegoController extends Controller
         $parts = $filters->apply(
             InventoryPart::whereInventoryId($inventory->id)
             ->with('part.storageLocation')
+            ->with('part.partImageUrl')
             ->with('color')
             ->get()
         );

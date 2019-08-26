@@ -14,6 +14,13 @@ class Inventory extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['theme', 'set'];
+
+    /**
      * An inventory has many inventory parts
      *
      * @return hasMany
@@ -30,7 +37,19 @@ class Inventory extends Model
      */
     public function set()
     {
+        // only use if ApiLegoController@getInventories is loading set & theme after pagination
+        // return $this->belongsTo(Set::class, 'set_num', 'set_num')->with('setImageUrl');
         return $this->belongsTo(Set::class, 'set_num', 'set_num');
+    }
+
+    /**
+     * An inventory has one theme through a set
+     *
+     * @return hasOneThrough
+     */
+    public function theme()
+    {
+        return $this->hasOneThrough(Theme::class, Set::class, 'set_num', 'id', 'set_num', 'theme_id');
     }
 
     /**
@@ -80,7 +99,7 @@ class Inventory extends Model
      */
     public function getThemeIdAttribute()
     {
-        return $this->set->theme_id;
+        return $this->theme->id;
     }
 
     /**
@@ -90,6 +109,6 @@ class Inventory extends Model
      */
     public function getThemeLabelAttribute()
     {
-        return $this->set->theme->theme_label;
+        return $this->theme->theme_label;
     }
 }
