@@ -16,7 +16,7 @@ class UserPartsTest extends TestCase
 
         $part = create('App\Part');
 
-        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
+        create('App\UserPart', ['part_num' => $part->part_num]);
 
         $response = $this->get(route('api.users.parts'));
 

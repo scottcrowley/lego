@@ -54,8 +54,11 @@ Route::group([
     Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
     Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');
     Route::get('/{location}/parts', function (StorageLocation $location) {
-        return view('storage.locations.parts', compact('location'));
-    })->name('storage.locations.parts');
+        return view('storage.locations.parts.index', compact('location'));
+    })->name('storage.locations.parts.index');
+    Route::get('/{location}/parts/edit', function (StorageLocation $location) {
+        return view('storage.locations.parts.edit', compact('location'));
+    })->name('storage.locations.parts.edit');
 });
 
 Route::group([
@@ -117,6 +120,9 @@ Route::group([
     Route::get('/profile', 'ApiUserController@getProfile')->name('api.users.profile');
     Route::get('/sets', 'ApiUserController@getSets')->name('api.users.sets');
     Route::get('/parts', 'ApiUserController@getParts')->name('api.users.parts');
+    Route::get('/storage/locations/{location}/parts', 'ApiUserController@getStorageLocationParts')->name('api.users.storage.locations.parts');
+    Route::get('/storage/locations/{location}/parts/edit', 'ApiUserController@editStorageLocationParts')->name('api.users.storage.locations.parts.edit');
+    Route::get('/storage/locations/{location}/parts/toggle/{part}', 'ApiUserController@togglePartInLocation')->name('api.users.storage.locations.parts.toggle');
     // Route::get('/clear/{type}', 'ApiUserController@clearCache')->name('api.users.clear');
     // Route::get('/setlists', 'ApiUserController@getSetLists')->name('api.users.setlists');
 });

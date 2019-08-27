@@ -13,7 +13,7 @@
             @forelse ($locations as $location)
                 <div class="py-2 px-1 border rounded mt-3 flex text-secondary-darker">
                     <span class="flex-1">{{ $location->name.((!is_null($location->nickname)) ? ' ('.$location->nickname.')' : '') }} </span>
-                    <a href="{{ route('storage.locations.parts', $location->id) }}" class="text-sm mr-3">parts</a>
+                    <a href="{{ route('storage.locations.parts.index', $location->id) }}" class="text-sm mr-3">parts</a>
                     <a href="{{ route('storage.locations.copy', $location->id) }}" class="text-sm mr-3">copy</a>
                     <a href="{{ route('storage.locations.edit', $location->id) }}" class="text-sm">edit</a>
                 </div>

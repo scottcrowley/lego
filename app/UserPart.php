@@ -7,6 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class UserPart extends Model
 {
     /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'part_num';
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+    /**
      * no timestamps needed
      *
      * @var boolean
@@ -18,14 +38,28 @@ class UserPart extends Model
      *
      * @var array
      */
-    protected $with = ['part'];
+    protected $with = ['part', 'color'];
 
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['name'];
+    protected $appends = ['name', 'color_name', 'image_url', 'category_label', 'location'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['color', 'part'];
+
+    /**
+     * Base url for a parts ldraw image
+     *
+     * @var string
+     */
+    protected $ldrawBaseUrl = 'https://cdn.rebrickable.com/media/thumbs/parts/ldraw/{color_id}/{part_num}.png/250x250p.png';
 
     /**
      * A UserPart belongs to a Part
@@ -34,7 +68,17 @@ class UserPart extends Model
      */
     public function part()
     {
-        return $this->belongsTo(Part::class, 'part_num', 'part_num');
+        return $this->belongsTo(Part::class, 'part_num', 'part_num')->with('storageLocation')->with('partImageUrl');
+    }
+
+    /**
+     * A UserPart has one Color
+     *
+     * @return hasOne
+     */
+    public function color()
+    {
+        return $this->hasOne(Color::class, 'id', 'color_id');
     }
 
     /**
@@ -45,5 +89,55 @@ class UserPart extends Model
     public function getNameAttribute()
     {
         return $this->part->name;
+    }
+
+    /**
+     * Attribute getter for color->name
+     *
+     * @return string
+     */
+    public function getColorNameAttribute()
+    {
+        return $this->color->name;
+    }
+
+    /**
+     * Attribute getter for part->location
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->part->location;
+    }
+
+    /**
+     * Attribute getter for part->image_url
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->part->image_url;
+    }
+
+    /**
+     * Attribute getter for part->category_label
+     *
+     * @return string
+     */
+    public function getCategoryLabelAttribute()
+    {
+        return $this->part->category_label;
+    }
+
+    /**
+     * Getter for the parts ldraw image url
+     *
+     * @return string
+     */
+    public function getLdrawImageUrlAttribute()
+    {
+        return str_replace(['{color_id}', '{part_num}'], [$this->color_id, $this->part_num], $this->ldrawBaseUrl);
     }
 }

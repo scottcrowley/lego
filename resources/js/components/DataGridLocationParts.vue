@@ -51,20 +51,19 @@
                     </div>
                     <div class="card-body">
                         <div v-for="valname in valnames">
-                            <button v-if="valname.label == 'button'" class="btn is-primary is-narrow is-small mt-2" @click.prevent="executeEndpoint(valname.url, index, valname.successMsg)">
-                                {{ valname.text }}
-                            </button>
-                            <p v-else :class="(valname.title) ? 'title' : ''">
-                                <span v-if="!valname.link">
-                                    <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
-                                    {{ (
-                                        (valname.boolean === true) ? (
-                                            (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
-                                        ) : data[valname.field]
-                                    ) }}
-                                </span>
-                                <a :href="generateLinkUrl(valname.linkUrl, index)" v-if="valname.link">{{ data[valname.field] }}</a>
+                            <p :class="(valname.title) ? 'title' : ''">
+                                <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
+                                {{ (
+                                    (valname.boolean === true) ? (
+                                        (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
+                                    ) : data[valname.field]
+                                ) }}
                             </p>
+                        </div>
+                        <div>
+                            <button class="btn is-primary is-narrow is-small mt-2" @click.prevent="executeEndpoint(index)">
+                                {{ (data.location !== null && data.location.id == location_id) ? 'Remove Part' : 'Add Part' }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -96,11 +95,19 @@
                 type: String,
                 default: ''
             }, 
+            location_id: {
+                type: String,
+                default: ''
+            }, 
             image_field: {
                 type: String,
                 default: ''
             }, 
             image_label_field: {
+                type: String,
+                default: ''
+            }, 
+            toggle_end_point: {
                 type: String,
                 default: ''
             }, 
@@ -318,13 +325,13 @@
                 }
                 console.log('Config', error.config);
             },
-            executeEndpoint(url, index, successMsg) {
-                let endpoint = this.generateLinkUrl(url, index);
+            executeEndpoint(index) {
+                let endpoint = this.generateLinkUrl(this.toggle_end_point, index);
 
                 axios.get(endpoint)
                     .then(response => {
-                        this.getResults(this.currentPage);
-                        flash(successMsg);
+                        this.dataSet[index].location = response.data.location;
+                        flash('Part association successfully updated!');
                     })
                     .catch(error => {
                         this.processError(error);

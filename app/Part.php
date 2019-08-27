@@ -59,7 +59,7 @@ class Part extends Model
      *
      * @var array
      */
-    protected $hidden = ['partImageUrl', 'category'];
+    protected $hidden = ['partImageUrl', 'category', 'storageLocation'];
 
     /**
      * Add a new url to the partImageUrl relation
@@ -90,6 +90,7 @@ class Part extends Model
     public function storageLocation()
     {
         return $this->belongsToMany(StorageLocation::class, 'part_storage_location', 'part_num', 'storage_location_id', 'part_num', 'id');
+        // return $this->hasOneThrough(StorageLocation::class, PartStorageLocation::class, 'part_num', 'id', 'part_num', 'storage_location_id');
     }
 
     /**

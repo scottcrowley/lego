@@ -29,8 +29,9 @@ class PartTest extends TestCase
         $location = create('App\StorageLocation');
 
         $part = create('App\Part');
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
 
-        $location->addPart($part);
+        $location->togglePart($userPart);
 
         $this->assertEquals($part->location->name, $location->name);
     }
@@ -45,5 +46,22 @@ class PartTest extends TestCase
         $part->addImageUrl('http://www.example.com');
 
         $this->assertEquals($part->partImageUrl->first()->image_url, 'http://www.example.com');
+    }
+
+    /** @test */
+    public function it_can_access_its_storage_location_when_editing_storage_location_parts()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $part = create('App\Part');
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
+
+        $userPart = ($this->get(route('api.users.storage.locations.parts.toggle', [$location->id, $userPart->part_num])))->getData();
+
+        $response = $this->get(route('api.users.storage.locations.parts.edit', [$location->id, 'part_num' => $userPart->part_num]));
+
+        $this->assertEquals($location->name, $response->getData()->data[0]->location->name);
     }
 }

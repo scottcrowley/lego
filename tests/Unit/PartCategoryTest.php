@@ -29,10 +29,11 @@ class PartCategoryTest extends TestCase
         $partCategory = create('App\PartCategory');
 
         $part = create('App\Part', ['part_category_id' => $partCategory->id]);
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
 
         $storageLocation = create('App\StorageLocation');
 
-        $storageLocation->addPart($part);
+        $storageLocation->togglePart($userPart);
 
         $partLocations = $partCategory->storageLocations();
 

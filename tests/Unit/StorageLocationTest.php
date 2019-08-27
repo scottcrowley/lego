@@ -96,28 +96,54 @@ class StorageLocationTest extends TestCase
 
         $location = create('App\StorageLocation');
 
-        $part = create('App\Part');
+        $part = create('App\UserPart');
 
-        $location->addPart($part);
+        $location->togglePart($part);
 
         $this->assertEquals($part->part_num, $location->fresh()->parts->first()->part_num);
     }
 
     /** @test */
-    public function it_can_remove_an_associated_part_category()
+    public function it_can_toggle_an_associated_part()
     {
         $this->signIn();
 
         $location = create('App\StorageLocation');
 
-        $part = create('App\Part');
+        $part = create('App\UserPart');
 
-        $location->addPart($part);
+        $location->togglePart($part);
 
-        $this->assertEquals(1, $location->fresh()->parts->count());
+        $this->assertEquals($part->part_num, $location->fresh()->parts[0]->part_num);
 
-        $location->removePart($part);
+        $location->togglePart($part);
 
         $this->assertEquals(0, $location->fresh()->parts->count());
+    }
+
+    /** @test */
+    public function it_can_toggle_an_associated_part_through_api()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $part = create('App\UserPart');
+
+        $part = ($this->get(route('api.users.storage.locations.parts.toggle', [$location->id, $part->part_num])))->getData();
+
+        $this->assertEquals($location->name, $part->location->name);
+
+        $response = ($this->get(route('api.users.storage.locations.parts', $location->id)))->getData()->data[0];
+        $this->assertEquals($part->part_num, $response->part_num);
+
+        $part = ($this->get(route('api.users.storage.locations.parts.toggle', [$location->id, $part->part_num])))->getData();
+        $this->assertNull($part->location);
+
+        $response = ($this->get(route('api.users.storage.locations.parts', $location->id)))->getData()->data;
+
+        $this->assertCount(0, $response);
     }
 }

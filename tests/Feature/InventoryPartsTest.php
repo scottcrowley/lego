@@ -128,8 +128,9 @@ class InventoryPartsTest extends TestCase
         $inventory = create('App\Inventory');
         $location = create('App\StorageLocation');
         $part = create('App\Part');
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
 
-        $location->addPart($part);
+        $location->togglePart($userPart);
 
         create('App\InventoryPart', ['inventory_id' => $inventory->id, 'part_num' => $part->part_num]);
 

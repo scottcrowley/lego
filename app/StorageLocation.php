@@ -21,25 +21,14 @@ class StorageLocation extends Model
     protected $with = ['type'];
 
     /**
-     * Add a part to the storage location
+     * Toggles a part association in this storage location
      *
-     * @param Part $part
+     * @param UserPart $part
      * @return void
      */
-    public function addPart(Part $part)
+    public function togglePart(UserPart $part)
     {
-        $this->parts()->attach($part);
-    }
-
-    /**
-     * Removes a part from the storage location
-     *
-     * @param Part $part
-     * @return void
-     */
-    public function removePart(Part $part)
-    {
-        $this->parts()->detach($part);
+        $this->parts()->toggle($part);
     }
 
     /**
@@ -59,7 +48,7 @@ class StorageLocation extends Model
      */
     public function parts()
     {
-        return $this->belongsToMany(Part::class, 'part_storage_location', 'storage_location_id', 'part_num', 'id', 'part_num');
+        return $this->belongsToMany(UserPart::class, 'part_storage_location', 'storage_location_id', 'part_num', 'id', 'part_num');
     }
 
     public function getLocationNameAttribute()

@@ -29,7 +29,7 @@ class ApiLegoController extends Controller
     protected $defaultPerPage = 30;
 
     /**
-     * Create a new RebrickableApiLegoController instance.
+     * Create a new ApiLegoController instance.
      */
     public function __construct()
     {
