@@ -150,7 +150,7 @@ export default {
             }
         },
         updatePerPage(event) {
-            if (event.target.value == 0) return;
+            if (event.target.value == 0 || event.target.value == this.perpage) return;
             this.perpage = event.target.value;
 
             this.getResults(this.currentPage);

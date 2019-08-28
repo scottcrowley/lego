@@ -1,6 +1,7 @@
 .btn {
     @apply .bg-secondary .text-secondary-darkest .font-normal .text-sm .font-semibold .py-2 .px-4 .rounded;
     cursor: pointer;
+    outline: none;
 
     &.is-primary {
         @apply .bg-primary .text-white;
@@ -29,6 +30,10 @@
 
     &.is-narrow, &.is-header-btn {
         @apply .py-1 .px-2;
+    }
+
+    &.is-super-small {
+        @apply .text-xs .py-s1 .px-1;
     }
 }
 
@@ -59,4 +64,8 @@ button.burger {
     &:hover {
         @apply .text-primary-dark .bg-primary-lightest .border-primary-dark;
     }
+}
+
+button.btn {
+    outline: none;
 }

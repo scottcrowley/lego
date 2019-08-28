@@ -2,18 +2,18 @@
 
 @section('content')
 <div class="w-full px-3 sm:px-0">
-    <div class="flex mb-3 mb-8 mx-auto border rounded-lg p-6 bg-white shadow-md" style="width: 95%;">
+    <div class="flex bg-white border mb-8 md:mx-auto md:p-6 md:w-2/3 p-3 rounded-lg shadow-md w-full" style="width: 95%;">
         <div class="w-auto max-w-md">
             <img src="{{ $inventory->set->image_url }}" alt="{{ $inventory->set->name }}">
         </div>
         <div class="flex-1 ml-5 pt-6">
             <div class="flex flex-col h-full">
                 <div>
-                    <p class="title text-2xl mb-4">{{ $inventory->set->name }}</p>
-                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Set Number:</span> {{ $inventory->set->set_num }}</p>
-                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Theme:</span> {{ $inventory->set->theme->theme_label }}</p>
-                    <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Year:</span> {{ $inventory->set->year }}</p>
-                    <p class="font-hairline tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
+                    <p class="title text-md md:text-2xl mb-4">{{ $inventory->set->name }}</p>
+                    <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Set Number:</span> {{ $inventory->set->set_num }}</p>
+                    <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Theme:</span> {{ $inventory->set->theme->theme_label }}</p>
+                    <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Year:</span> {{ $inventory->set->year }}</p>
+                    <p class="text-sm md:text-base font-hairline tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
                 </div>
                 <div class="mt-auto self-end">
                     <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back to Inventories</a>

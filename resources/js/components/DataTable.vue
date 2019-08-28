@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mt-4 flex items-center mb-4" v-show="!loading">
+        <div class="mt-4 mb-6 flex items-center" v-show="!loading">
             <p class="text-sm flex-1">
                 <span v-text="allData.total"></span> <span v-text="label"></span> found
             </p>

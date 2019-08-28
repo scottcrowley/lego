@@ -13,36 +13,24 @@
                     </svg>
                 </div>
             </div>
-            <div class="relative ml-3">
-                <select id="selectOrder" @change="updateSortOrder($event)">
-                    <option value="0">Ascending</option>
-                    <option value="1">Descending</option>
-                </select>
-                <div class="select-menu-icon">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="relative ml-auto">
-                <select id="selectPerPage" @change="updatePerPage($event)">
-                    <option value="0">Per Page</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="75">75</option>
-                    <option value="100">100</option>
-                </select>
-                <div class="select-menu-icon">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                </div>
-            </div>
+            <select-menu-special
+                select_id="selectOrder"
+                parent_classes="ml-3"
+                :options_list="[{label: 'Ascending', value: 0}, {label: 'Descending', value: 1}]"
+                change_method="updateSortOrder"
+                default_label=""
+            />
+            <select-menu-special
+                select_id="selectPerPage"
+                parent_classes="ml-auto"
+                :options_list="[{label: '10', value: 10}, {label: '15', value: 15}, {label: '25', value: 25}, {label: '50', value: 50}, {label: '75', value: 75}, {label: '100', value: 100}]"
+                change_method="updatePerPage"
+                default_label="Per Page"
+                default_value=0
+            />
         </div>
 
-        <div class="mt-4 flex flex-col md:flex-row items-center" v-show="!loading">
+        <div class="mt-4 mb-6 flex flex-col md:flex-row items-center" v-show="!loading">
             <p class="text-sm flex-1 mb-2 md:mb-0">
                 <span v-text="allData.total"></span> <span v-text="label"></span> found
             </p>
@@ -107,8 +95,10 @@
 
 <script>
     import dataGridCore from '../mixins/dataGridCore';
+    import SelectMenuSpecial from '../components/SelectMenuSpecial';
 
     export default {
+        components: {SelectMenuSpecial},
         mixins: [dataGridCore],
 
         methods: {

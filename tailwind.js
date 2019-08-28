@@ -300,6 +300,7 @@ module.exports = {
   */
 
   textSizes: {
+    '2xs': '.625rem',     // 10px
     'xs': '.75rem',     // 12px
     'sm': '.875rem',    // 14px
     'base': '1rem',     // 16px
@@ -709,6 +710,7 @@ module.exports = {
   */
 
   padding: {
+    's1': '0.20rem',
     'px': '1px',
     '0': '0',
     '1': '0.25rem',
