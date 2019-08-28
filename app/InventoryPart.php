@@ -116,7 +116,7 @@ class InventoryPart extends Model
     {
         $location = $this->part->storageLocation;
 
-        return ($location->count()) ? $location->first()->location_name : 'None';
+        return ($location) ? $location->location_name : 'None';
     }
 
     /**

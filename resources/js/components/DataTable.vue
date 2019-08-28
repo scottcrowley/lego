@@ -1,5 +1,20 @@
 <template>
     <div>
+        <div class="mt-4 flex items-center mb-4" v-show="!loading">
+            <p class="text-sm flex-1">
+                <span v-text="allData.total"></span> <span v-text="label"></span> found
+            </p>
+            <div class="page-navigation ml-2">
+                <pagination
+                        class="mb-0"
+                        :data="allData"
+                        @pagination-change-page="getResults"
+                        :limit="limit"
+                        :show-disabled="showDisabled"
+                        :size="size"
+                        :align="align" />
+            </div>
+        </div>
         <div class="w-full">
             <div class="" v-show="!loading">
                 <div id="colnames" class="flex">
@@ -10,6 +25,7 @@
                         @click.prevent="updateSort($event)"></div>
                 </div>
             </div>
+            
             <div>
                 <div class="" v-show="loading">
                     <div class="h-8 w-8 mx-auto loader loader-lg"></div>

@@ -32,6 +32,7 @@
                 image_field="ldraw_image_url" 
                 image_label_field="image_url" 
                 per_page="100" 
+                :allow_image_swap=true
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},

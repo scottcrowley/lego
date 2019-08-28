@@ -4,10 +4,27 @@
 <div class="w-full px-3 sm:px-0">
     <div class="w-2/3 mb-3 mb-8 mx-auto border rounded-lg p-6 bg-white shadow-md">
         <div>
-            <p class="title text-2xl mb-4">{{ $location->name }}</p>
+            <div class="mb-4 flex">
+                @if ($allLocations->count())
+                    <select-menu
+                        parent_classes="w-full"
+                        select_classes="text-2xl w-full"
+                        selected_value="{{ $location->id }}"
+                        selected_field="id"
+                        label_field="name"
+                        change_endpoint="{{ url('/storage/locations/{location}/parts/edit') }}"
+                        :data="{{ $allLocations }}"
+                    />
+                @else
+                    <p class="title text-2xl">{{ $location->name }}</p>
+                @endif
+            </div>
             <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Nickname:</span> {{ $location->nickname ?: 'None' }}</p>
             <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Type:</span> {{ $location->type->name }}</p>
             <p class="mb-2 font-hairline tracking-wide"><span class="font-semibold">Parts in Location:</span> {{ $location->parts->count() }}</p>
+        </div>
+        <div class="pt-2">
+            <a href="{{ route('storage.locations.parts.index', $location->id) }}" class="btn is-primary is-narrow">View Parts in Location</a>
         </div>
     </div>
     <div class="rounded shadow">

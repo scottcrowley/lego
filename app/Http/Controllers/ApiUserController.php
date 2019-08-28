@@ -99,6 +99,20 @@ class ApiUserController extends Controller
     }
 
     /**
+     * get all user parts associated with a storage location
+     *
+     * @param StorageLocation $location
+     * @param StorageLocationPartsFilters $filters
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getStorageLocationIndividualParts(StorageLocation $location, StorageLocationPartsFilters $filters)
+    {
+        $parts = $filters->apply($location->parts)->values();
+
+        return $this->processPartPages($parts, null, ['ldraw_image_url']);
+    }
+
+    /**
      * get all user parts for editing storage location parts
      *
      * @param StorageLocation $location

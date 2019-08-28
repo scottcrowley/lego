@@ -89,8 +89,8 @@ class Part extends Model
      */
     public function storageLocation()
     {
-        return $this->belongsToMany(StorageLocation::class, 'part_storage_location', 'part_num', 'storage_location_id', 'part_num', 'id');
-        // return $this->hasOneThrough(StorageLocation::class, PartStorageLocation::class, 'part_num', 'id', 'part_num', 'storage_location_id');
+        // return $this->belongsToMany(StorageLocation::class, 'part_storage_location', 'part_num', 'storage_location_id', 'part_num', 'id');
+        return $this->hasOneThrough(StorageLocation::class, PartStorageLocation::class, 'part_num', 'id', 'part_num', 'storage_location_id');
     }
 
     /**
@@ -120,7 +120,7 @@ class Part extends Model
      */
     public function getLocationAttribute()
     {
-        return $this->storageLocation->first();
+        return $this->storageLocation;
     }
 
     /**
