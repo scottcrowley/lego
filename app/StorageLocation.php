@@ -21,6 +21,13 @@ class StorageLocation extends Model
     protected $with = ['type'];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['location_name'];
+
+    /**
      * Toggles a part association in this storage location
      *
      * @param UserPart $part

@@ -8,15 +8,15 @@
                     @if ($allLocations->count())
                         <select-menu
                             parent_classes="w-full"
-                            select_classes="text-md md:text-2xl w-full"
+                            select_classes="text-md md:text-xl w-full"
                             selected_value="{{ $location->id }}"
                             selected_field="id"
-                            label_field="name"
+                            label_field="location_name"
                             change_endpoint="{{ url('/storage/locations/{location}/parts/individual') }}"
                             :data="{{ $allLocations }}"
                         />
                     @else
-                        <p class="title text-md md:text-2xl">{{ $location->name }}</p>
+                        <p class="title text-md md:text-xl">{{ $location->name }}</p>
                     @endif
                 </div>
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Nickname:</span> {{ $location->nickname ?: 'None' }}</p>

@@ -23,10 +23,10 @@
 
 <div class="field-group">
     <label for="description">Storage Type:</label>
-    <div class="field">
+    <div class="field w-3/4">
         <div class="relative">
             @if (count($types))
-                <select name="storage_type_id" id="storage_type_id" required>
+                <select name="storage_type_id" id="storage_type_id" class="w-full text-base" required>
                     <option value="">Choose a Container Type</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" 
