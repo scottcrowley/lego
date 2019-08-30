@@ -91,6 +91,56 @@ abstract class Filters
     }
 
     /**
+     * filters a given collection by a given key and value
+     *
+     * @param \Illuminate\Support\Collection $collection
+     * @param string $key
+     * @param mixed $value
+     * @return \Illuminate\Support\Collection
+     */
+    protected function filterCollection($collection, $key, $value)
+    {
+        return $collection->filter(
+            function ($item) use ($key, $value) {
+                $value = trim($value);
+                return false !== stristr($item[$key], $value);
+            }
+        );
+    }
+
+    /**
+     * checks a value sting for the presence of a ',' and then returns array from each split value
+     *
+     * @param string $value
+     * @return array
+     */
+    protected function getMultipleFilters($value)
+    {
+        if (strpos($value, ',') === false) {
+            return [$value];
+        }
+
+        return explode(',', $value);
+    }
+
+    /**
+     * processMultipleFilters
+     *
+     * @param \Illuminate\Support\Collection $collection
+     * @param string $key
+     * @param array $value
+     * @return \Illuminate\Support\Collection
+     */
+    protected function processMultipleFilters($collection, $key, $values)
+    {
+        foreach ($values as $value) {
+            $collection = $this->filterCollection($collection, $key, $value);
+        }
+
+        return $collection;
+    }
+
+    /**
      * Search the collection for a given name value.
      *
      * @param  string $value
@@ -98,10 +148,11 @@ abstract class Filters
      */
     protected function name($value)
     {
-        return $this->collection = $this->collection->filter(
-            function ($item) use ($value) {
-                return false !== stristr($item['name'], $value);
-            }
-        );
+        return $this->collection =
+            $this->processMultipleFilters(
+                $this->collection,
+                'name',
+                $this->getMultipleFilters($value)
+            );
     }
 }

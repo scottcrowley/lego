@@ -6,22 +6,24 @@
                 <button class="block ml-auto btn is-small is-narrow" @click.prevent="filtersShow = !filtersShow" v-text="(filtersShow) ? 'hide' : 'show'"></button>
             </div>
             <div class="ml-2 pt-4" v-show="filtersShow">
-                <div class="field-group flex items-center mb-2">
-                    <label for="filter_name">Name:</label>
-                    <input type="text" name="filter_name" id="filter_name" class="flex-1 ml-3" v-model="filter_name">
-                </div>
-                <div class="field-group flex items-center mb-2">
-                    <label for="filter_part_num">Part Number:</label>
-                    <input type="text" name="filter_part_num" id="filter_part_num" class="flex-1 ml-3" v-model="filter_part_num">
-                </div>
-                <div class="field-group flex items-center mb-2">
-                    <label for="filter_category_label">Category:</label>
-                    <input type="text" name="filter_category_label" id="filter_category_label" class="flex-1 ml-3" v-model="filter_category_label">
-                </div>
-                <div class="field-group flex items-center mb-2">
-                    <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
-                    <button class="btn ml-3" @click.prevent="clearFilters()">Clear Filters</button>
-                </div>
+                <form @submit.prevent="applyFilters()">
+                    <div class="field-group flex items-center mb-2">
+                        <label for="filter_name">Name:</label>
+                        <input type="text" name="filter_name" id="filter_name" class="flex-1 ml-3" v-model="filter_name">
+                    </div>
+                    <div class="field-group flex items-center mb-2">
+                        <label for="filter_part_num">Part Number:</label>
+                        <input type="text" name="filter_part_num" id="filter_part_num" class="flex-1 ml-3" v-model="filter_part_num">
+                    </div>
+                    <div class="field-group flex items-center mb-2">
+                        <label for="filter_category_label">Category:</label>
+                        <input type="text" name="filter_category_label" id="filter_category_label" class="flex-1 ml-3" v-model="filter_category_label">
+                    </div>
+                    <div class="field-group flex items-center mb-2">
+                        <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
+                        <button class="btn ml-3" @click.prevent="clearFilters()">Clear Filters</button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="w-full h-8 loader loader-lg" v-show="loading"></div>
@@ -91,7 +93,7 @@
                         <div>
                             <p v-if="(data.location !== null && data.location.id != location_id)">
                                 <span class="font-bold">Storage Location:</span> 
-                                {{ (data.location.nickname != '') ? data.location.nickname : data.location.name }}
+                                {{ data.location.location_name }}
                             </p>
                             <button v-else class="btn is-primary is-narrow is-small mt-2" @click.prevent="executeEndpoint(index)">
                                 {{ (data.location !== null && data.location.id == location_id) ? 'Remove Part' : 'Add Part' }}
