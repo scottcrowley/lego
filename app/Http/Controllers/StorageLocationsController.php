@@ -15,7 +15,9 @@ class StorageLocationsController extends Controller
      */
     public function index()
     {
-        $locations = StorageLocation::orderBy('name')->get();
+        $locations = StorageLocation::with('type')->orderBy('name')->get();
+
+        $locations = $locations->groupBy('type_name')->sortKeys();
 
         return view('storage.locations.index', compact('locations'));
     }
@@ -29,6 +31,7 @@ class StorageLocationsController extends Controller
     {
         $location = $location ?? new StorageLocation;
         $types = \App\StorageType::orderBy('name')->get();
+
         return view('storage.locations.create', compact('location', 'types'));
     }
 

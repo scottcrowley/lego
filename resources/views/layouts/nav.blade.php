@@ -35,7 +35,7 @@
         <div class="flex item-end justify-center mb-2 mt-2 md:mt-3">
             @if (auth()->check())
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle" href="#">Your Legos</a>
+                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Your Legos</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('legouser.setlists') }}">Set Lists</a>
                         <a href="{{ route('legouser.sets') }}">Sets</a>
@@ -45,7 +45,7 @@
                     </div>
                 </dropdown>
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle" href="#">Lego</a>
+                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Lego</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('lego.sets.grid') }}">Sets</a>
                         <a href="{{ route('lego.themes') }}">Themes</a>
@@ -56,7 +56,7 @@
                     </div>
                 </dropdown>
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle" href="#">Storage</a>
+                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Storage</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('storage.types.index') }}">Types</a>
                         <a href="{{ route('storage.locations.index') }}">Locations</a>

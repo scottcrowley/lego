@@ -62,4 +62,9 @@ class StorageLocation extends Model
     {
         return (! is_null($this->nickname)) ? $this->nickname : $this->name;
     }
+
+    public function getTypeNameAttribute()
+    {
+        return $this->type->name;
+    }
 }

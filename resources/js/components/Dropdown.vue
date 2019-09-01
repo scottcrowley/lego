@@ -1,6 +1,6 @@
 <template>
     <div class="dropdown-menu" ref="dropdowncontainer">
-        <div role="button" class="dropdown-toggle-wrap" @click.prevent="toggle">
+        <div role="button" class="dropdown-toggle-wrap" @click.prevent="toggle($event)" >
             <slot name="link"></slot>
         </div>
 
@@ -19,17 +19,23 @@
         },
 
         created() {
-            window.addEventListener('click', this.close)
+            window.addEventListener('click', this.close);
         },
 
         beforeDestroy() {
-            window.removeEventListener('click', this.close)
+            window.removeEventListener('click', this.close);
         },
 
         methods: {
-            toggle() {
+            toggle(e) {
                 this.open = ! this.open;
+                // this.toggleClasses(e);
             },
+
+            // toggleClasses(e) {
+            //     e.target.classList.toggle('toggle-open');
+            //     e.target.classList.toggle('toggle-closed');
+            // },
 
             close(e) {
                 if (! this.$refs.dropdowncontainer.contains(e.target)) {
