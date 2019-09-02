@@ -20,6 +20,10 @@
                         <input type="text" name="filter_category_label" id="filter_category_label" class="flex-1 ml-3" v-model="filter_category_label">
                     </div>
                     <div class="field-group flex items-center mb-2">
+                        <label for="filter_exclude_assigned">Exclude Assigned Parts:</label>
+                        <input type="checkbox" name="filter_exclude_assigned" id="filter_exclude_assigned" value="1" class="ml-3" v-model="filter_exclude_assigned">
+                    </div>
+                    <div class="field-group flex items-center mb-2">
                         <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
                         <button class="btn ml-3" @click.prevent="clearFilters()">Clear Filters</button>
                     </div>
@@ -70,6 +74,11 @@
                         :size="pagerSize"
                         :align="pagerAlign" />
             </div>
+        </div>
+
+        <div class="mb-6 flex flex-col md:flex-row items-center justify-center md:justify-start" v-show="!loading">
+            <button class="btn is-small" @click.prevent="addAll()">Add All Parts To Location</button>
+            <button class="btn is-small mt-2 md:mt-0 ml-0 md:ml-2" @click.prevent="removeAll()">Remove All Parts To Location</button>
         </div>
 
         <div class="card-container" v-show="!loading">
@@ -134,10 +143,11 @@
         data() {
             return {
                 filtersShow: false,
-                filterParams: ['name', 'part_num', 'category_label'],
+                filterParams: ['name', 'part_num', 'category_label', 'exclude_assigned'],
                 filter_name: '',
                 filter_part_num: '',
-                filter_category_label: ''
+                filter_category_label: '',
+                filter_exclude_assigned: '',
             }
         },
 
@@ -146,13 +156,15 @@
         },
         
         methods: {
-            executeEndpoint(index) {
+            executeEndpoint(index, multiple = false) {
                 let endpoint = this.generateLinkUrl(this.toggle_end_point, index);
-
+                console.log(endpoint);
                 axios.get(endpoint)
                     .then(response => {
                         this.dataSet[index].location = response.data.location;
-                        flash('Part association successfully updated!');
+                        if (multiple === false) {
+                            flash('Part association successfully updated!');
+                        }
                     })
                     .catch(error => {
                         this.processError(error);
@@ -163,11 +175,13 @@
                 let newParams = '';
 
                 paramList.forEach((p, index) => {
-                    if (p != ''){
-                        let details = p.split('=');
-                        if (! removeList.includes(details[0])) {
-                            newParams = newParams + '&' + p;
-                        }
+                    if (p == '') {
+                        return;
+                    }
+
+                    let details = p.split('=');
+                    if (! removeList.includes(details[0])) {
+                        newParams = newParams + '&' + p;
                     }
                 });
 
@@ -176,14 +190,16 @@
             populateFilters(currentParams) {
                 let paramList = currentParams.split('&');
                 paramList.forEach((p, index) => {
-                    if (p != ''){
-                        let details = p.split('=');
-                        if (this.filterParams.includes(details[0])) {
-                            let input = 'filter_' + details[0];
-                            this[input] = decodeURIComponent(details[1]);
+                    if (p == '') {
+                        return;
+                    }
 
-                            this.filtersShow = true;
-                        }
+                    let details = p.split('=');
+                    if (this.filterParams.includes(details[0])) {
+                        let input = 'filter_' + details[0];
+                        this[input] = decodeURIComponent(details[1]);
+
+                        this.filtersShow = true;
                     }
                 });
             },
@@ -193,6 +209,9 @@
                 this.filterParams.forEach((p, index) => {
                     let input = 'filter_' + p;
                     let value = this[input];
+                    if (value === true) {
+                        value = this.location_id;
+                    }
                     if (value != '') {
                         this.presentParamsString = this.presentParamsString + '&' + p + '=' + value;
                     }
@@ -208,8 +227,33 @@
 
                 this.presentParamsString = this.stripParams(this.presentParamsString, this.filterParams);
 
-                this.getResults(this.currentPage);
-            }
+                this.getResults(1);
+            },
+            addAll() {
+                let keys = Object.keys(this.dataSet);
+                let processed = 0;
+                keys.forEach((key) => {
+                    if (this.dataSet[key].location !== null) {
+                        return;
+                    }
+                    this.executeEndpoint(key, true);
+                    processed++;
+                });
+                
+                flash(processed+' Parts added successfully!');
+            },
+            removeAll() {
+                let keys = Object.keys(this.dataSet);
+                let processed = 0;
+                keys.forEach((key) => {
+                    if (this.dataSet[key].location !== null && this.dataSet[key].location.id == this.location_id) {
+                        this.executeEndpoint(key, true);
+                        processed++;
+                    }
+                });
+
+                flash(processed+' Parts removed successfully!');
+            },
         }
     };
 </script>

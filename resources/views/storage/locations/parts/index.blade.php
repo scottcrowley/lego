@@ -20,6 +20,7 @@
                 @endif
             </div>
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Nickname:</span> {{ $location->nickname ?: 'None' }}</p>
+            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Description:</span> {{ $location->description }}</p>
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Type:</span> {{ $location->type->name }}</p>
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Parts in Location:</span> {{ $location->parts->unique('part_num')->count() }}</p>
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Individual Parts in Location:</span> {{ $location->parts->count() }}</p>
