@@ -13,6 +13,12 @@ class StorageLocationPartsFilters extends Filters
      */
     protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'category_label', 'color', 'exclude_assigned'];
 
+    /**
+     * exlude all results that have an existing storage location except the given location_id
+     *
+     * @param mixed $value
+     * @return \Illuminate\Support\Collection
+     */
     protected function exclude_assigned($value)
     {
         if ($value) {

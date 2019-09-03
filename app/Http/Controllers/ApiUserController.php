@@ -7,6 +7,7 @@ use App\UserPart;
 use App\StorageLocation;
 use App\Filters\SetFilters;
 use App\Filters\PartFilters;
+use App\Filters\UserPartFilters;
 use App\Gateways\RebrickableApiUser;
 use App\Filters\StorageLocationPartsFilters;
 
@@ -73,13 +74,24 @@ class ApiUserController extends Controller
      * @param PartFilters $filters
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getParts(PartFilters $filters)
+    public function getAllParts(UserPartFilters $filters)
+    {
+        $parts = $filters->apply(UserPart::all())->unique('part_num')->values();
+
+        return $parts->paginate($this->defaultPerPage);
+    }
+
+    /**
+     * get all individual user parts
+     *
+     * @param PartFilters $filters
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getAllIndividualParts(UserPartFilters $filters)
     {
         $parts = $filters->apply(UserPart::all())->values();
 
-        return $parts->paginate($this->defaultPerPage);
-
-        // return $this->processPartPages($parts, 'part', ['name', 'category_label']);
+        return $this->processPartPages($parts, null, ['ldraw_image_url']);
     }
 
     /**
@@ -94,8 +106,6 @@ class ApiUserController extends Controller
         $parts = $filters->apply($location->parts)->unique('part_num')->values();
 
         return $parts->paginate($this->defaultPerPage);
-
-        // return $this->processPartPages($parts, 'part', ['name', 'image_url', 'category_label']);
     }
 
     /**
@@ -124,8 +134,6 @@ class ApiUserController extends Controller
         $parts = $filters->apply(UserPart::all())->unique('part_num')->values();
 
         return $parts->paginate($this->defaultPerPage);
-
-        // return $this->processPartPages($parts, 'part', ['name', 'image_url', 'category_label', 'location']);
     }
 
     /**
@@ -143,7 +151,7 @@ class ApiUserController extends Controller
     }
 
     /**
-     * processPartPages
+     * Sets append properties and eager loading relationship on a given page
      *
      * @param mixed $parts
      * @param null|array|string $loads

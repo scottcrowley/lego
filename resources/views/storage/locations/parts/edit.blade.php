@@ -32,20 +32,27 @@
             <div>Available Parts</div>
         </div>
         <div class="bg-white px-4 pb-6 rounded-b">
-            <data-grid-location-parts 
+            <data-grid-with-filters 
+                :use_location=true
                 label="Parts" 
                 location_id="{{ $location->id }}"
                 image_field="image_url" 
                 image_label_field="name"
                 toggle_end_point="{{ url('/api/users/storage/locations/'.$location->id.'/parts/toggle/{part_num}') }}"
-                per_page="100" 
+                per_page="100"
+                :filters="[
+                    {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Category', param: 'category_label', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Exclude Assigned Parts', param: 'exclude_assigned', type: 'checkbox', classes: 'ml-3'},
+                    ]"
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'exclude_assigned', 'category_label']"
-                endpoint="{{ route('api.users.storage.locations.parts.edit', $location->id) }}"></data-grid-location-parts>
+                endpoint="{{ route('api.users.storage.locations.parts.edit', $location->id) }}"></data-grid-with-filters>
         </div>
     </div>
 </div>

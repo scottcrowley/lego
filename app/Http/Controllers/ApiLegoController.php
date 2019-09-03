@@ -157,8 +157,6 @@ class ApiLegoController extends Controller
 
         $page = $inventories->paginate($this->defaultPerPage);
 
-        // $page->load('set')->load('theme'); //doesnt allow for sorting with any of the additional fields
-
         return $page;
     }
 

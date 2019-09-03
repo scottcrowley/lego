@@ -93,11 +93,12 @@ Route::group([
     Route::group([
         'prefix' => 'legouser',
     ], function () {
+        Route::view('/parts/all', 'legouser.parts.all')->name('legouser.parts.all');
+        Route::view('/parts/individual', 'legouser.parts.individual')->name('legouser.parts.individual');
         Route::view('/setlists', 'legouser.setlists')->name('legouser.setlists');
         Route::view('/sets', 'legouser.sets')->name('legouser.sets');
-        Route::view('/parts', 'legouser.parts')->name('legouser.parts');
-        Route::view('/loose_parts', 'legouser.loose_parts')->name('legouser.loose_parts');
-        Route::view('/lost_parts', 'legouser.lost_parts')->name('legouser.lost_parts');
+        Route::view('/loose-parts', 'legouser.loose_parts')->name('legouser.loose_parts');
+        Route::view('/lost-parts', 'legouser.lost_parts')->name('legouser.lost_parts');
     });
 });
 
@@ -125,7 +126,8 @@ Route::group([
     Route::get('/token', 'ApiUserController@getToken')->name('api.users.token');
     Route::get('/profile', 'ApiUserController@getProfile')->name('api.users.profile');
     Route::get('/sets', 'ApiUserController@getSets')->name('api.users.sets');
-    Route::get('/parts', 'ApiUserController@getParts')->name('api.users.parts');
+    Route::get('/parts/all', 'ApiUserController@getAllParts')->name('api.users.parts.all');
+    Route::get('/parts/individual', 'ApiUserController@getAllIndividualParts')->name('api.users.parts.individual');
     Route::get('/storage/locations/{location}/parts', 'ApiUserController@getStorageLocationParts')->name('api.users.storage.locations.parts');
     Route::get('/storage/locations/{location}/parts/individual', 'ApiUserController@getStorageLocationIndividualParts')->name('api.users.storage.locations.parts.individual');
     Route::get('/storage/locations/{location}/parts/edit', 'ApiUserController@editStorageLocationParts')->name('api.users.storage.locations.parts.edit');

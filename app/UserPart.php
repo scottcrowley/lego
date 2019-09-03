@@ -45,7 +45,7 @@ class UserPart extends Model
      *
      * @var array
      */
-    protected $appends = ['name', 'color_name', 'image_url', 'category_label', 'location'];
+    protected $appends = ['name', 'color_name', 'image_url', 'category_label', 'location', 'location_name'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -132,6 +132,16 @@ class UserPart extends Model
     }
 
     /**
+     * Attribute getter for part->location->location_name
+     *
+     * @return string
+     */
+    public function getLocationNameAttribute()
+    {
+        return (is_null($this->part->location)) ? 'None' : $this->part->location->location_name;
+    }
+
+    /**
      * Getter for the parts ldraw image url
      *
      * @return string
@@ -139,5 +149,15 @@ class UserPart extends Model
     public function getLdrawImageUrlAttribute()
     {
         return str_replace(['{color_id}', '{part_num}'], [$this->color_id, $this->part_num], $this->ldrawBaseUrl);
+    }
+
+    /**
+     * Public Getter for the ldrawBaseUrl property
+     *
+     * @return string
+     */
+    public function getLdrawBaseUrl()
+    {
+        return $this->ldrawBaseUrl;
     }
 }

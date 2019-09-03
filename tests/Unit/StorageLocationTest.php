@@ -124,8 +124,6 @@ class StorageLocationTest extends TestCase
     /** @test */
     public function it_can_toggle_an_associated_part_through_api()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $location = create('App\StorageLocation');
@@ -133,7 +131,6 @@ class StorageLocationTest extends TestCase
         $part = create('App\UserPart');
 
         $part = ($this->get(route('api.users.storage.locations.parts.toggle', [$location->id, $part->part_num])))->getData();
-
         $this->assertEquals($location->name, $part->location->name);
 
         $response = ($this->get(route('api.users.storage.locations.parts', $location->id)))->getData()->data[0];
@@ -143,7 +140,29 @@ class StorageLocationTest extends TestCase
         $this->assertNull($part->location);
 
         $response = ($this->get(route('api.users.storage.locations.parts', $location->id)))->getData()->data;
-
         $this->assertCount(0, $response);
+    }
+
+    /** @test */
+    public function it_can_retrieve_all_parts_through_api()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+        $color1 = create('App\Color');
+        $color2 = create('App\Color');
+
+        $part = create('App\Part');
+
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num, 'color_id' => $color1->id]);
+        create('App\UserPart', ['part_num' => $part->part_num, 'color_id' => $color2->id]);
+
+        $location->togglePart($userPart);
+
+        $response = ($this->get(route('api.users.storage.locations.parts', $location->id)))->getData()->data;
+        $this->assertCount(1, $response);
+
+        $response = ($this->get(route('api.users.storage.locations.parts.individual', $location->id)))->getData()->data;
+        $this->assertCount(2, $response);
     }
 }

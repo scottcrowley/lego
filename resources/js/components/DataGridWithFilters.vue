@@ -7,21 +7,9 @@
             </div>
             <div class="ml-2 pt-4" v-show="filtersShow">
                 <form @submit.prevent="applyFilters()">
-                    <div class="field-group flex items-center mb-2">
-                        <label for="filter_name">Name:</label>
-                        <input type="text" name="filter_name" id="filter_name" class="flex-1 ml-3" v-model="filter_name">
-                    </div>
-                    <div class="field-group flex items-center mb-2">
-                        <label for="filter_part_num">Part Number:</label>
-                        <input type="text" name="filter_part_num" id="filter_part_num" class="flex-1 ml-3" v-model="filter_part_num">
-                    </div>
-                    <div class="field-group flex items-center mb-2">
-                        <label for="filter_category_label">Category:</label>
-                        <input type="text" name="filter_category_label" id="filter_category_label" class="flex-1 ml-3" v-model="filter_category_label">
-                    </div>
-                    <div class="field-group flex items-center mb-2">
-                        <label for="filter_exclude_assigned">Exclude Assigned Parts:</label>
-                        <input type="checkbox" name="filter_exclude_assigned" id="filter_exclude_assigned" value="1" class="ml-3" v-model="filter_exclude_assigned">
+                    <div class="field-group flex items-center mb-2" v-for="filter in filters">
+                        <label :for="'filter_'+filter.param" v-text="filter.label"></label>
+                        <input :type="filter.type" :name="'filter_'+filter.param" :id="'filter_'+filter.param" :class="filter.classes" v-model="filterModels['filter_'+filter.param]">
                     </div>
                     <div class="field-group flex items-center mb-2">
                         <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
@@ -75,10 +63,12 @@
                         :align="pagerAlign" />
             </div>
         </div>
-
-        <div class="mb-6 flex flex-col md:flex-row items-center justify-center md:justify-start" v-show="!loading">
-            <button class="btn is-small" @click.prevent="addAll()">Add All Parts To Location</button>
-            <button class="btn is-small mt-2 md:mt-0 ml-0 md:ml-2" @click.prevent="removeAll()">Remove All Parts To Location</button>
+ 
+        <div v-if="use_location">
+            <div class="mb-6 flex flex-col md:flex-row items-center justify-center md:justify-start" v-show="!loading">
+                <button class="btn is-small" @click.prevent="addAll()">Add All Parts To Location</button>
+                <button class="btn is-small mt-2 md:mt-0 ml-0 md:ml-2" @click.prevent="removeAll()">Remove All Parts To Location</button>
+            </div>
         </div>
 
         <div class="card-container" v-show="!loading">
@@ -99,7 +89,7 @@
                                 ) }}
                             </p>
                         </div>
-                        <div>
+                        <div v-if="use_location">
                             <p v-if="(data.location !== null && data.location.id != location_id)">
                                 <span class="font-bold">Storage Location:</span> 
                                 {{ data.location.location_name }}
@@ -140,10 +130,22 @@
 
         mixins: [dataGridCore],
 
+        props: {
+            use_location: {
+                type: Boolean,
+                default: false
+            }, 
+            filters: {
+                type: Array,
+                default: []
+            }
+        },
+
         data() {
             return {
                 filtersShow: false,
-                filterParams: ['name', 'part_num', 'category_label', 'exclude_assigned'],
+                filterParams: [],
+                filterModels: {},
                 filter_name: '',
                 filter_part_num: '',
                 filter_category_label: '',
@@ -152,7 +154,8 @@
         },
 
         mounted() {
-            this.populateFilters(this.presentParamsString);
+            this.populateFilters();
+            this.populateFilterParams(this.presentParamsString);
         },
         
         methods: {
@@ -187,7 +190,14 @@
 
                 return newParams;
             },
-            populateFilters(currentParams) {
+            populateFilters() {
+                this.filters.forEach((f, index) => {
+                    this.filterParams[index] = f.param;
+                    let filterName = 'filter_' + f.param;
+                    this.filterModels[filterName] = '';
+                });
+            },
+            populateFilterParams(currentParams) {
                 let paramList = currentParams.split('&');
                 paramList.forEach((p, index) => {
                     if (p == '') {
@@ -197,7 +207,7 @@
                     let details = p.split('=');
                     if (this.filterParams.includes(details[0])) {
                         let input = 'filter_' + details[0];
-                        this[input] = decodeURIComponent(details[1]);
+                        this.filterModels[input] = decodeURIComponent(details[1]);
 
                         this.filtersShow = true;
                     }
@@ -208,7 +218,7 @@
 
                 this.filterParams.forEach((p, index) => {
                     let input = 'filter_' + p;
-                    let value = this[input];
+                    let value = this.filterModels[input];
                     if (value === true) {
                         value = this.location_id;
                     }
@@ -222,7 +232,7 @@
             clearFilters() {
                 this.filterParams.forEach((p, index) => {
                     let input = 'filter_' + p;
-                    this[input] = '';
+                    this.filterModels[input] = '';
                 });
 
                 this.presentParamsString = this.stripParams(this.presentParamsString, this.filterParams);
