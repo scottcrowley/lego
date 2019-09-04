@@ -219,6 +219,7 @@ module.exports = {
     'md': '768px',
     'lg': '992px',
     'xl': '1200px',
+    '2xl': '1600px',
   },
 
 
@@ -592,8 +593,10 @@ module.exports = {
     '16': '4rem',
     '24': '6rem',
     '32': '8rem',
+    '40': '10rem',
     '48': '12rem',
     '64': '16rem',
+    '72': '18rem',
     'full': '100%',
     'screen': '100vh',
   },

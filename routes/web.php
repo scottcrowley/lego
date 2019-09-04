@@ -132,7 +132,6 @@ Route::group([
     Route::get('/storage/locations/{location}/parts/individual', 'ApiUserController@getStorageLocationIndividualParts')->name('api.users.storage.locations.parts.individual');
     Route::get('/storage/locations/{location}/parts/edit', 'ApiUserController@editStorageLocationParts')->name('api.users.storage.locations.parts.edit');
     Route::get('/storage/locations/{location}/parts/toggle/{part}', 'ApiUserController@togglePartInLocation')->name('api.users.storage.locations.parts.toggle');
-    // Route::get('/clear/{type}', 'ApiUserController@clearCache')->name('api.users.clear');
     // Route::get('/setlists', 'ApiUserController@getSetLists')->name('api.users.setlists');
 });
 
