@@ -104,6 +104,16 @@ class Part extends Model
     }
 
     /**
+     * A part has many user part associations
+     *
+     * @return hasMany
+     */
+    public function userParts()
+    {
+        return $this->hasMany(UserPart::class, 'part_num', 'part_num');
+    }
+
+    /**
      * Custom getter for category name.
      *
      * @return string
@@ -137,5 +147,47 @@ class Part extends Model
         }
 
         return $partImageUrl->first()->image_url;
+    }
+
+    /**
+     * Getter for if the user owns this part
+     *
+     * @return bool
+     */
+    public function getOwnsPartAttribute()
+    {
+        return ! $this->userParts->isEmpty();
+    }
+
+    /**
+     * Getter for quantity of owned user parts
+     *
+     * @return int
+     */
+    public function getOwnedPartCountAttribute()
+    {
+        $userParts = $this->userParts;
+
+        if ($userParts->isEmpty()) {
+            return 0;
+        }
+
+        return $userParts->sum('quantity');
+    }
+
+    /**
+     * Getter for owned part location if available
+     *
+     * @return string
+     */
+    public function getOwnedPartLocationNameAttribute()
+    {
+        $userParts = $this->userParts;
+
+        if ($userParts->isEmpty()) {
+            return '';
+        }
+
+        return $userParts->first()->location_name;
     }
 }

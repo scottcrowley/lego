@@ -64,4 +64,48 @@ class PartTest extends TestCase
 
         $this->assertEquals($location->name, $response->getData()->data[0]->location->name);
     }
+
+    /** @test */
+    public function it_can_determine_whether_or_not_a_user_owns_the_part()
+    {
+        $this->signIn();
+
+        $part = create('App\Part');
+
+        $this->assertFalse($part->owns_part);
+
+        create('App\UserPart', ['part_num' => $part->part_num]);
+
+        $this->assertTrue($part->fresh()->owns_part);
+    }
+
+    /** @test */
+    public function it_can_determine_the_quantity_of_user_parts_for_an_owned_part()
+    {
+        $this->signIn();
+
+        $part = create('App\Part');
+
+        $this->assertEquals(0, $part->owned_part_count);
+
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
+
+        $this->assertEquals($userPart->quantity, $part->fresh()->owned_part_count);
+    }
+
+    /** @test */
+    public function it_can_access_the_location_name_of_the_part_if_it_is_owned()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+        $part = create('App\Part');
+
+        $this->assertEmpty($part->owned_part_location_name);
+
+        $userPart = create('App\UserPart', ['part_num' => $part->part_num]);
+        $location->togglePart($userPart);
+
+        $this->assertEquals($location->location_name, $part->fresh()->owned_part_location_name);
+    }
 }

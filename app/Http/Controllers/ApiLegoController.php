@@ -21,6 +21,8 @@ use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
 {
+    use ApiControllerFunctions;
+
     /**
      * default number of results to display
      *
@@ -105,15 +107,9 @@ class ApiLegoController extends Controller
      */
     public function getParts(PartFilters $filters)
     {
-        $parts = $filters->apply(Part::all());
+        $parts = $filters->apply(Part::all())->values();
 
-        $parts = $parts->values();
-
-        $page = $parts->paginate($this->defaultPerPage);
-
-        $page->load('partImageUrl');
-
-        return $page;
+        return $this->processPartPages($parts, ['partImageUrl', 'userParts'], ['owns_part', 'owned_part_count', 'owned_part_location_name']);
     }
 
     /**
