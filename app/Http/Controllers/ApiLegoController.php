@@ -48,9 +48,7 @@ class ApiLegoController extends Controller
      */
     public function getColors(ColorFilters $filters)
     {
-        $colors = $filters->apply(Color::all());
-
-        $colors = $colors->values();
+        $colors = $filters->apply(Color::all())->values();
 
         return $colors->paginate($this->defaultPerPage);
     }
@@ -78,7 +76,7 @@ class ApiLegoController extends Controller
      */
     public function getPartRelationships(PartRelationshipFilters $filters)
     {
-        $relationships = $filters->apply(PartRelationship::all());
+        $relationships = $filters->apply(PartRelationship::all())->values();
 
         return $relationships->paginate($this->defaultPerPage);
     }
@@ -91,10 +89,7 @@ class ApiLegoController extends Controller
      */
     public function getThemes(ThemeFilters $filters)
     {
-        $allThemes = Theme::all();
-        $themes = $filters->apply($allThemes);
-
-        $themes = $themes->values();
+        $themes = $filters->apply(Theme::all())->values();
 
         return $themes->paginate($this->defaultPerPage);
     }

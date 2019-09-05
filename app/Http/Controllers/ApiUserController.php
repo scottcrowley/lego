@@ -63,9 +63,7 @@ class ApiUserController extends Controller
      */
     public function getSets(SetFilters $filters)
     {
-        $sets = $filters->apply(UserSet::all());
-
-        $sets = $sets->values();
+        $sets = $filters->apply(UserSet::all())->values();
 
         return $sets->paginate($this->defaultPerPage);
     }
