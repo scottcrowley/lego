@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Validator;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Rules\CurrentPassword;
 use Illuminate\Validation\Rule;
@@ -68,7 +69,7 @@ class ProfileController extends Controller
                 ->withInput($request->except(['current_password', 'password', 'password_confirmation']));
         }
 
-        $data = array_except($validator->attributes(), ['current_password', 'password_confirmation']);
+        $data = Arr::except($validator->attributes(), ['current_password', 'password_confirmation']);
         if ($request->filled('password')) {
             $data['password'] = \Hash::make($data['password']);
         }
