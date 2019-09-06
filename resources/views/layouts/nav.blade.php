@@ -37,10 +37,10 @@
                 <dropdown>
                     <a slot="link" class="dropdown-toggle toggle-closed" href="#">Your Legos</a>
                     <div slot="dropdown-items">
-                        <a href="{{ route('legouser.setlists') }}">Set Lists</a>
-                        <a href="{{ route('legouser.sets') }}">Sets</a>
+                        <a href="{{ route('legouser.sets.grid') }}">Sets</a>
                         <a href="{{ route('legouser.parts.all') }}">Parts - All</a>
                         <a href="{{ route('legouser.parts.individual') }}">Parts - Individual</a>
+                        <a href="{{ route('legouser.setlists') }}">Set Lists</a>
                         <a href="{{ route('legouser.loose_parts') }}">Loose Parts</a>
                         <a href="{{ route('legouser.lost_parts') }}">Lost Parts</a>
                     </div>
@@ -50,8 +50,8 @@
                     <div slot="dropdown-items">
                         <a href="{{ route('lego.sets.grid') }}">Sets</a>
                         <a href="{{ route('lego.themes') }}">Themes</a>
-                        <a href="{{ route('lego.part_categories') }}">Part Categories</a>
                         <a href="{{ route('lego.parts.grid') }}">Parts</a>
+                        <a href="{{ route('lego.part_categories') }}">Part Categories</a>
                         <a href="{{ route('lego.colors') }}">Colors</a>
                         <a href="{{ route('lego.inventories.grid') }}">Set Inventories</a>
                     </div>

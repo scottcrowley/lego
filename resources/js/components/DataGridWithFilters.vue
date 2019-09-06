@@ -81,12 +81,15 @@
                     <div class="card-body">
                         <div v-for="valname in valnames">
                             <p :class="(valname.title) ? 'title' : ''">
-                                <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
-                                {{ (
-                                    (valname.boolean === true) ? (
-                                        (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
-                                    ) : data[valname.field]
-                                ) }}
+                                <span v-if="!valname.link">
+                                    <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
+                                    {{ (
+                                        (valname.boolean === true) ? (
+                                            (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
+                                        ) : data[valname.field]
+                                    ) }}
+                                </span>
+                                <a :href="generateLinkUrl(valname.linkUrl, index)" v-else>{{ data[valname.field] }}</a>
                             </p>
                         </div>
                         <div v-if="use_location">
