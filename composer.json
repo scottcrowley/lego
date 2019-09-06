@@ -10,9 +10,10 @@
     "require": {
         "php": "^7.2",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
         "kitetail/zttp": "^0.4.0",
+        "laravel/framework": "^6.0",
+        "laravel/telescope": "^2.1",
+        "laravel/tinker": "^1.0",
         "sc-laravel-presets/default-tailwindcss": "dev-master",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
