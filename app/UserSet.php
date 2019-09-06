@@ -51,7 +51,7 @@ class UserSet extends Model
      */
     public function inventory()
     {
-        return $this->hasOne(Inventory::class, 'set_num', 'set_num');
+        return $this->hasOne(Inventory::class, 'set_num', 'set_num')->withDefault('id', null);
     }
 
     /**

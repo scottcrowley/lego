@@ -16,7 +16,9 @@ class ColorsTest extends TestCase
 
         $color = create('App\Color');
 
-        $this->assertTrue(checkName($this->get(route('api.lego.colors')), $color->name));
+        $response = $this->get(route('api.lego.colors'));
+
+        $this->assertTrue(checkNameExists($response, $color->name));
     }
 
     /** @test */
@@ -28,7 +30,10 @@ class ColorsTest extends TestCase
 
         $black = create('App\Color', ['name' => 'black']);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.colors', ['name' => 'black'])), $black->name));
+        $response = $this->get(route('api.lego.colors', ['name' => 'black']));
+
+        $this->assertTrue(checkNameExists($response, $black->name));
+        $this->assertfalse(checkNameExists($response, $white->name));
     }
 
     /** @test */

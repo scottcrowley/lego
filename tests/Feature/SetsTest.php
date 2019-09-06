@@ -17,7 +17,9 @@ class SetsTest extends TestCase
 
         $set = create('App\Set');
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets')), $set->name));
+        $response = $this->get(route('api.lego.sets'));
+
+        $this->assertTrue(checkNameExists($response, $set->name));
     }
 
     /** @test */
@@ -29,7 +31,10 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['name' => 'Set B']);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['name' => 'Set B'])), $second->name));
+        $response = $this->get(route('api.lego.sets', ['name' => 'Set B']));
+
+        $this->assertTrue(checkNameExists($response, $second->name));
+        $this->assertFalse(checkNameExists($response, $first->name));
     }
 
     /** @test */
@@ -41,7 +46,10 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['set_num' => 'Set B']);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['set_num' => 'Set B'])), $second->name));
+        $response = $this->get(route('api.lego.sets', ['set_num' => 'Set B']));
+
+        $this->assertTrue(checkNameExists($response, $second->name));
+        $this->assertFalse(checkNameExists($response, $first->name));
     }
 
     /** @test */
@@ -55,7 +63,10 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['theme_id' => $theme->id]);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['theme_id' => $theme->id])), $second->name));
+        $response = $this->get(route('api.lego.sets', ['theme_id' => $theme->id]));
+
+        $this->assertTrue(checkNameExists($response, $second->name));
+        $this->assertFalse(checkNameExists($response, $first->name));
     }
 
     /** @test */
@@ -67,19 +78,10 @@ class SetsTest extends TestCase
 
         $second = create('App\Set', ['year' => '2010']);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['year' => '2010'])), $second->name));
-    }
+        $response = $this->get(route('api.lego.sets', ['year' => '2010']));
 
-    /** @test */
-    public function an_authenticated_user_can_filter_results_before_a_given_year()
-    {
-        $this->signIn();
-
-        $first = create('App\Set', ['year' => '2015']);
-
-        $second = create('App\Set', ['year' => '2010']);
-
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['minyear' => '2012'])), $second->name));
+        $this->assertTrue(checkNameExists($response, $second->name));
+        $this->assertFalse(checkNameExists($response, $first->name));
     }
 
     /** @test */
@@ -87,11 +89,29 @@ class SetsTest extends TestCase
     {
         $this->signIn();
 
+        $first = create('App\Set', ['year' => '2015']);
+
+        $second = create('App\Set', ['year' => '2010']);
+
+        $response = $this->get(route('api.lego.sets', ['minyear' => '2012']));
+
+        $this->assertTrue(checkNameExists($response, $first->name));
+        $this->assertFalse(checkNameExists($response, $second->name));
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_before_a_given_year()
+    {
+        $this->signIn();
+
         $first = create('App\Set', ['year' => '2000']);
 
         $second = create('App\Set', ['year' => '2010']);
 
-        $this->assertTrue(checkName($this->get(route('api.lego.sets', ['maxyear' => '2005'])), $second->name));
+        $response = $this->get(route('api.lego.sets', ['maxyear' => '2005']));
+
+        $this->assertTrue(checkNameExists($response, $first->name));
+        $this->assertFalse(checkNameExists($response, $second->name));
     }
 
     /** @test */

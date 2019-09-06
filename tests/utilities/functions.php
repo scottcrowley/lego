@@ -21,9 +21,9 @@ function createRaw($class, $attributes = [], $times = null)
     return $f->toArray();
 }
 
-function checkName($response, $name)
+function checkNameExists($response, $name)
 {
-    $data = $response->getData()->data;
+    $data = collect($response->getData()->data);
 
-    return (count($data) == 1 && $name == $data[0]->name);
+    return ($data->where('name', $name)->isNotEmpty());
 }
