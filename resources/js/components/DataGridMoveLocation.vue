@@ -1,6 +1,23 @@
 <template>
     <div>
         <div class="w-full h-8 loader loader-lg" v-show="loading"></div>
+        <div v-if="move_location" class="block sm:flex mt-3 mb-8 justify-center" v-show="!loading">
+            <form v-if="all_move_locations.length" class="sm:flex w-full sm:w-auto" @submit.prevent="">
+                <div>
+                    <select-menu-special
+                        select_id="moveToLocation"
+                        parent_classes="w-full"
+                        :options_list="locationOptions"
+                        change_method="updateMoveBtn"
+                        default_label="Choose a location to move to..."
+                        default_value=""
+                    />
+                </div>
+                <button class="mt-3 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveDisabled" @click.prevent="moveSelected()">Move Selected</button>
+                <button class="mt-1 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveDisabled" @click.prevent="moveAll()">Move All</button>
+            </form>
+            <p v-else>There are currently no other storage locations in the database.</p>
+        </div>
         <div class="w-full mb-4 flex" v-show="!loading">
             <div class="relative">
                 <select id="selectSort" @change="updateSort($event)">
@@ -46,9 +63,13 @@
             </div>
         </div>
 
+        <div v-if="move_location" v-show="!loading">
+            <p class="title mb-2 text-center">Select the parts below to move</p>
+        </div>
+
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
-                <div class="card-content"  @click.prevent="selectPart($event, index)">
+                <div class="card-content" :class="(move_location ? 'cursor-pointer' : '')" @click.prevent="selectPart($event, index)">
                     <div class="card-image">
                         <img class="" :src="data[image_field]" :alt="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null" @click.prevent="swapImageUrl($event)">
                         <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
@@ -102,6 +123,47 @@
         components: {SelectMenuSpecial, SelectMenu},
         mixins: [dataGridCore],
 
+        props: {
+            move_location: {
+                type: Boolean,
+                default: false
+            }, 
+            all_move_locations: {
+                type: Array,
+                default: []
+            }, 
+            move_endpoint: {
+                type: String,
+                default: ''
+            }
+        },
+
+        data() {
+            return {
+                moveDisabled: true,
+                partsSelected: {}
+            }
+        },
+
+        mounted () {
+            this.postResultsFunction = 'updateSelected';
+        },
+
+        computed: {
+            locationOptions() {
+                if (this.move_location && this.all_move_locations.length) {
+                    let options = [];
+                    this.all_move_locations.forEach((location, index) => {
+                        options[index] = {
+                            label: location.location_name,
+                            value: location.id
+                        };
+                    });
+                    return options; 
+                }
+            }
+        },
+
         methods: {
             executeEndpoint(url, index, successMsg) {
                 let endpoint = this.generateLinkUrl(url, index);
@@ -114,6 +176,76 @@
                     .catch(error => {
                         this.processError(error);
                     });
+            },
+
+            selectPart(event, index) {
+                event.target.classList.toggle('border-primary');
+                this.partsSelected[index] = ! this.partsSelected[index];
+            },
+
+            updateSelected(selected = false) {
+                if (this.move_location) {
+                    this.partsSelected = {};
+                    let keys = Object.keys(this.dataSet);
+                    keys.forEach((key) => {
+                        this.partsSelected[key] = selected;
+                    });
+                }
+            },
+            
+            updateMoveBtn(event) {
+                if (event.target.value == '') {
+                    this.moveDisabled = true;
+                    return false;
+                }
+                this.moveDisabled = false;
+            },
+
+            moveParts(parts, endpoint) {
+                axios.post(endpoint, parts)
+                    .then(response => {
+                        this.finalizeMove(response.data);
+                    }).catch(error => {
+                        this.processError(error);
+                    });
+            },
+
+            moveAll() {
+                this.updateSelected(true);
+                this.moveSelected();
+            },
+
+            moveSelected() {
+                if (! this.move_location) {
+                    return;
+                }
+
+                let endpoint = this.move_endpoint + '/' + document.querySelector('#moveToLocation').value;
+                let parts  = [];
+
+                let keys = Object.keys(this.partsSelected);
+                keys.forEach((key) => {
+                    if (! this.partsSelected[key]) {
+                        return;
+                    }
+
+                    parts.push(this.dataSet[key]);
+                });
+
+                if (! parts.length) {
+                    flash('You have not selected any parts to move.', 'danger');
+                    return;
+                }
+                this.moveParts(parts, endpoint);
+            },
+
+            finalizeMove(count) {
+                document.querySelectorAll('.card-container .border-primary').forEach(el => { 
+                    el.classList.remove('border-primary'); 
+                });
+                this.getResults(this.currentPage);
+                this.updateSelected();
+                flash('Successfully moved '+count+' parts!');
             },
         }
     };

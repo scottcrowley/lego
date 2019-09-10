@@ -2,6 +2,7 @@
     <div>
         <div class="relative" :class="parent_classes">
             <select :class="select_classes" ref="selectmenuelement" @change="selectChanged($event)">
+                <option v-if="default_label != ''" v-text="default_label" :value="default_value"></option>
                 <option v-for="data in dataSet" :value="data[selected_field]">{{ data[label_field] }}</option>
             </select>
             <div class="select-menu-icon">
@@ -22,6 +23,8 @@
             'selected_field',
             'data',
             'label_field',
+            'default_label',
+            'default_value',
             'change_endpoint'
         ],
         data() {
@@ -36,8 +39,10 @@
 
         methods: {
             selectChanged(e) {
-                let redirect = this.generateEndpointUrl(e.target.value);
-                this.redirect(redirect);
+                if (this.change_endpoint != '') {
+                    let redirect = this.generateEndpointUrl(e.target.value);
+                    this.redirect(redirect);
+                }
             },
 
             generateEndpointUrl(value) {

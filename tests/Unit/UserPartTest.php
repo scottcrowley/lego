@@ -148,4 +148,19 @@ class UserPartTest extends TestCase
         $response = ($this->get(route('api.users.parts.individual')))->getData()->data;
         $this->assertCount(2, $response);
     }
+
+    /** @test */
+    public function it_can_be_assigned_to_a_storage_location()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $userPart = create('App\UserPart');
+
+        $userPart->toggleLocation($location);
+
+        $this->assertEquals($location->fresh()->parts->first()->name, $userPart->name);
+        $this->assertEquals($userPart->fresh()->storageLocation->name, $location->name);
+    }
 }

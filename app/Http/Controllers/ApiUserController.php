@@ -108,6 +108,11 @@ class ApiUserController extends Controller
         return $parts->paginate($this->defaultPerPage);
     }
 
+    public function moveStorageLocationParts(StorageLocation $location, StorageLocation $newLocation)
+    {
+        return $location->movePartsTo(request()->all(), $newLocation);
+    }
+
     /**
      * get all user parts associated with a storage location
      *

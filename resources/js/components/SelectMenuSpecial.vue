@@ -1,6 +1,6 @@
 <template>
     <div class="relative" :class="parent_classes">
-        <select :id="select_id" @change="handleMethodCall(change_method,$event)">
+        <select :id="select_id" @change="handleMethodCall(change_method,$event)" class="w-full">
             <option v-if="default_label != ''" v-text="default_label" :value="default_value"></option>
             <option v-for="option in options_list" :value="option.value">{{ option.label }}</option>
         </select>

@@ -57,7 +57,8 @@ export default {
             perpage: this.per_page,
             currentPage: 1,
             defaultPage: 0,
-            location: null
+            location: null,
+            postResultsFunction: null
         }
     },
 
@@ -188,6 +189,10 @@ export default {
                     this.allData = response.data;
                     this.dataSet = response.data.data;
                     this.updateUrl(params);
+                    if (this.postResultsFunction !== null) {
+                        this[this.postResultsFunction]();
+                        // this.updateSelected();
+                    }
                 })
                 .catch(error => {
                     this.processError(error);

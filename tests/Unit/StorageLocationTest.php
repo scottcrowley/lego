@@ -165,4 +165,91 @@ class StorageLocationTest extends TestCase
         $response = ($this->get(route('api.users.storage.locations.parts.individual', $location->id)))->getData()->data;
         $this->assertCount(2, $response);
     }
+
+    /** @test */
+    public function it_can_move_all_current_parts_to_a_different_location()
+    {
+        $this->signIn();
+
+        $originalLocation = create('App\StorageLocation');
+        $newLocation = create('App\StorageLocation');
+
+        $userParts = create('App\UserPart', [], 5);
+
+        $userParts->each->toggleLocation($originalLocation);
+
+        $this->assertCount(5, $originalLocation->fresh()->parts);
+
+        $originalLocation->moveAllPartsTo($newLocation);
+
+        $this->assertEmpty($originalLocation->fresh()->parts);
+        $this->assertCount(5, $newLocation->fresh()->parts);
+    }
+
+    /** @test */
+    public function it_can_move_an_array_of_parts_to_a_different_location()
+    {
+        $this->signIn();
+
+        $originalLocation = create('App\StorageLocation');
+        $newLocation = create('App\StorageLocation');
+
+        $part = create('App\UserPart');
+        $userParts = create('App\UserPart', [], 5);
+
+        $part->toggleLocation($originalLocation);
+        $userParts->each->toggleLocation($originalLocation);
+
+        $this->assertCount(6, $originalLocation->fresh()->parts);
+
+        $originalLocation->movePartsTo([$part], $newLocation);
+
+        $this->assertCount(5, $originalLocation->fresh()->parts);
+        $this->assertCount(1, $newLocation->fresh()->parts);
+        $this->assertEquals($part->name, $newLocation->parts->first()->name);
+    }
+
+    /** @test */
+    public function it_can_only_move_parts_to_new_location_if_the_part_is_in_the_current_location()
+    {
+        $this->signIn();
+
+        $originalLocation = create('App\StorageLocation');
+        $newLocation = create('App\StorageLocation');
+
+        $part = create('App\UserPart');
+        $userParts = create('App\UserPart', [], 5);
+        $partNotInOriginal = create('App\UserPart');
+
+        $part->toggleLocation($originalLocation);
+        $userParts->each->toggleLocation($originalLocation);
+
+        $this->assertCount(6, $originalLocation->fresh()->parts);
+
+        $originalLocation->movePartsTo([$part, $partNotInOriginal], $newLocation);
+
+        $this->assertCount(5, $originalLocation->fresh()->parts);
+        $this->assertCount(2, $newLocation->fresh()->parts);
+        $this->assertEquals($part->part_num, $newLocation->parts[0]->part_num);
+        $this->assertEquals($partNotInOriginal->part_num, $newLocation->parts[1]->part_num);
+    }
+
+    /** @test */
+    public function it_can_move_parts_to_a_new_location_through_api()
+    {
+        $this->signIn();
+
+        $originalLocation = create('App\StorageLocation');
+        $newLocation = create('App\StorageLocation');
+
+        $userParts = create('App\UserPart', [], 5);
+
+        $userParts->each->toggleLocation($originalLocation);
+
+        $this->assertCount(5, $originalLocation->fresh()->parts);
+        $this->post(route('api.users.storage.locations.parts.move', [$originalLocation, $newLocation]), $userParts->toArray());
+
+        $this->assertCount(0, $originalLocation->fresh()->parts);
+        $this->assertCount(5, $newLocation->fresh()->parts);
+    }
 }

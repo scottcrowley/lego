@@ -65,6 +65,10 @@ Route::group([
         $allLocations = StorageLocation::orderBy('name')->get();
         return view('storage.locations.parts.individual', compact('location', 'allLocations'));
     })->name('storage.locations.parts.individual');
+    Route::get('/{location}/parts/move', function (StorageLocation $location) {
+        $allLocations = StorageLocation::where('id', '<>', $location->id)->orderBy('name')->get();
+        return view('storage.locations.parts.move', compact('location', 'allLocations'));
+    })->name('storage.locations.parts.move');
 });
 
 Route::group([
@@ -111,11 +115,8 @@ Route::group([
     Route::get('/part_categories', 'ApiLegoController@getPartCategories')->name('api.lego.part_categories');
     Route::get('/part_relationships', 'ApiLegoController@getPartRelationships')->name('api.lego.part_relationships');
     Route::get('/parts', 'ApiLegoController@getParts')->name('api.lego.parts');
-    // Route::get('/parts/{partNum}', 'ApiLegoController@getPart')->name('api.lego.parts.show');
     Route::get('/sets', 'ApiLegoController@getSets')->name('api.lego.sets');
-    // Route::get('/sets/{setNum}', 'ApiLegoController@getSet')->name('api.lego.sets.show');
     Route::get('/themes', 'ApiLegoController@getThemes')->name('api.lego.themes');
-    // Route::get('/themes/{id}', 'ApiLegoController@getTheme')->name('api.lego.themes.show');
     Route::get('/inventories', 'ApiLegoController@getInventories')->name('api.lego.inventories');
     Route::get('/inventory_parts/{inventory}', 'ApiLegoController@getInventoryParts')->name('api.lego.inventory_parts');
 });
@@ -130,10 +131,10 @@ Route::group([
     Route::get('/parts/all', 'ApiUserController@getAllParts')->name('api.users.parts.all');
     Route::get('/parts/individual', 'ApiUserController@getAllIndividualParts')->name('api.users.parts.individual');
     Route::get('/storage/locations/{location}/parts', 'ApiUserController@getStorageLocationParts')->name('api.users.storage.locations.parts');
+    Route::post('/storage/locations/{location}/parts/{newLocation}', 'ApiUserController@moveStorageLocationParts')->name('api.users.storage.locations.parts.move');
     Route::get('/storage/locations/{location}/parts/individual', 'ApiUserController@getStorageLocationIndividualParts')->name('api.users.storage.locations.parts.individual');
     Route::get('/storage/locations/{location}/parts/edit', 'ApiUserController@editStorageLocationParts')->name('api.users.storage.locations.parts.edit');
     Route::get('/storage/locations/{location}/parts/toggle/{part}', 'ApiUserController@togglePartInLocation')->name('api.users.storage.locations.parts.toggle');
-    // Route::get('/setlists', 'ApiUserController@getSetLists')->name('api.users.setlists');
 });
 
 Route::group([

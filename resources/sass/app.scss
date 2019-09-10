@@ -69,7 +69,7 @@
             @apply .w-full .mb-3 .px-2;
 
             & .card-content {
-                @apply .w-full .flex .h-48 .p-1 .border .overflow-hidden;
+                @apply .w-full .flex .h-48 .p-1 .border .rounded .overflow-hidden;
 
                 & .card-image {
                     @apply .w-2/5 .m-auto .overflow-hidden .text-xs .text-center;

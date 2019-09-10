@@ -69,3 +69,11 @@ button.burger {
 button.btn {
     outline: none;
 }
+
+button.btn:disabled, .btn.is-disabled {
+    @apply .cursor-default .bg-secondary-light;
+
+    &:hover {
+        @apply .bg-secondary-light;
+    }
+}

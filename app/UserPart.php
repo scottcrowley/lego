@@ -82,6 +82,27 @@ class UserPart extends Model
     }
 
     /**
+     * A UserPart has one storage location
+     *
+     * @return hasOneThrough
+     */
+    public function storageLocation()
+    {
+        return $this->hasOneThrough(StorageLocation::class, PartStorageLocation::class, 'part_num', 'id', 'part_num', 'storage_location_id');
+    }
+
+    /**
+     * Toggle storage location association for this part
+     *
+     * @param StorageLocation $location
+     * @return void
+     */
+    public function toggleLocation(StorageLocation $location)
+    {
+        $location->togglePart($this);
+    }
+
+    /**
      * Attribute getter for part->name
      *
      * @return string

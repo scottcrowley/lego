@@ -40,6 +40,9 @@
                 image_label_field="name"
                 toggle_end_point="{{ url('/api/users/storage/locations/'.$location->id.'/parts/toggle/{part_num}') }}"
                 per_page="100"
+                :move_location=false
+                :all_move_locations="[]"
+                move_endpoint=""
                 :filters="[
                     {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
