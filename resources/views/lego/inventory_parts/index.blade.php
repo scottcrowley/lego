@@ -31,14 +31,14 @@
                 label="Parts" 
                 :colnames="[
                     {name: 'Part Number', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-32'}, 
-                    {name: 'Name', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-1/2'}, 
+                    {name: 'Name', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-3/5'}, 
                     {name: 'Qty', sortable: false, sorted: false, sortDesc: false, boolean: false, width: 'w-12'},
                     {name: 'Color', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-32'}, 
-                    {name: 'Location', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-2/5'}, 
+                    {name: 'Location', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-1/4'}, 
                     {name: 'Spare', sortable: true, sorted: false, sortDesc: false, boolean: true, width: 'w-12'}]"
                 :valnames="['part_num', 'name', 'quantity', 'color_name', 'location_name', 'is_spare']"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color']"
-                endpoint="{{ '/api/lego/inventory_parts/'.$inventory->id }}"></data-table>
+                endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-table>
         </div>
     </div>
 </div>

@@ -13,9 +13,6 @@
                 image_field="image_url" 
                 image_label_field="name" 
                 per_page="50" 
-                :move_location=false
-                :all_move_locations="[]"
-                move_endpoint=""
                 :filters="[
                     {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Set Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},

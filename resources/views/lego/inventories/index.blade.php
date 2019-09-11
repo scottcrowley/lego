@@ -18,7 +18,7 @@
                     {name: 'Pieces', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-16'}]"
                 :valnames="['set_num', 'name', 'theme_label', 'year', 'num_parts']"
                 :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear']"
-                endpoint="/api/lego/inventories"></data-table>
+                endpoint="{{ route('api.lego.inventories') }}"></data-table>
         </div>
     </div>
 </div>

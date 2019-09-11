@@ -149,10 +149,6 @@
                 filtersShow: false,
                 filterParams: [],
                 filterModels: {},
-                filter_name: '',
-                filter_part_num: '',
-                filter_category_label: '',
-                filter_exclude_assigned: '',
             }
         },
 
@@ -223,12 +219,17 @@
                     let input = 'filter_' + p;
                     let value = this.filterModels[input];
                     if (value === true) {
-                        value = this.location_id;
+                        value = this.filters[index].value;
+                        // value = this.location_id;
                     }
                     if (value != '') {
                         this.presentParamsString = this.presentParamsString + '&' + p + '=' + value;
                     }
                 });
+
+                if (this.presentParamsString == '') {
+                    this.filtersShow = false;
+                }
                 
                 this.getResults(1);
             },

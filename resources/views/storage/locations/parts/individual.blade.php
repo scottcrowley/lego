@@ -41,9 +41,6 @@
                 image_label_field="image_url" 
                 per_page="100" 
                 :allow_image_swap=true
-                :move_location=false
-                :all_move_locations="[]"
-                move_endpoint=""
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},

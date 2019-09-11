@@ -99,7 +99,6 @@ Route::group([
     ], function () {
         Route::view('/parts/all', 'legouser.parts.all')->name('legouser.parts.all');
         Route::view('/parts/individual', 'legouser.parts.individual')->name('legouser.parts.individual');
-        Route::view('/setlists', 'legouser.setlists')->name('legouser.setlists');
         Route::view('/sets', 'legouser.sets.index')->name('legouser.sets.index');
         Route::view('/sets-grid', 'legouser.sets.grid')->name('legouser.sets.grid');
         Route::view('/loose-parts', 'legouser.loose_parts')->name('legouser.loose_parts');

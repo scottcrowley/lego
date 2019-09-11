@@ -40,14 +40,11 @@
                 image_label_field="name"
                 toggle_end_point="{{ url('/api/users/storage/locations/'.$location->id.'/parts/toggle/{part_num}') }}"
                 per_page="100"
-                :move_location=false
-                :all_move_locations="[]"
-                move_endpoint=""
                 :filters="[
                     {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Category', param: 'category_label', type: 'text', classes: 'flex-1 ml-3'},
-                    {label: 'Exclude Assigned Parts', param: 'exclude_assigned', type: 'checkbox', classes: 'ml-3'},
+                    {label: 'Exclude Assigned Parts', param: 'exclude_assigned', type: 'checkbox', value: {{ $location->id }}, classes: 'ml-3'},
                     ]"
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: true, sortdesc: false, boolean: false},

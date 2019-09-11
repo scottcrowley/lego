@@ -16,7 +16,7 @@
                     <p class="text-sm md:text-base font-hairline tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
                 </div>
                 <div class="mt-auto self-end">
-                    <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back to Inventories</a>
+                    <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back</a>
                 </div>
             </div>
         </div>
@@ -26,27 +26,33 @@
             <div class="flex-1">Lego Set Inventory Parts</div>
             <a href="{{ route('lego.inventory_parts.index', $inventory->id) }}" class="btn is-outlined is-header-btn text-sm">View as list</a>
         </div>
-        <div class="bg-white p-4 py-6 rounded-b">
-            <data-grid 
+        <div class="bg-white px-4 pb-6 rounded-b">
+            <data-grid-with-filters 
+                :use_location=false
                 label="Parts" 
                 image_field="ldraw_image_url" 
                 image_label_field="image_url" 
                 per_page="100" 
                 :allow_image_swap=true
-                :move_location=false
-                :all_move_locations="[]"
-                move_endpoint=""
+                :filters="[
+                    {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Color', param: 'color', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Category', param: 'category_label', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Location', param: 'location_name', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Exclude Spare Parts', param: 'exclude_spare', type: 'checkbox', value: 1, classes: 'ml-3'},
+                    ]"
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
-                    {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Quantity', field: 'quantity', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Color', field: 'color_name', title: false, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
                     ]"
-                :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color']"
-                endpoint="{{ '/api/lego/inventory_parts/'.$inventory->id }}"></data-grid>
+                :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'exclude_spare', 'location_name']"
+                endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-grid-with-filters>
         </div>
     </div>
 </div>

@@ -15,7 +15,7 @@
                         {name: 'Part Count', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-1/4'}]"
                     :valnames="['name', 'part_count']"
                     :allowedparams="['name']"
-                    endpoint="/api/lego/part_categories"></data-table>
+                    endpoint="{{ route('api.lego.part_categories') }}"></data-table>
             </div>
         </div>
     </div>

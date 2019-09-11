@@ -14,7 +14,7 @@
                     {name: 'Parent Themes', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-2/5'}]"
                 :valnames="['name', 'parents_label']"
                 :allowedparams="['name', 'parent_id']"
-                endpoint="/api/lego/themes"></data-table>
+                endpoint="{{ route('api.lego.themes') }}"></data-table>
         </div>
     </div>
 </div>

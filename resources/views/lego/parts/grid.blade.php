@@ -13,9 +13,6 @@
                 image_field="image_url" 
                 image_label_field="name" 
                 per_page="100" 
-                :move_location=false
-                :all_move_locations="[]"
-                move_endpoint=""
                 :filters="[
                     {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
@@ -29,7 +26,7 @@
                     {label: 'Storage Location', field: 'owned_part_location_name', title: false, sortable: false, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'category_label']"
-                endpoint="/api/lego/parts"></data-grid-with-filters>
+                endpoint="{{ route('api.lego.parts') }}"></data-grid-with-filters>
         </div>
     </div>
 </div>
