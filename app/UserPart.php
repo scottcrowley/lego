@@ -45,7 +45,7 @@ class UserPart extends Model
      *
      * @var array
      */
-    protected $appends = ['name', 'color_name', 'image_url', 'category_label', 'location', 'location_name'];
+    protected $appends = ['name', 'color_name', 'image_url', 'part_category_id', 'category_label', 'location', 'location_name'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -140,6 +140,16 @@ class UserPart extends Model
     public function getImageUrlAttribute()
     {
         return $this->part->image_url;
+    }
+
+    /**
+     * Attribute getter for part->category_id
+     *
+     * @return int
+     */
+    public function getPartCategoryIdAttribute()
+    {
+        return $this->part->part_category_id;
     }
 
     /**

@@ -11,5 +11,5 @@ class InventoryFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear'];
+    protected $filters = ['sort', 'sortdesc', 'set_num', 'name', 'theme_id', 'theme_label', 'year', 'minyear', 'maxyear'];
 }

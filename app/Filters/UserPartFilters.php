@@ -11,7 +11,7 @@ class UserPartFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'location_id', 'location_name', 'category_label'];
+    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'category_label', 'location_id', 'location_name'];
 
     /**
     * return results for a given location

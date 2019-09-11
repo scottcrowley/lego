@@ -26,14 +26,13 @@ class PartsTest extends TestCase
     {
         $this->signIn();
 
-        $first = create('App\Part', ['name' => 'Part 1']);
+        $firstPart = create('App\Part', ['name' => 'First Part']);
+        $secondPart = create('App\Part', ['name' => 'Second Part']);
 
-        $second = create('App\Part', ['name' => 'Part 2']);
+        $response = $this->get(route('api.lego.parts', ['name' => $secondPart->name]));
 
-        $response = $this->get(route('api.lego.parts', ['name' => 'Part 2']));
-
-        $this->assertTrue(checkNameExists($response, $second->name));
-        $this->assertFalse(checkNameExists($response, $first->name));
+        $this->assertTrue(checkNameExists($response, $secondPart->name));
+        $this->assertFalse(checkNameExists($response, $firstPart->name));
     }
 
     /** @test */
@@ -41,14 +40,13 @@ class PartsTest extends TestCase
     {
         $this->signIn();
 
-        $first = create('App\Part', ['part_num' => 'Part 1']);
+        $firstPart = create('App\Part', ['part_num' => 'First Part']);
+        $secondPart = create('App\Part', ['part_num' => 'Second Part']);
 
-        $second = create('App\Part', ['part_num' => 'Part 2']);
+        $response = $this->get(route('api.lego.parts', ['part_num' => $secondPart->part_num]));
 
-        $response = $this->get(route('api.lego.parts', ['part_num' => 'Part 2']));
-
-        $this->assertTrue(checkNameExists($response, $second->name));
-        $this->assertFalse(checkNameExists($response, $first->name));
+        $this->assertTrue(checkNameExists($response, $secondPart->name));
+        $this->assertFalse(checkNameExists($response, $firstPart->name));
     }
 
     /** @test */
@@ -57,15 +55,28 @@ class PartsTest extends TestCase
         $this->signIn();
 
         $category = create('App\PartCategory');
-
-        $first = create('App\Part');
-
-        $second = create('App\Part', ['part_category_id' => $category->id]);
+        $firstPart = create('App\Part');
+        $secondPart = create('App\Part', ['part_category_id' => $category->id]);
 
         $response = $this->get(route('api.lego.parts', ['part_category_id' => $category->id]));
 
-        $this->assertTrue(checkNameExists($response, $second->name));
-        $this->assertFalse(checkNameExists($response, $first->name));
+        $this->assertTrue(checkNameExists($response, $secondPart->name));
+        $this->assertFalse(checkNameExists($response, $firstPart->name));
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_by_part_category_label()
+    {
+        $this->signIn();
+
+        $category = create('App\PartCategory');
+        $firstPart = create('App\Part');
+        $secondPart = create('App\Part', ['part_category_id' => $category->id]);
+
+        $response = $this->get(route('api.lego.parts', ['category_label' => $category->name]));
+
+        $this->assertTrue(checkNameExists($response, $secondPart->name));
+        $this->assertFalse(checkNameExists($response, $firstPart->name));
     }
 
     /** @test */

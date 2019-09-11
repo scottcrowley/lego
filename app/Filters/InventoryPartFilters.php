@@ -11,7 +11,7 @@ class InventoryPartFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'location_name', 'exclude_spare'];
+    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'category_label', 'color_id', 'color', 'location_name', 'exclude_spare'];
 
     /**
      * Search the collection for a given storage location name.

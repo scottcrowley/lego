@@ -22,8 +22,8 @@ class ProfileTest extends TestCase
         $this->signIn($user = create('App\User'));
 
         $this->get(route('profile'))
-            ->assertSee($user->username)
-            ->assertSee($user->name);
+            ->assertSee(e($user->username))
+            ->assertSee(e($user->name));
     }
 
     /** @test */
@@ -32,8 +32,8 @@ class ProfileTest extends TestCase
         $this->signIn($user = create('App\User'));
 
         $this->get(route('profile.edit'))
-            ->assertSee($user->username)
-            ->assertSee($user->name);
+            ->assertSee(e($user->username))
+            ->assertSee(e($user->name));
     }
 
     /** @test */

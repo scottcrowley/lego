@@ -53,7 +53,7 @@ class SetsTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_filter_results_by_theme()
+    public function an_authenticated_user_can_filter_results_by_theme_id()
     {
         $this->signIn();
 
@@ -70,18 +70,36 @@ class SetsTest extends TestCase
     }
 
     /** @test */
+    public function an_authenticated_user_can_filter_results_by_theme_label()
+    {
+        $this->signIn();
+
+        $parentTheme = create('App\Theme', ['name' => 'The Parent Theme']);
+        $firstTheme = create('App\Theme', ['name' => 'First Theme']);
+        $secondTheme = create('App\Theme', ['name' => 'Second Theme', 'parent_id' => $parentTheme->id]);
+        ThemeLabel::create(['theme_id' => $secondTheme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' -> '.$secondTheme->name]);
+
+        $firstSet = create('App\Set', ['theme_id' => $firstTheme->id]);
+        $secondSet = create('App\Set', ['theme_id' => $secondTheme->id]);
+
+        $response = $this->get(route('api.lego.sets', ['theme_label' => $secondTheme->name]));
+
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
+    }
+
+    /** @test */
     public function an_authenticated_user_can_filter_results_by_exact_year()
     {
         $this->signIn();
 
-        $first = create('App\Set', ['year' => '2004']);
-
-        $second = create('App\Set', ['year' => '2010']);
+        $firstSet = create('App\Set', ['year' => '2004']);
+        $secondSet = create('App\Set', ['year' => '2010']);
 
         $response = $this->get(route('api.lego.sets', ['year' => '2010']));
 
-        $this->assertTrue(checkNameExists($response, $second->name));
-        $this->assertFalse(checkNameExists($response, $first->name));
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
     }
 
     /** @test */
@@ -89,14 +107,13 @@ class SetsTest extends TestCase
     {
         $this->signIn();
 
-        $first = create('App\Set', ['year' => '2015']);
-
-        $second = create('App\Set', ['year' => '2010']);
+        $firstSet = create('App\Set', ['year' => '2010']);
+        $secondSet = create('App\Set', ['year' => '2015']);
 
         $response = $this->get(route('api.lego.sets', ['minyear' => '2012']));
 
-        $this->assertTrue(checkNameExists($response, $first->name));
-        $this->assertFalse(checkNameExists($response, $second->name));
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
     }
 
     /** @test */
@@ -104,14 +121,41 @@ class SetsTest extends TestCase
     {
         $this->signIn();
 
-        $first = create('App\Set', ['year' => '2000']);
-
-        $second = create('App\Set', ['year' => '2010']);
+        $firstSet = create('App\Set', ['year' => '2010']);
+        $secondSet = create('App\Set', ['year' => '2000']);
 
         $response = $this->get(route('api.lego.sets', ['maxyear' => '2005']));
 
-        $this->assertTrue(checkNameExists($response, $first->name));
-        $this->assertFalse(checkNameExists($response, $second->name));
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_by_a_minimum_number_of_pieces()
+    {
+        $this->signIn();
+
+        $firstSet = create('App\Set', ['num_parts' => '500']);
+        $secondSet = create('App\Set', ['num_parts' => '2000']);
+
+        $response = $this->get(route('api.lego.sets', ['minpieces' => 1000]));
+
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_filter_results_by_a_maximum_number_of_pieces()
+    {
+        $this->signIn();
+
+        $firstSet = create('App\Set', ['num_parts' => '2000']);
+        $secondSet = create('App\Set', ['num_parts' => '500']);
+
+        $response = $this->get(route('api.lego.sets', ['maxpieces' => 1000]));
+
+        $this->assertTrue(checkNameExists($response, $secondSet->name));
+        $this->assertFalse(checkNameExists($response, $firstSet->name));
     }
 
     /** @test */

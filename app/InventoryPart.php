@@ -18,7 +18,7 @@ class InventoryPart extends Model
      *
      * @var array
      */
-    protected $appends = ['name', 'category_label', 'image_url', 'color_name', 'ldraw_image_url'];
+    protected $appends = ['name', 'part_category_id', 'category_label', 'image_url', 'color_name', 'ldraw_image_url'];
 
     /**
      * Base url for a parts ldraw image
@@ -75,6 +75,16 @@ class InventoryPart extends Model
     public function getNameAttribute()
     {
         return $this->part->name;
+    }
+
+    /**
+     * Getter for part->part_category_id
+     *
+     * @return int
+     */
+    public function getPartCategoryIdAttribute()
+    {
+        return $this->part->part_category_id;
     }
 
     /**

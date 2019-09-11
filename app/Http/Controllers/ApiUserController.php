@@ -152,6 +152,6 @@ class ApiUserController extends Controller
     {
         $location->togglePart($part);
 
-        return $part->fresh('part');
+        return $part->fresh();
     }
 }

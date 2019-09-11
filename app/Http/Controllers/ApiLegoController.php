@@ -137,7 +137,7 @@ class ApiLegoController extends Controller
         // $inventories = $filters->apply(Inventory::all()); //doesnt allow for sorting with any of the additional fields
         $inventories = $filters->apply(Inventory::with('set')->with('theme')->get());
 
-        $inventories->each->setAppends([
+        $inventories = $inventories->each->setAppends([
             'image_url',
             'year',
             'num_parts',
@@ -168,9 +168,7 @@ class ApiLegoController extends Controller
             ->get()
         );
 
-        $parts->each->append('location_name');
-
-        $parts = $parts->values();
+        $parts = $parts->each->append('location_name')->values();
 
         return $parts->paginate($this->defaultPerPage);
     }
