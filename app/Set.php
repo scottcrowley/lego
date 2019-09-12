@@ -77,13 +77,13 @@ class Set extends Model
     }
 
     /**
-     * A set has many set image urls
+     * A set has one set image url
      *
      * @return hasMany
      */
     public function setImageUrl()
     {
-        return $this->hasMany(SetImageUrl::class, 'set_num', 'set_num');
+        return $this->hasOne(SetImageUrl::class, 'set_num', 'set_num');
     }
 
     /**
@@ -93,13 +93,7 @@ class Set extends Model
      */
     public function getImageUrlAttribute()
     {
-        $setImageUrl = $this->setImageUrl;
-
-        if (is_null($setImageUrl) || ! $setImageUrl->count()) {
-            return '';
-        }
-
-        return $setImageUrl->first()->image_url;
+        return optional($this->setImageUrl)->image_url;
     }
 
     /**

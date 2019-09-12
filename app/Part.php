@@ -89,18 +89,17 @@ class Part extends Model
      */
     public function storageLocation()
     {
-        // return $this->belongsToMany(StorageLocation::class, 'part_storage_location', 'part_num', 'storage_location_id', 'part_num', 'id');
         return $this->hasOneThrough(StorageLocation::class, PartStorageLocation::class, 'part_num', 'id', 'part_num', 'storage_location_id');
     }
 
     /**
-     * A part has many part image urls
+     * A part has one part image url
      *
      * @return hasMany
      */
     public function partImageUrl()
     {
-        return $this->hasMany(PartImageUrl::class, 'part_num', 'part_num');
+        return $this->hasOne(PartImageUrl::class, 'part_num', 'part_num');
     }
 
     /**
@@ -140,13 +139,7 @@ class Part extends Model
      */
     public function getImageUrlAttribute()
     {
-        $partImageUrl = $this->partImageUrl;
-
-        if (is_null($partImageUrl) || ! $partImageUrl->count()) {
-            return '';
-        }
-
-        return $partImageUrl->first()->image_url;
+        return optional($this->partImageUrl)->image_url;
     }
 
     /**
