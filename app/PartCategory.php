@@ -67,7 +67,7 @@ class PartCategory extends Model
      */
     public function categoryPartCount()
     {
-        return $this->hasOne(CategoryPartCount::class, 'part_category_id')->withDefault(['part_count' => 0]);
+        return $this->hasOne(CategoryPartCount::class, 'part_category_id');
     }
 
     /**
@@ -77,6 +77,6 @@ class PartCategory extends Model
      */
     public function getPartCountAttribute()
     {
-        return $this->categoryPartCount->part_count;
+        return optional($this->categoryPartCount)->part_count;
     }
 }
