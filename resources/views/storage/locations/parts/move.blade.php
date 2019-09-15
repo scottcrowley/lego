@@ -13,7 +13,7 @@
             <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Total Pieces in Location:</span> {{ $location->parts->sum('quantity') }}</p>
         </div>
         <div class="pt-2 flex">
-            <a href="{{ url()->previous() }}" class="btn is-outlined block ml-auto">Cancel</a>
+            <a href="{{ url()->previous() }}" class="btn is-outlined block ml-auto">Done</a>
         </div>
     </div>
     <div class="rounded shadow">
@@ -26,7 +26,6 @@
                 image_field="image_url" 
                 image_label_field="name" 
                 per_page="100" 
-                :move_location=true
                 :all_move_locations="{{ $allLocations }}"
                 move_endpoint="{{ url('/api/users/storage/locations/'.$location->id.'/parts/') }}"
                 :valnames="[

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="w-full h-8 loader loader-lg" v-show="loading"></div>
-        <div v-if="move_location" class="block sm:flex mt-3 mb-8 justify-center" v-show="!loading">
+        <div class="block sm:flex mt-3 mb-8 justify-center" v-show="!loading">
             <form v-if="all_move_locations.length" class="sm:flex w-full sm:w-auto" @submit.prevent="">
                 <div>
                     <select-menu-special
@@ -13,8 +13,8 @@
                         default_value=""
                     />
                 </div>
-                <button class="mt-3 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveDisabled" @click.prevent="moveSelected()">Move Selected</button>
-                <button class="mt-1 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveDisabled" @click.prevent="moveAll()">Move All</button>
+                <button class="mt-3 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveSelectedDisabled" @click.prevent="moveSelected()">Move Selected</button>
+                <button class="mt-1 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveAllDisabled" @click.prevent="moveAll()">Move All</button>
             </form>
             <p v-else>There are currently no other storage locations in the database.</p>
         </div>
@@ -63,13 +63,13 @@
             </div>
         </div>
 
-        <div v-if="move_location" v-show="!loading">
+        <div v-show="!loading">
             <p class="title mb-2 text-center">Select the parts below to move</p>
         </div>
 
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
-                <div class="card-content" :class="(move_location ? 'cursor-pointer' : '')" @click.prevent="selectPart($event, index)">
+                <div class="card-content cursor-pointer" @click.prevent="selectPart($event, index)">
                     <div class="card-image">
                         <img class="" :src="data[image_field]" :alt="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null" @click.prevent="swapImageUrl($event)">
                         <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
@@ -124,10 +124,6 @@
         mixins: [dataGridCore],
 
         props: {
-            move_location: {
-                type: Boolean,
-                default: false
-            }, 
             all_move_locations: {
                 type: Array,
                 default: []
@@ -140,8 +136,10 @@
 
         data() {
             return {
-                moveDisabled: true,
-                partsSelected: {}
+                moveAllDisabled: true,
+                moveSelectedDisabled: true,
+                partsSelected: {},
+                selected: false
             }
         },
 
@@ -151,7 +149,7 @@
 
         computed: {
             locationOptions() {
-                if (this.move_location && this.all_move_locations.length) {
+                if (this.all_move_locations.length) {
                     let options = [];
                     this.all_move_locations.forEach((location, index) => {
                         options[index] = {
@@ -178,27 +176,39 @@
                     });
             },
 
+            checkSelected() {
+                let values = Object.values(this.partsSelected);
+                let selected = values.filter(function(value) {
+                    return value === true;
+                });
+                return selected.length != 0;
+            },
+
             selectPart(event, index) {
                 event.target.classList.toggle('border-primary');
                 this.partsSelected[index] = ! this.partsSelected[index];
+                this.selected = this.checkSelected();
+                this.updateMoveBtn();
             },
 
             updateSelected(selected = false) {
-                if (this.move_location) {
-                    this.partsSelected = {};
-                    let keys = Object.keys(this.dataSet);
-                    keys.forEach((key) => {
-                        this.partsSelected[key] = selected;
-                    });
-                }
+                this.partsSelected = {};
+                this.selected = selected;
+                let keys = Object.keys(this.dataSet);
+                keys.forEach((key) => {
+                    this.partsSelected[key] = selected;
+                });
             },
             
-            updateMoveBtn(event) {
-                if (event.target.value == '') {
-                    this.moveDisabled = true;
+            updateMoveBtn() {
+                let moveTo = document.querySelector('#moveToLocation').value;
+                if (moveTo == '') {
+                    this.moveAllDisabled = true;
+                    this.moveSelectedDisabled = true;
                     return false;
                 }
-                this.moveDisabled = false;
+                this.moveAllDisabled = false;
+                this.moveSelectedDisabled = ! this.selected;
             },
 
             moveParts(parts, endpoint) {
@@ -216,10 +226,6 @@
             },
 
             moveSelected() {
-                if (! this.move_location) {
-                    return;
-                }
-
                 let endpoint = this.move_endpoint + '/' + document.querySelector('#moveToLocation').value;
                 let parts  = [];
 

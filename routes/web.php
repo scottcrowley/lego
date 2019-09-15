@@ -54,19 +54,19 @@ Route::group([
     Route::get('/{location}/edit', 'StorageLocationsController@edit')->name('storage.locations.edit');
     Route::patch('/{location}', 'StorageLocationsController@update')->name('storage.locations.update');
     Route::get('/{location}/parts', function (StorageLocation $location) {
-        $allLocations = StorageLocation::orderBy('name')->get();
+        $allLocations = StorageLocation::all()->sortBy('location_name')->values();
         return view('storage.locations.parts.index', compact('location', 'allLocations'));
     })->name('storage.locations.parts.index');
     Route::get('/{location}/parts/edit', function (StorageLocation $location) {
-        $allLocations = StorageLocation::orderBy('name')->get();
+        $allLocations = StorageLocation::all()->sortBy('location_name')->values();
         return view('storage.locations.parts.edit', compact('location', 'allLocations'));
     })->name('storage.locations.parts.edit');
     Route::get('/{location}/parts/individual', function (StorageLocation $location) {
-        $allLocations = StorageLocation::orderBy('name')->get();
+        $allLocations = StorageLocation::all()->sortBy('location_name')->values();
         return view('storage.locations.parts.individual', compact('location', 'allLocations'));
     })->name('storage.locations.parts.individual');
     Route::get('/{location}/parts/move', function (StorageLocation $location) {
-        $allLocations = StorageLocation::where('id', '<>', $location->id)->orderBy('name')->get();
+        $allLocations = StorageLocation::where('id', '<>', $location->id)->get()->sortBy('location_name')->values();
         return view('storage.locations.parts.move', compact('location', 'allLocations'));
     })->name('storage.locations.parts.move');
 });

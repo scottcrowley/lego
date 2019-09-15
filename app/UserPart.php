@@ -123,16 +123,6 @@ class UserPart extends Model
     }
 
     /**
-     * Attribute getter for part->location
-     *
-     * @return string
-     */
-    public function getLocationAttribute()
-    {
-        return $this->part->location;
-    }
-
-    /**
      * Attribute getter for part->image_url
      *
      * @return string
@@ -160,6 +150,16 @@ class UserPart extends Model
     public function getCategoryLabelAttribute()
     {
         return $this->part->category_label;
+    }
+
+    /**
+     * Attribute getter for part->location
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->part->location;
     }
 
     /**
