@@ -40,15 +40,15 @@
                     {label: 'Color', param: 'color', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Category', param: 'category_label', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Location', param: 'location_name', type: 'text', classes: 'flex-1 ml-3'},
-                    {label: 'Exclude Spare Parts', param: 'exclude_spare', type: 'checkbox', value: 1, classes: 'ml-3'},
+                    {label: 'Exclude Spare Parts', param: 'exclude_spare', type: 'checkbox', value: 1, classes: 'ml-3', defaultvalue: true},
                     ]"
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Quantity', field: 'quantity', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
-                    {label: 'Color', field: 'color_name', title: false, sortable: true, sorted: true, sortdesc: false, boolean: false},
+                    {label: 'Color', field: 'color_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
-                    {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'exclude_spare', 'location_name']"

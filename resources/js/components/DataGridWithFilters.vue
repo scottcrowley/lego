@@ -160,7 +160,6 @@
         methods: {
             executeEndpoint(index, multiple = false) {
                 let endpoint = this.generateLinkUrl(this.toggle_end_point, index);
-                console.log(endpoint);
                 axios.get(endpoint)
                     .then(response => {
                         this.dataSet[index].location = response.data.location;
@@ -190,11 +189,17 @@
                 return newParams;
             },
             populateFilters() {
+                let defaultSet = false;
                 this.filters.forEach((f, index) => {
                     this.filterParams[index] = f.param;
                     let filterName = 'filter_' + f.param;
-                    this.filterModels[filterName] = '';
+                    let defaultExist = (f.defaultvalue && f.defaultvalue != '');
+                    this.filterModels[filterName] = (defaultExist) ? f.defaultvalue : '';
+                    if (defaultExist) {
+                        defaultSet = true;
+                    }
                 });
+                this.filtersShow = defaultSet;
             },
             populateFilterParams(currentParams) {
                 let paramList = currentParams.split('&');
@@ -220,7 +225,6 @@
                     let value = this.filterModels[input];
                     if (value === true) {
                         value = this.filters[index].value;
-                        // value = this.location_id;
                     }
                     if (value != '') {
                         this.presentParamsString = this.presentParamsString + '&' + p + '=' + value;
