@@ -94,13 +94,14 @@
 </template>
 
 <script>
+    import dataCore from '../mixins/dataCore';
     import dataGridCore from '../mixins/dataGridCore';
     import SelectMenu from '../components/SelectMenu';
     import SelectMenuSpecial from '../components/SelectMenuSpecial';
 
     export default {
         components: {SelectMenuSpecial, SelectMenu},
-        mixins: [dataGridCore],
+        mixins: [dataCore, dataGridCore],
 
         methods: {
             executeEndpoint(url, index, successMsg) {

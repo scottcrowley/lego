@@ -125,13 +125,14 @@
 </template>
 
 <script>
+    import dataCore from '../mixins/dataCore';
     import dataGridCore from '../mixins/dataGridCore';
     import SelectMenuSpecial from '../components/SelectMenuSpecial';
 
     export default {
         components: {SelectMenuSpecial},
 
-        mixins: [dataGridCore],
+        mixins: [dataGridCore, dataCore],
 
         props: {
             use_location: {
@@ -149,15 +150,16 @@
                 filtersShow: false,
                 filterParams: [],
                 filterModels: {},
+                preResultsFunction: 'checkFilters'
             }
-        },
-
-        mounted() {
-            this.populateFilters();
-            this.populateFilterParams(this.presentParamsString);
         },
         
         methods: {
+            checkFilters() {
+                this.populateFilters();
+                this.populateFilterParams(this.presentParamsString);
+                this.applyFilters(false);
+            },
             executeEndpoint(index, multiple = false) {
                 let endpoint = this.generateLinkUrl(this.toggle_end_point, index);
                 axios.get(endpoint)
@@ -217,7 +219,7 @@
                     }
                 });
             },
-            applyFilters() {
+            applyFilters(getResults = true) {
                 this.presentParamsString = this.stripParams(this.presentParamsString, this.filterParams);
 
                 this.filterParams.forEach((p, index) => {
@@ -235,7 +237,9 @@
                     this.filtersShow = false;
                 }
                 
-                this.getResults(1);
+                if (getResults) {
+                    this.getResults(1);
+                }
             },
             clearFilters() {
                 this.filterParams.forEach((p, index) => {

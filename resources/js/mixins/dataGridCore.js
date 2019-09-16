@@ -1,9 +1,5 @@
 export default {
     props: {
-        label: {
-            type: String,
-            default: ''
-        }, 
         location_id: {
             type: String,
             default: ''
@@ -20,26 +16,14 @@ export default {
             type: String,
             default: ''
         }, 
-        per_page: {
-            type: String,
-            default: '25'
-        }, 
         valnames: {
             type: Array,
             default: [{}]
         }, 
-        allowedparams: {
-            type: Array,
-            default: []
-        },
         allow_image_swap: {
             type: Boolean,
             default: false
         },
-        endpoint: {
-            type: String,
-            default: ''
-        }
     },
 
     data() {
@@ -48,24 +32,15 @@ export default {
             pagerShowDisabled: true,
             pagerSize: 'small',
             pagerAlign: 'left',
-            dataSet: [],
-            allData: {},
-            loading: true,
-            sortedCol: '',
-            sortdesc: false,
-            presentParamsString: '',
-            perpage: this.per_page,
             currentPage: 1,
-            defaultPage: 0,
-            location: null,
             postResultsFunction: null
         }
     },
 
     mounted() {
-        let checkedUrl = this.checkUrl();
-        if (!checkedUrl) {
-            this.checkSorted();
+        let updateSort = this.checkUriParams();
+        if (!updateSort) {
+            this.checkSortDefault();
         } else {
             this.updateSortSelect();
         }
@@ -74,54 +49,7 @@ export default {
     },
 
     methods: {
-        checkUrl() {
-            this.location = window.location;
-            let url = new URL(this.location.href);
-            this.checkAllowedParams(url.search);
-
-            let page = url.searchParams.get('page');
-            let sort = url.searchParams.get('sort');
-            let sortdesc = url.searchParams.get('sortdesc');
-            let perpage = url.searchParams.get('perpage');
-            let updateSort = (sort != null || sortdesc != null) ? true : false;
-
-            if (sort != null) {
-                this.sortedCol = sort;
-            } else if (sortdesc != null) {
-                this.sortdesc = true;
-                this.sortedCol = sortdesc;
-            }
-
-            if (page) {
-                this.defaultPage = page;
-            }
-
-            this.perpage = (perpage) ? perpage : this.perpage;
-            document.getElementById('selectPerPage').value = this.perpage;
-
-            return updateSort;
-        },
-        checkAllowedParams(search) {
-            if (search.startsWith('?')) {
-                search = search.substr(1);
-            }
-            if (search) {
-                let urlParams = search.split('&');
-                urlParams.forEach(this.processParam);
-            }
-        },
-        processParam(param) {
-            let details = param.split('=');
-            if (
-                details[0] != 'page'
-                && details[0] != 'sort'
-                && details[0] != 'sortdesc'
-                && this.allowedparams.includes(details[0])
-            ) {
-                this.presentParamsString = this.presentParamsString + '&' + param;
-            }
-        },
-        checkSorted() {
+        checkSortDefault() {
             let cols = this.valnames;
 
             cols.forEach((col, index) => {
@@ -134,38 +62,16 @@ export default {
                 }
             });
         },
-        updateSort(event) {
-            let value = event.target.value;
-            
-            if (value != '' && value != this.sortedCol) {
-                this.sortedCol = value;
-                this.getResults();
-            }
-        },
-        updateSortOrder(event) {
-            let value = (event.target.value == '1') ? true : false;
-            
-            if (value != this.sortdesc) {
-                this.sortdesc = value;
-                this.getResults();
-            }
-        },
-        updatePerPage(event) {
-            if (event.target.value == 0 || event.target.value == this.perpage) return;
-            this.perpage = event.target.value;
-
-            this.getResults(this.currentPage);
-        },
         updateSortSelect() {
-            let element = document.getElementById('selectSort');
-            element.value = this.sortedCol;
-
-            let sortdesc = (this.sortdesc) ? 1 : 0;
-            element = document.getElementById('selectOrder');
-            element.value = sortdesc;
+            document.getElementById('selectSort').value = this.sortedCol;
+            document.getElementById('selectOrder').value = (this.sortdesc) ? 1 : 0;
         },
         getResults(page = 1) {
             this.loading = true;
+
+            if (this.preResultsFunction) {
+                this[this.preResultsFunction]();
+            }
 
             if (!page && this.defaultPage == 0) {
                 page = 1;
@@ -188,18 +94,36 @@ export default {
                     this.loading = false;
                     this.allData = response.data;
                     this.dataSet = response.data.data;
-                    this.updateUrl(params);
+                    this.updateUri(params);
                     if (this.postResultsFunction !== null) {
                         this[this.postResultsFunction]();
-                        // this.updateSelected();
                     }
                 })
                 .catch(error => {
                     this.processError(error);
                 });
         },
-        updateUrl(params) {
-            history.pushState(null, null, params);
+        updateSort(event) {
+            let value = event.target.value;
+            
+            if (value != '' && value != this.sortedCol) {
+                this.sortedCol = value;
+                this.getResults();
+            }
+        },
+        updateSortOrder(event) {
+            let value = (event.target.value == '1') ? true : false;
+            
+            if (value != this.sortdesc) {
+                this.sortdesc = value;
+                this.getResults();
+            }
+        },
+        updatePerPage(event) {
+            if (event.target.value == 0 || event.target.value == this.perpage) return;
+            this.perpage = event.target.value;
+
+            this.getResults(this.currentPage);
         },
         generateLinkUrl(url, index) {
             let token = url.match(/\{.+\}/ig);
@@ -225,26 +149,5 @@ export default {
                 e.target.alt = src;
             }
         },
-        processError(error) {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                let message = error.response.status + ': ' + error.response.data;
-                flash(message, 'danger');
-
-                console.log('Data', error.response.data);
-                console.log('Status', error.response.status);
-                console.log('Headers', error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log('Request', error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
-            console.log('Config', error.config);
-        }
     }
 }

@@ -66,12 +66,11 @@
 </template>
 
 <script>
+    import dataCore from '../mixins/dataCore';
+
     export default {
+        mixins: [dataCore],
         props: {
-            label: {
-                type: String,
-                default: ''
-            }, 
             colnames: {
                 type: Array,
                 default: [{}]
@@ -80,14 +79,6 @@
                 type: Array,
                 default: []
             },
-            allowedparams: {
-                type: Array,
-                default: []
-            },
-            endpoint: {
-                type: String,
-                default: ''
-            },
         },
         data() {
             return {
@@ -95,21 +86,13 @@
                 showDisabled: true,
                 size: 'small',
                 align: 'left',
-                dataSet: [],
-                allData: {},
-                loading: true,
-                sortedCol: '',
-                sortdesc: false,
-                presentParamsString: '',
-                defaultPage: 0,
-                location: null
             }
         },
 
         mounted() {
-            let checkedUrl = this.checkUrl();
-            if (!checkedUrl) {
-                this.checkSorted();
+            let updateSort = this.checkUriParams();
+            if (!updateSort) {
+                this.checkSortDefault();
             } else {
                 this.updateSortedColumn();
             }
@@ -118,50 +101,7 @@
         },
 
         methods: {
-            checkUrl() {
-                this.location = window.location;
-                let url = new URL(this.location.href);
-                this.checkAllowedParams(url.search);
-                
-                let page = url.searchParams.get('page');
-                let sort = url.searchParams.get('sort');
-                let sortdesc = url.searchParams.get('sortdesc');
-                let updateSort = (sort != null || sortdesc != null) ? true : false;
-
-                if (sort != null) {
-                    this.sortedCol = sort;
-                } else if (sortdesc != null) {
-                    this.sortdesc = true;
-                    this.sortedCol = sortdesc;
-                }
-
-                if (page) {
-                    this.defaultPage = page;
-                }
-
-                return updateSort;
-            },
-            checkAllowedParams(search) {
-                if (search.startsWith('?')) {
-                    search = search.substr(1);
-                }
-                if (search) {
-                    let urlParams = search.split('&');
-                    urlParams.forEach(this.processParam);
-                }
-            },
-            processParam(param) {
-                let details = param.split('=');
-                if (
-                    details[0] != 'page'
-                    && details[0] != 'sort'
-                    && details[0] != 'sortdesc'
-                    && this.allowedparams.includes(details[0])
-                ) {
-                    this.presentParamsString = this.presentParamsString + '&' + param;
-                }
-            },
-            checkSorted() {
+            checkSortDefault() {
                 let cols = this.colnames;
 
                 cols.forEach((col, index) => {
@@ -235,32 +175,11 @@
                         this.loading = false;
                         this.allData = response.data;
                         this.dataSet = response.data.data;
-                        this.updateUrl(params);
+                        this.updateUri(params);
                     })
                     .catch(function(error) {
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            let message = error.response.status + ': ' + error.response.data;
-                            flash(message, 'danger');
-
-                            console.log('Data', error.response.data);
-                            console.log('Status', error.response.status);
-                            console.log('Headers', error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.log('Request', error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.log('Error', error.message);
-                        }
-                        console.log('Config', error.config);
+                        this.processError(error);
                     });
-            },
-            updateUrl(params) {
-                history.pushState(null, null, params);
             },
             showColor(rgb) {
                 return 'background-color: #' + rgb;
