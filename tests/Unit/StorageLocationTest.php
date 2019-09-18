@@ -167,6 +167,20 @@ class StorageLocationTest extends TestCase
     }
 
     /** @test */
+    public function it_can_get_the_user_part_count_of_each_associated_part()
+    {
+        $this->signIn();
+
+        $location = create('App\StorageLocation');
+
+        $userPart = create('App\UserPart', ['quantity' => 5]);
+
+        $location->togglePart($userPart);
+
+        $this->assertEquals(5, $location->fresh()->part_counts[$userPart->part_num]);
+    }
+
+    /** @test */
     public function it_can_move_all_current_parts_to_a_different_location()
     {
         $this->signIn();

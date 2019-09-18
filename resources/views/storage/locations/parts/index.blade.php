@@ -48,6 +48,7 @@
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Part Number', field: 'part_num', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
+                    {label: 'Part Count', field: 'total_part_count', title: false, sortable: false, sorted: false, sortdesc: false, boolean: false},
                     {label: 'button', text: 'Remove Part', url: '{{ url('/api/users/storage/locations/'.$location->id.'/parts/toggle/{part_num}') }}', successMsg: 'Part association successfully updated!'},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id']"

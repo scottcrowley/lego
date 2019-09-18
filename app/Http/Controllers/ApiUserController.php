@@ -104,7 +104,10 @@ class ApiUserController extends Controller
     public function getStorageLocationParts(StorageLocation $location, StorageLocationPartsFilters $filters)
     {
         $parts = $filters->apply($location->parts)->unique('part_num')->values();
-
+        $partCounts = $location->part_counts;
+        $parts = $parts->each(function ($part) use ($partCounts) {
+            return $part['total_part_count'] = $partCounts[$part->part_num];
+        });
         return $parts->paginate($this->defaultPerPage);
     }
 

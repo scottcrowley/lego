@@ -99,6 +99,15 @@ class StorageLocation extends Model
         return $success;
     }
 
+    public function getPartCountsAttribute()
+    {
+        return $this->parts
+            ->groupBy('part_num')
+            ->map(function ($part, $key) {
+                return $part->sum('quantity');
+            });
+    }
+
     public function getLocationNameAttribute()
     {
         return (! is_null($this->nickname)) ? $this->nickname : $this->name;
