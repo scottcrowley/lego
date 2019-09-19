@@ -18,6 +18,13 @@ class UserSet extends Model
      *
      * @var array
      */
+    protected $fillable = ['set_num', 'quantity'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $with = ['set', 'inventory'];
 
     /**

@@ -2,7 +2,9 @@
 
 This is an open source app to manage your Lego collection on the Rebrickable.com site. It is assumed that you have an account on Rebrickable and have sets or parts already entered there. 
 
-Project was built and maintained by Scott Crowley.
+The main purpose of this app is to allow you a way to specify storage locations for all of your Lego parts. For people that have large collections, this app can be used to keep your Legos organized, so you will always know where any particular piece is located. 
+
+Project was built and maintained by [Scott Crowley](https://github.com/scottcrowley).
 
 ## Installation
 
@@ -42,7 +44,7 @@ Visit: http://lego.test/register to register a new Lego Project user account.
 
 #### Step 5
 
-Import data from Rebrickable. See [Data Population](#data-population) section below for more details.
+Import data from Rebrickable. See the [Data Population](#data-population) section below for more details.
 
 #### Step 6
 
@@ -50,7 +52,7 @@ Run additional Lego Artisan commands. See the [Run Other Lego Artisan Commands](
 
 ## Data Population
 
-There is a massive amount of data available on the Rebrickable site and API calls can become very time comsuming, it was determined to be better to have a majority of the data reside in the local database. There is a place you can download all the content from Rebrickable in CSV format. This data is updated once a month. The only real need to keep the local database current with the Rebrickable data, is in the event where you are adding a lot of new sets. So once the data is populated in the local database, there won't be a need to update it very often.
+There is a massive amount of data available on the Rebrickable site and API calls can become very time comsuming, it was determined to be better to have a majority of the data reside in a local database. There is a place you can download all the content from Rebrickable in CSV format, which is updated once a month. The only real need to keep the local database current with the Rebrickable data, is in the event where you are adding a lot of new sets. So once the data is populated in the local database, there won't be a need to update it very often.
 
 #### CSV Downloads
 The CSV files are available for download on the Rebrickable site at https://rebrickable.com/downloads/. These files are usually updated at the beginning of each month. Below are direct links to each of the files that should be downloaded and imported into the local database.
@@ -131,6 +133,20 @@ There are several other Lego setup commands that have been created to help speed
     
         ```bash
         php artisan lego:theme-hierarchy
+        ```
+* #### Import All User Sets From Rebrickable
+    * This will import all the User Sets found on Rebrickable into the database.
+    * ***IMPORTANT*** - The user_sets table, in the database, is emptied when executing this command.
+    
+        ```bash
+        php artisan lego:import-user-sets
+        ```
+* #### Import All User Parts From Rebrickable
+    * This will import all the User Parts found on Rebrickable into the database.
+    * ***IMPORTANT*** - This command can take a VERY long time to execute. Also, the user_parts table, in the database, is emptied when executing this command.
+    
+        ```bash
+        php artisan lego:import-user-parts
         ```
 ## Automator Scripts
 * #### Setup

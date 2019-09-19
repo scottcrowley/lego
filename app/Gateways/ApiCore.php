@@ -139,7 +139,9 @@ class ApiCore
         $this->appendUrl($type);
         $this->appendUrlParam('page='.$page);
         $this->appendUrlParam('page_size='.$page_size);
-        $this->appendUrlParam('ordering='.$ordering);
+        if ($ordering != '') {
+            $this->appendUrlParam('ordering='.$ordering);
+        }
 
         $this->executeGet();
 

@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         Commands\UpdatePartImageUrl::class,
         Commands\UpdateSetImageUrl::class,
         Commands\UpdateThemeHierarchy::class,
+        Commands\ImportUserSets::class,
+        Commands\ImportUserParts::class,
     ];
 
     /**

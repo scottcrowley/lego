@@ -28,6 +28,31 @@ class RebrickableApiUser extends ApiCore
     }
 
     /**
+     * special getter for all parts since the amount of data needs to be throttled
+     *
+     * @param int $totalPages
+     * @return Illuminate\Support\Collection
+     */
+    public function getAllParts($totalPages = null)
+    {
+        $firstPage = $this->getType('allparts', 1, $this->max);
+
+        if ($firstPage === false) {
+            return $this->getErrors();
+        }
+
+        $totalPages = (is_null($totalPages)) ? (int) ceil($this->jsonResponse['count'] / $this->max) : $totalPages;
+
+        $this->removeUrlParam('page');
+
+        $url = $this->getRequestUrl().'&page=';
+
+        $all = $this->executePool($totalPages, $url, $firstPage);
+
+        return collect($all);
+    }
+
+    /**
      * gets all of an allowed type
      *
      * @param string $type
@@ -36,7 +61,7 @@ class RebrickableApiUser extends ApiCore
      */
     public function getAll($type, $totalPages = null)
     {
-        $allowedTypes = ['setlists', 'sets', 'allparts'];
+        $allowedTypes = ['setlists', 'sets'];
 
         abort_if(! in_array($type, $allowedTypes), 400, 'Request Type is not allowed!');
 

@@ -38,6 +38,13 @@ class UserPart extends Model
      *
      * @var array
      */
+    protected $fillable = ['part_num', 'color_id', 'quantity'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $with = ['part', 'color'];
 
     /**
