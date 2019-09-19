@@ -100,13 +100,13 @@ trait GuzzleWrapper
             explode(
                 '&',
                 substr($this->urlParams, 1)
-                )
             )
+        )
             ->filter(
                 function ($value, $key) use ($param) {
                     return substr($value, 0, (strlen($param) + 1)) != $param.'=';
                 }
-        );
+            );
 
         if (! $urlParams->count()) {
             $this->urlParams = '';

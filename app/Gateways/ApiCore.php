@@ -25,14 +25,16 @@ class ApiCore
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($bypassVerify = false)
     {
         $this->credentials = config('rebrickable.api');
 
-        $this->verifyCredentials();
+        if (! $bypassVerify) {
+            $this->verifyCredentials();
 
-        if (class_basename($this) == 'RebrickableApiUser') {
-            $this->baseUrl = $this->baseUrl.$this->credentials['token'].'/';
+            if (class_basename($this) == 'RebrickableApiUser') {
+                $this->baseUrl = $this->baseUrl.$this->credentials['token'].'/';
+            }
         }
     }
 
