@@ -77,7 +77,7 @@ class SetsTest extends TestCase
         $parentTheme = create('App\Theme', ['name' => 'The Parent Theme']);
         $firstTheme = create('App\Theme', ['name' => 'First Theme']);
         $secondTheme = create('App\Theme', ['name' => 'Second Theme', 'parent_id' => $parentTheme->id]);
-        ThemeLabel::create(['theme_id' => $secondTheme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' -> '.$secondTheme->name]);
+        ThemeLabel::create(['theme_id' => $secondTheme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' / '.$secondTheme->name]);
 
         $firstSet = create('App\Set', ['theme_id' => $firstTheme->id]);
         $secondSet = create('App\Set', ['theme_id' => $secondTheme->id]);
@@ -195,13 +195,13 @@ class SetsTest extends TestCase
 
         $childTheme = create('App\Theme', ['name' => 'child theme', 'parent_id' => $parentTheme->id]);
 
-        ThemeLabel::create(['theme_id' => $childTheme->id, 'parents_label' => $topParentTheme->name.' -> '.$parentTheme->name, 'theme_label' => $topParentTheme->name.' -> '.$parentTheme->name.' -> '.$childTheme->name]);
+        ThemeLabel::create(['theme_id' => $childTheme->id, 'parents_label' => $topParentTheme->name.' / '.$parentTheme->name, 'theme_label' => $topParentTheme->name.' / '.$parentTheme->name.' / '.$childTheme->name]);
 
         create('App\Set', ['theme_id' => $childTheme->id]);
 
         $response = $this->get(route('api.lego.sets'));
 
-        $this->assertEquals($response->getData()->data[0]->theme_label, 'top parent theme -> parent theme -> child theme');
+        $this->assertEquals($response->getData()->data[0]->theme_label, 'top parent theme / parent theme / child theme');
     }
 
     /** @test */

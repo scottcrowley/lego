@@ -99,7 +99,7 @@ class InventoriesTest extends TestCase
 
         $theme = create('App\Theme', ['name' => 'The New Theme', 'parent_id' => $parentTheme->id]);
 
-        ThemeLabel::create(['theme_id' => $theme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' -> '.$theme->name]);
+        ThemeLabel::create(['theme_id' => $theme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' / '.$theme->name]);
 
         $set = create('App\Set', ['theme_id' => $theme->id]);
 
@@ -168,7 +168,7 @@ class InventoriesTest extends TestCase
         $firstTheme = create('App\Theme', ['name' => 'First Theme']);
         $secondTheme = create('App\Theme', ['name' => 'Second Theme', 'parent_id' => $parentTheme->id]);
 
-        ThemeLabel::create(['theme_id' => $secondTheme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' -> '.$secondTheme->name]);
+        ThemeLabel::create(['theme_id' => $secondTheme->id, 'parents_label' => $parentTheme->name, 'theme_label' => $parentTheme->name.' / '.$secondTheme->name]);
 
         $firstSet = create('App\Set', ['theme_id' => $firstTheme->id]);
         $secondSet = create('App\Set', ['theme_id' => $secondTheme->id]);

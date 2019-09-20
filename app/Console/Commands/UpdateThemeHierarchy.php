@@ -75,7 +75,7 @@ class UpdateThemeHierarchy extends Command
                 if (! is_null($theme->parent_id)) {
                     $parents = $this->themeParentHierarchy($theme->toArray(), $allThemes);
 
-                    $themes[$theme->id] = ['parents_label' => $parents['parents_label'], 'theme_label' => $parents['parents_label'].' -> '.$theme->name];
+                    $themes[$theme->id] = ['parents_label' => $parents['parents_label'], 'theme_label' => $parents['parents_label'].' / '.$theme->name];
                 } else {
                     $themes[$theme->id] = ['parents_label' => 'None', 'theme_label' => $theme->name];
                 }
@@ -105,7 +105,7 @@ class UpdateThemeHierarchy extends Command
             if (count($parents)) {
                 foreach ($parents as $parent) {
                     if ($theme['parents_label'] != '') {
-                        $theme['parents_label'] .= ' -> ';
+                        $theme['parents_label'] .= ' / ';
                     }
                     $theme['parents_label'] .= $parent['name'];
                 }

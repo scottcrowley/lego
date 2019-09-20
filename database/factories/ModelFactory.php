@@ -154,11 +154,11 @@ $factory->define(App\ThemeLabel::class, function (Faker $faker) {
     $child = factory(App\Theme::class)->create(['parent_id' => $middle->id]);
 
     ThemeLabel::create(['theme_id' => $top->id, 'parents_label' => null, 'theme_label' => $top->name]);
-    ThemeLabel::create(['theme_id' => $middle->id, 'parents_label' => $top->name, 'theme_label' => $top->name.' -> '.$middle->name]);
+    ThemeLabel::create(['theme_id' => $middle->id, 'parents_label' => $top->name, 'theme_label' => $top->name.' / '.$middle->name]);
 
     return [
         'theme_id' => $child->id,
-        'parents_label' => $top->name.' -> '.$middle->name,
-        'theme_label' => $top->name.' -> '.$middle->name.' -> '.$child->name
+        'parents_label' => $top->name.' / '.$middle->name,
+        'theme_label' => $top->name.' / '.$middle->name.' / '.$child->name
     ];
 });
