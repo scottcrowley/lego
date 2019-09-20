@@ -69,15 +69,15 @@
             @apply .w-full .mb-3 .px-2;
 
             & .card-content {
-                @apply .w-full .flex .h-48 .p-1 .border .rounded .overflow-hidden;
+                @apply .w-full .flex .p-1 .h-64 .border .rounded .overflow-hidden;
 
                 & .card-image {
                     @apply .w-2/5 .m-auto .overflow-hidden .text-xs .text-center;
-                    max-width: 182px;
+                    max-width: 138px;
 
                     & img {
                         @apply .block .mx-auto .my-auto;
-                        max-width: 182px;
+                        max-width: 138px;
                         max-height: 146px;
                     }
                 }
@@ -122,7 +122,8 @@
                 @apply .w-1/2;
     
                 & .card-content {
-                    @apply .block .h-72;
+                    @apply .block;
+                    height: 22rem;
 
                     & .card-image {
                         @apply .w-3/4 .block;
@@ -176,7 +177,7 @@
         & .card {
             &.card-horizontal {
                 & .card-content {
-                    @apply .flex .h-48;
+                    @apply .flex .h-64;
 
                     & .card-image {
                         @apply .w-2/5;
@@ -207,7 +208,7 @@
         & .card {
             &.card-horizontal {
                 & .card-content {
-                    @apply .h-64;
+                    height: 18rem;
 
                     & .card-image {
                         @apply .w-1/2;
