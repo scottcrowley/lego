@@ -38,9 +38,9 @@ trait GuzzleWrapper
     protected $header = [];
 
     /**
-     * The entire response from the Guzzle request. GuzzleHttp\Psr7\Response
+     * The entire response from the Guzzle request.
      *
-     * @var null
+     * @var \Zttp\ZttpResponse
      */
     public $response;
 
@@ -93,8 +93,6 @@ trait GuzzleWrapper
         if ($param == '') {
             return;
         }
-
-        // $urlParams = collect(explode('&', substr($this->urlParams, 1)));
 
         $urlParams = collect(
             explode(
@@ -240,6 +238,14 @@ trait GuzzleWrapper
         $this->response = Zttp::withHeaders($this->header)->delete($this->url, $this->urlParams);
     }
 
+    /**
+     * Execute Pooled requests
+     *
+     * @param int $totalPages
+     * @param string $url
+     * @param array $firstPage
+     * @return array
+     */
     protected function executePool($totalPages, $url, $firstPage)
     {
         $client = $this->generateGuzzleClient();
@@ -252,7 +258,7 @@ trait GuzzleWrapper
     /**
      * convert Guzzle response to json
      *
-     * @return void
+     * @return array
      */
     protected function parseResponse()
     {
@@ -354,7 +360,7 @@ trait GuzzleWrapper
     /**
      * generates a new Guzzle Client
      *
-     * @return Client
+     * @return \GuzzleHttp\Client
      */
     protected function generateGuzzleClient()
     {
@@ -373,7 +379,7 @@ trait GuzzleWrapper
      *
      * @param int $totalPages
      * @param string $baseUrl
-     * @return Request
+     * @return \GuzzleHttp\Psr7\Request
      */
     protected function generateGuzzleRequests($totalPages, $baseUrl)
     {
@@ -386,10 +392,10 @@ trait GuzzleWrapper
     }
 
     /**
-     * executeGuzzlePool
+     * executes a generated Guzzle Request Pool
      *
-     * @param Client $client
-     * @param Request $requests
+     * @param \GuzzleHttp\Client $client
+     * @param \GuzzleHttp\Psr7\Request $requests
      * @param array $data
      * @return array
      */

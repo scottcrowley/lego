@@ -118,6 +118,8 @@ Route::group([
     Route::get('/themes', 'ApiLegoController@getThemes')->name('api.lego.themes');
     Route::get('/inventories', 'ApiLegoController@getInventories')->name('api.lego.inventories');
     Route::get('/inventory_parts/{inventory}', 'ApiLegoController@getInventoryParts')->name('api.lego.inventory_parts');
+    Route::get('/inventory_parts/selection/{inventory}', 'ApiLegoController@getPartSelection')->name('api.lego.inventory_parts.selection.get');
+    Route::post('/inventory_parts/selection', 'ApiLegoController@updatePartSelection')->name('api.lego.inventory_parts.selection.update');
 });
 
 Route::group([

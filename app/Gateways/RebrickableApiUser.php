@@ -12,6 +12,13 @@ class RebrickableApiUser extends ApiCore
     protected $baseUrl = 'https://rebrickable.com/api/v3/users/';
 
     /**
+     * Total number of User Parts
+     *
+     * @var int
+     */
+    protected $userPartCount = 0;
+
+    /**
      * Get details about a specific user.
      *
      * @return Illuminate\Support\Collection
@@ -25,6 +32,35 @@ class RebrickableApiUser extends ApiCore
         }
 
         return collect($results);
+    }
+
+    public function getPartsFirstPage($page_size = null)
+    {
+        $parts = $this->getType('allparts', 1, $page_size);
+
+        if ($parts === false) {
+            return $this->getErrors();
+        }
+
+        $this->userPartCount = $this->jsonResponse['count'];
+
+        return collect($parts);
+    }
+
+    public function getPartCount()
+    {
+        return $this->userPartCount;
+    }
+
+    public function getPartsByPage($page, $page_size = null)
+    {
+        $parts = $this->getType('allparts', $page, $page_size);
+
+        if ($parts === false) {
+            return $this->getErrors();
+        }
+
+        return collect($parts);
     }
 
     /**

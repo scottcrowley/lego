@@ -134,8 +134,12 @@ class ApiCore
      * @param string $ordering
      * @return array
      */
-    public function getType($type, int $page = 1, int $page_size = 1000, $ordering = '')
+    public function getType($type, int $page = 1, $page_size = null, $ordering = '')
     {
+        if (is_null($page_size)) {
+            $page_size = $this->max;
+        }
+
         $this->appendUrl($type);
         $this->appendUrlParam('page='.$page);
         $this->appendUrlParam('page_size='.$page_size);

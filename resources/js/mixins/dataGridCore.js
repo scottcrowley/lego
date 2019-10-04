@@ -33,6 +33,7 @@ export default {
             pagerSize: 'small',
             pagerAlign: 'left',
             currentPage: 1,
+            preResultsFunction: null,
             postResultsFunction: null
         }
     },
@@ -140,13 +141,13 @@ export default {
 
             return url;
         },
-        swapImageUrl(e) {
+        swapImageUrl(event) {
             if (this.allow_image_swap) {
-                let src = e.target.src;
-                let alt = e.target.alt;
+                let src = event.target.src;
+                let alt = event.target.dataset.altImage;
 
-                e.target.src = alt;
-                e.target.alt = src;
+                event.target.src = alt;
+                event.target.dataset.altImage = src;
             }
         },
     }

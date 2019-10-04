@@ -9,34 +9,34 @@
 @tailwind utilities;
 
 .table {
-    @apply .w-full;
+    @apply w-full;
 
     & thead {
-        @apply .border-none;
+        @apply border-none;
 
         & th {
-            @apply .px-1 .py-0 .text-xs .text-secondary-darker .text-left .font-semibold;
+            @apply px-1 py-0 text-xs text-secondary-darker text-left font-semibold;
         }
     }
 
     & tbody {
         & tr {
             & td {
-                @apply .px-1 .py-1 .text-xs .text-secondary-dark .text-left .font-hairline;
+                @apply px-1 py-1 text-xs text-secondary-dark text-left font-hairline;
                 
             }
 
             &:nth-child(odd) {
                 & td {
-                    @apply .text-secondary-darkest;
+                    @apply text-secondary-darkest;
                 }
             }
 
             &:hover {
-                @apply .bg-secondary-light;
+                @apply bg-secondary-light;
 
                 & td {
-                    @apply .text-secondary-darkest;
+                    @apply text-secondary-darkest;
                 }
             }
         }
@@ -44,55 +44,70 @@
 }
 
 .card-container {
-    @apply .flex .flex-wrap .-mx-2;
+    @apply flex flex-wrap -mx-2;
 
     &.dashboard {
-        @apply .w-auto .flex-no-wrap .justify-start .flex-col .items-center .px-2 mx-0;
+        @apply w-auto flex-no-wrap justify-start flex-col items-center px-2 mx-0;
 
         & .card {
-            @apply .h-auto .w-48 .border .border-secondary-dark .rounded-lg .bg-white .p-4 .pr-3 .mt-8 .shadow-md;
+            @apply h-auto w-48 border border-secondary-dark rounded-lg bg-white p-4 pr-3 mt-8 shadow-md;
 
             & .card-header {
-                @apply .text-secondary-darker .font-semibold .text-xs .text-right;
+                @apply text-secondary-darker font-semibold text-xs text-right;
             }
 
             & .card-body {
-                @apply .text-left .text-green-dark .font-thin .text-xl .mt-1;
+                @apply text-left text-green-dark font-thin text-xl mt-1;
             }
         }
     }
 
     & .card {
-        // @apply .border .border-grey-light .rounded .shadow;
+        // @apply border border-grey-light rounded shadow;
 
         &.card-horizontal {
-            @apply .w-full .mb-3 .px-2;
+            @apply w-full mb-3 px-2;
 
             & .card-content {
-                @apply .w-full .flex .p-1 .h-64 .border .rounded .overflow-hidden;
+                @apply w-full flex p-1 h-64 border rounded overflow-hidden;
 
                 & .card-image {
-                    @apply .w-2/5 .m-auto .overflow-hidden .text-xs .text-center;
+                    @apply w-2/5 m-auto overflow-hidden text-xs text-center;
                     max-width: 138px;
+                    min-height: auto;
 
                     & img {
-                        @apply .block .mx-auto .my-auto;
+                        @apply block mx-auto my-auto;
+                        overflow-wrap: break-word;
                         max-width: 138px;
                         max-height: 146px;
                     }
                 }
                 & .card-body {
-                    @apply .w-3/5 .bg-white .p-2 .leading-normal .text-left .my-auto;
+                    @apply w-3/5 bg-white p-2 leading-normal text-left flex flex-col justify-center;
 
                     & p {
-                        @apply .text-grey-dark .text-xs;
+                        @apply text-grey-dark text-xs;
 
                         &.title {
-                            @apply .font-semibold .text-secondary-darker .text-sm .mb-2;
+                            @apply font-semibold text-secondary-darker text-sm mb-2;
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+.dim-container {
+    @apply w-full rounded relative border border-transparent;
+    
+    &.dim {
+        @apply border-primary;
+        
+        & .card-content {
+            @apply border-none;
+            opacity: .3;
         }
     }
 }
@@ -102,32 +117,33 @@
     .card-container {
 
         &.dashboard { 
-            @apply .flex-row .flex-wrap .justify-between;
+            @apply flex-row flex-wrap justify-between;
 
             & .card {
-                @apply .p-8;
+                @apply p-8;
 
                 & .card-header {
-                    @apply .text-sm;
+                    @apply text-sm;
                 }
 
                 & .card-body {
-                    @apply .text-2xl .mt-4;
+                    @apply text-2xl mt-4;
                 }
             }
         }
 
         & .card {
             &.card-horizontal {
-                @apply .w-1/2;
+                @apply w-1/2;
     
                 & .card-content {
-                    @apply .block;
+                    @apply block;
                     height: 22rem;
 
                     & .card-image {
-                        @apply .w-3/4 .block;
+                        @apply w-3/4 block;
                         max-width: 192px;
+                        min-height: 146px;
 
                         & img {
                             max-width: 192px;
@@ -135,7 +151,7 @@
                     }
 
                     & .card-body {
-                        @apply .w-full .my-0;
+                        @apply w-full justify-start;
                     }
                 }
             }
@@ -147,12 +163,12 @@
     .card-container {
 
         &.dashboard { 
-            @apply .w-3/4 .m-auto .px-0;
+            @apply w-3/4 m-auto px-0;
         }
 
         & .card {
             &.card-horizontal {
-                @apply .w-1/3;
+                @apply w-1/3;
                 & .card-content {
                     & .card-image {
                         max-width: 172px;
@@ -171,17 +187,18 @@
     .card-container{
 
         &.dashboard { 
-            @apply .w-3/5;
+            @apply w-3/5;
         }
 
         & .card {
             &.card-horizontal {
                 & .card-content {
-                    @apply .flex .h-64;
+                    @apply flex h-64;
 
                     & .card-image {
-                        @apply .w-2/5;
+                        @apply w-2/5;
                         max-width: 120px;
+                        min-height: auto;
 
                         & img {
                             max-width: 120px;
@@ -190,7 +207,7 @@
                     }
 
                     & .card-body {
-                        @apply .w-3/5 my-auto;
+                        @apply w-3/5 justify-center;
                     }
                 }
             }
@@ -202,7 +219,7 @@
     .card-container {
 
         &.dashboard { 
-            @apply .w-1/2;
+            @apply w-1/2;
         }
 
         & .card {
@@ -211,7 +228,7 @@
                     height: 18rem;
 
                     & .card-image {
-                        @apply .w-1/2;
+                        @apply w-1/2;
                         max-width: 184px;
 
                         & img {
@@ -221,7 +238,7 @@
                     }
 
                     & .card-body {
-                        @apply .w-1/2;
+                        @apply w-1/2;
                     }
                 }
             }

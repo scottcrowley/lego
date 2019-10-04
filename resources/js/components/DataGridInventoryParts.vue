@@ -63,41 +63,29 @@
                         :align="pagerAlign" />
             </div>
         </div>
- 
-        <div v-if="use_location">
-            <div class="mb-6 flex flex-col md:flex-row items-center justify-center md:justify-start" v-show="!loading">
-                <button class="btn is-small" @click.prevent="addAll()">Add All Parts To Location</button>
-                <button class="btn is-small mt-2 md:mt-0 ml-0 md:ml-2" @click.prevent="removeAll()">Remove All Parts To Location</button>
-            </div>
-        </div>
 
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
-                <div class="card-content">
-                    <div class="card-image">
-                        <div class="w-full my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
-                        <img :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-else class="" @click.prevent="swapImageUrl($event)">
-                    </div>
-                    <div class="card-body">
-                        <p :class="(valname.title) ? 'title' : ''" v-for="valname in valnames">
-                            <span v-if="!valname.link">
-                                <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
-                                {{ (
-                                    (valname.boolean === true) ? (
-                                        (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
-                                    ) : data[valname.field]
-                                ) }}
-                            </span>
-                            <a :href="generateLinkUrl(valname.linkUrl, index)" v-else>{{ data[valname.field] }}</a>
-                        </p>
-                        <div v-if="use_location">
-                            <p v-if="(data.location !== null && data.location.id != location_id)">
-                                <span class="font-bold">Storage Location:</span> 
-                                {{ data.location.location_name }}
-                            </p>
-                            <button v-else class="btn is-primary is-narrow is-small mt-2" @click.prevent="executeEndpoint(index)">
-                                {{ (data.location !== null && data.location.id == location_id) ? 'Remove Part' : 'Add Part' }}
-                            </button>
+                <div :class="(data.dimmed) ? 'dim' : ''" class="dim-container">
+                    <div class="card-content z-20">
+                        <div class="card-image">
+                            <div class="w-full my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
+                            <img :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-else class="" @click.prevent="swapImageUrl($event)">
+                        </div>
+                        <div class="card-body z-10" @click.prevent="toggleSelection($event, index)">
+                            <div class="z-0">
+                                <p :class="(valname.title) ? 'title' : ''" class="relative" v-for="valname in valnames" style="z-index: -1;">
+                                    <span v-if="!valname.link">
+                                        <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
+                                        {{ (
+                                            (valname.boolean === true) ? (
+                                                (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
+                                            ) : data[valname.field]
+                                        ) }}
+                                    </span>
+                                    <a :href="generateLinkUrl(valname.linkUrl, index)" v-else>{{ data[valname.field] }}</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,64 +121,75 @@
 
         mixins: [dataGridCore, dataCore, dataFilterCore],
 
-        props: {
-            use_location: {
-                type: Boolean,
-                default: false
-            }, 
-            filters: {
-                type: Array,
-                default: []
+        props: { 
+            selection_get_endpoint: {
+                type: String,
+                default: ''
+            },
+            selection_update_endpoint: {
+                type: String,
+                default: ''
             }
         },
 
         data() {
             return {
-                filtersShow: false,
-                filterParams: [],
-                filterModels: {},
-                preResultsFunction: 'checkFilters'
+                selection: {},
+                postResultsFunction: 'checkPartSelected',
             }
         },
         
         methods: {
-            executeEndpoint(index, multiple = false) {
-                let endpoint = this.generateLinkUrl(this.toggle_end_point, index);
-                axios.get(endpoint)
+            checkPartSelected() {
+                this.getCachedSelected();
+            },
+
+            updateSelectedParts() {
+                let keys = Object.keys(this.dataSet);
+                keys.forEach((key) => {
+                    let cacheKey = this.dataSet[key]['part_num'] + '-' + this.dataSet[key]['color_id'] + '-' + this.dataSet[key]['is_spare'];
+                    if (this.selection[cacheKey]) {
+                        this.dataSet[key].dimmed = true;
+                    }
+                });
+            },
+
+            toggleSelection(event, index) {
+                let el = event.target.closest('.dim-container');
+                let selected = ! el.classList.contains('dim');
+                
+                this.toggleDim(el);
+                this.updateCache(this.dataSet[index], selected);
+            },
+
+            toggleDim(el) {
+                el.classList.toggle('dim');
+            },
+
+            getCachedSelected() {
+                axios.get(this.selection_get_endpoint)
                     .then(response => {
-                        this.dataSet[index].location = response.data.location;
-                        if (multiple === false) {
-                            flash('Part association successfully updated!');
-                        }
+                        this.selection = response.data;
+
+                        this.updateSelectedParts();
                     })
                     .catch(error => {
                         this.processError(error);
                     });
             },
-            addAll() {
-                let keys = Object.keys(this.dataSet);
-                let processed = 0;
-                keys.forEach((key) => {
-                    if (this.dataSet[key].location !== null) {
-                        return;
-                    }
-                    this.executeEndpoint(key, true);
-                    processed++;
-                });
-                
-                flash(processed+' Parts added successfully!');
-            },
-            removeAll() {
-                let keys = Object.keys(this.dataSet);
-                let processed = 0;
-                keys.forEach((key) => {
-                    if (this.dataSet[key].location !== null && this.dataSet[key].location.id == this.location_id) {
-                        this.executeEndpoint(key, true);
-                        processed++;
-                    }
-                });
 
-                flash(processed+' Parts removed successfully!');
+            updateCache(data, selected) {
+                axios.post(this.selection_update_endpoint, {
+                    inventory_id: data.inventory_id,
+                    part_num: data.part_num,
+                    color_id: data.color_id,
+                    is_spare: data.is_spare,
+                    selected: selected,
+                }).then(response => {
+                    this.selection = response.data;
+                }).catch(error => {
+                    this.processError(error);
+                });
             },
         }
     };

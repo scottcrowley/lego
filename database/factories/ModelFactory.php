@@ -110,7 +110,7 @@ $factory->define(App\Inventory::class, function (Faker $faker) {
 
 $factory->define(App\InventoryPart::class, function (Faker $faker) {
     return [
-        'inventory_id' => factory(App\Inventory::class)->create(),
+        'inventory_id' => factory(App\Inventory::class),
         'part_num' => function () {
             return factory(App\Part::class)->create()->part_num;
         },

@@ -21,6 +21,13 @@ class InventoryPart extends Model
     protected $appends = ['name', 'part_category_id', 'category_label', 'image_url', 'color_name', 'ldraw_image_url'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['userParts'];
+
+    /**
      * Base url for a parts ldraw image
      *
      * @var string
@@ -45,6 +52,16 @@ class InventoryPart extends Model
     public function color()
     {
         return $this->hasOne(Color::class, 'id', 'color_id');
+    }
+
+    /**
+     * An inventory part can have one user part with the same color
+     *
+     * @return hasOne
+     */
+    public function userParts()
+    {
+        return $this->hasMany(UserPart::class, 'part_num', 'part_num')->without('part')->without('color');
     }
 
     /**
@@ -137,5 +154,32 @@ class InventoryPart extends Model
     public function getLdrawImageUrlAttribute()
     {
         return str_replace(['{color_id}', '{part_num}'], [$this->color_id, $this->part_num], $this->ldrawBaseUrl);
+    }
+
+    /**
+     * Getter for the the number of owned parts with the same color
+     *
+     * @return int
+     */
+    public function getTotalOwned()
+    {
+        $part = $this->userParts->where('color_id', $this->color_id)->first();
+
+        if (is_null($part)) {
+            return 0;
+        }
+        return $part->quantity;
+    }
+
+    /**
+     * Getter for the the number of owned parts with the same color label
+     *
+     * @return int
+     */
+    public function getQuantityLabelAttribute()
+    {
+        $label = $this->quantity.' / '.$this->getTotalOwned();
+
+        return $label;
     }
 }

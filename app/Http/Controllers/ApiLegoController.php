@@ -17,6 +17,8 @@ use App\Filters\ThemeFilters;
 use App\Filters\InventoryFilters;
 use App\Filters\PartCategoryFilters;
 use App\Filters\InventoryPartFilters;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
 use App\Filters\PartRelationshipFilters;
 
 class ApiLegoController extends Controller
@@ -165,11 +167,49 @@ class ApiLegoController extends Controller
             ->with('part.storageLocation')
             ->with('part.partImageUrl')
             ->with('color')
+            ->with('userParts')
             ->get()
         );
 
-        $parts = $parts->each->append('location_name')->values();
+        $parts = $parts->each(function ($part, $key) {
+            $part->dimmed = false;
+            $part->append('location_name');
+            $part->append('quantity_label');
+        })->values();
 
         return $parts->paginate($this->defaultPerPage);
+    }
+
+    /**
+     * gets all cached inventory parts that are marked as selected for a given inventory_id
+     *
+     * @return array
+     */
+    public function getPartSelection($inventory)
+    {
+        return Cache::get($inventory, []);
+    }
+
+    /**
+     * updates cache for any inventory parts selected for a given inventory_id
+     *
+     * @return array
+     */
+    public function updatePartSelection()
+    {
+        $request = request()->all();
+        $key = $request['part_num'].'-'.$request['color_id'].'-'.$request['is_spare'];
+        $cachedInventory = Cache::get($request['inventory_id'], []);
+        $inCache = isset($cachedInventory[$key]);
+
+        if (! $inCache && $request['selected']) {
+            $cachedInventory[$key] = true;
+        } elseif ($inCache && ! $request['selected']) {
+            unset($cachedInventory[$key]);
+        }
+
+        Cache::put($request['inventory_id'], $cachedInventory, now()->addDays(2));
+
+        return $cachedInventory;
     }
 }
