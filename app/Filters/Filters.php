@@ -69,14 +69,35 @@ abstract class Filters
     }
 
     /**
-     * Sort the collection by a given field.
+     * Sort the collection.
+     * Sort method-hattip to Hirnhamster https://stackoverflow.com/questions/25451019/what-is-the-syntax-for-sorting-an-eloquent-collection-by-multiple-columns/
      *
-     * @param  string $field
      * @return \Illuminate\Support\Collection
      */
-    protected function sort($field)
+    protected function sort()
     {
-        return $this->collection = $this->collection->sortBy($field, SORT_NATURAL);
+        $sort = $this->prepareSortCriteria();
+
+        $makeComparer = function ($criteria) {
+            $comparer = function ($first, $second) use ($criteria) {
+                foreach ($criteria as $field => $sortOrder) {
+                    $sortOrder = strtolower($sortOrder);
+
+                    if ($first[$field] < $second[$field]) {
+                        return $sortOrder === 'asc' ? -1 : 1;
+                    } elseif ($first[$field] > $second[$field]) {
+                        return $sortOrder === 'asc' ? 1 : -1;
+                    }
+                }
+                return 0;
+            };
+            return $comparer;
+        };
+
+        $comparer = $makeComparer($sort);
+        return $this->collection = $this->collection->sort($comparer);
+
+        //return $this->collection = $this->collection->sortBy($field, SORT_NATURAL);
     }
 
     /**
@@ -87,7 +108,7 @@ abstract class Filters
      */
     protected function sortdesc($field)
     {
-        return $this->collection = $this->collection->sortBy($field, SORT_NATURAL, true);
+        //return $this->collection = $this->collection->sortBy($field, SORT_NATURAL, true);
     }
 
     /**
@@ -106,6 +127,29 @@ abstract class Filters
                 return false !== stristr($item[$key], $value);
             }
         );
+    }
+
+    /**
+     * prepares the sort array based on fields provided in the sort & sortdesc url params
+     *
+     * @return array
+     */
+    protected function prepareSortCriteria()
+    {
+        $sort = $this->request->has('sort') ? explode(',', $this->request->sort) : [];
+
+        $criteria = [];
+
+        foreach ($sort as $field) {
+            if (substr($field, 0, 1) == '-') {
+                $criteria[substr($field, 1)] = 'desc';
+                continue;
+            }
+
+            $criteria[$field] = 'asc';
+        }
+
+        return $criteria;
     }
 
     /**
