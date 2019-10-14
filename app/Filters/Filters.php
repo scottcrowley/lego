@@ -83,6 +83,14 @@ abstract class Filters
                 foreach ($criteria as $field => $sortOrder) {
                     $sortOrder = strtolower($sortOrder);
 
+                    // use NaturalSortCompare
+                    // $natsort = NaturalSortCompare::natcompare($first[$field], $second[$field]);
+                    // if ($natsort == -1) {
+                    //     return $sortOrder === 'asc' ? -1 : 1;
+                    // } elseif ($natsort == 1) {
+                    //     return $sortOrder === 'asc' ? 1 : -1;
+                    // }
+
                     // use non natural sort
                     if ($first[$field] < $second[$field]) {
                         return $sortOrder === 'asc' ? -1 : 1;
