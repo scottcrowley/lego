@@ -55,9 +55,9 @@ class InventoryPart extends Model
     }
 
     /**
-     * An inventory part can have one user part with the same color
+     * An inventory part can have many user parts
      *
-     * @return hasOne
+     * @return hasMany
      */
     public function userParts()
     {
@@ -72,6 +72,48 @@ class InventoryPart extends Model
     public function inventory()
     {
         return $this->belongsTo(Inventory::class, 'id');
+    }
+
+    /**
+     * An inventory part has many stickered parts
+     *
+     * @return hasMany
+     */
+    public function stickeredParts()
+    {
+        return $this->hasMany(StickeredPart::class, 'inventory_id', 'inventory_id');
+    }
+
+    /**
+     * Add a new stickered part for this inventory part
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function addStickeredPart()
+    {
+        return StickeredPart::create([
+            'inventory_id' => $this->inventory_id,
+            'part_num' => $this->part_num,
+            'color_id' => $this->color_id,
+        ]);
+
+        // return $this->stickeredParts;
+    }
+
+    /**
+     * Removes a stickered part for this inventory part if it exists
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function removeStickeredPart()
+    {
+        $stickeredPart = $this->stickeredParts->first();
+
+        if (! is_null($stickeredPart)) {
+            $stickeredPart->delete();
+        }
+        $this->load('stickeredParts');
+        return $this->getStickeredParts();
     }
 
     /**
@@ -157,7 +199,7 @@ class InventoryPart extends Model
     }
 
     /**
-     * Getter for the the number of owned parts with the same color
+     * Getter for the number of owned parts with the same color
      *
      * @return int
      */
@@ -172,14 +214,31 @@ class InventoryPart extends Model
     }
 
     /**
-     * Getter for the the number of owned parts with the same color label
+     * Getter for the label of owned parts with the same color
      *
-     * @return int
+     * @return string
      */
     public function getQuantityLabelAttribute()
     {
         $label = $this->quantity.' / '.$this->getTotalOwned();
 
         return $label;
+    }
+
+    public function getStickeredParts()
+    {
+        return $this->stickeredParts->where('part_num', $this->part_num)->where('color_id', $this->color_id)->values();
+    }
+
+    /**
+     * Getter for the count of stickered parts
+     *
+     * @return int
+     */
+    public function getStickeredPartsCountAttribute()
+    {
+        $stickeredParts = $this->getStickeredParts();
+
+        return (is_null($stickeredParts)) ? 0 : $stickeredParts->count();
     }
 }

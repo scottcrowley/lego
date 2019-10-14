@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\InventoryPart;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -106,5 +107,70 @@ class InventoryPartTest extends TestCase
         $response = $this->post(route('api.lego.inventory_parts.selection.update'), $part);
 
         $this->assertEmpty($response->getData());
+    }
+
+    /** @test */
+    public function it_can_access_details_about_stickered_parts()
+    {
+        $this->signIn();
+        $inventoryPart = create('App\InventoryPart');
+        create('App\StickeredPart', ['inventory_id' => $inventoryPart->inventory_id, 'part_num' => $inventoryPart->part_num, 'color_id' => $inventoryPart->color_id]);
+
+        $this->assertEquals($inventoryPart->part_num, $inventoryPart->getStickeredParts()->first()->part_num);
+    }
+
+    /** @test */
+    public function it_can_access_the_stickered_parts_count_with_the_same_inventory_id_part_num_and_color_id()
+    {
+        $this->signIn();
+        $inventoryPart = create('App\InventoryPart');
+
+        $inventoryPart->addStickeredPart();
+        $inventoryPart->addStickeredPart();
+
+        $this->assertEquals(2, $inventoryPart->stickered_parts_count);
+    }
+
+    /** @test */
+    public function it_can_only_access_stickered_parts_with_the_same_inventory_id_part_num_and_color_id()
+    {
+        $this->signIn();
+        $inventoryPart = create('App\InventoryPart');
+        $inventoryPart2 = create('App\InventoryPart', ['inventory_id' => $inventoryPart->inventory_id, 'color_id' => $inventoryPart->color_id]);
+        $inventoryPart3 = create('App\InventoryPart');
+
+        $stickeredPart = create('App\StickeredPart', ['inventory_id' => $inventoryPart->inventory_id, 'part_num' => $inventoryPart->part_num, 'color_id' => $inventoryPart->color_id]);
+        $stickeredPart2 = create('App\StickeredPart', ['inventory_id' => $inventoryPart->inventory_id, 'part_num' => $inventoryPart2->part_num, 'color_id' => $inventoryPart2->color_id]);
+        $stickeredPart3 = create('App\StickeredPart', ['inventory_id' => $inventoryPart3->inventory_id, 'part_num' => $inventoryPart3->part_num, 'color_id' => $inventoryPart3->color_id]);
+        $stickeredPart4 = create('App\StickeredPart', ['inventory_id' => $inventoryPart->inventory_id, 'part_num' => $inventoryPart->part_num, 'color_id' => $inventoryPart->color_id]);
+
+        $allStickeredParts = $inventoryPart->getStickeredParts();
+        $this->assertEquals(2, $inventoryPart->stickered_parts_count);
+        $this->assertEquals($inventoryPart->part_num, $allStickeredParts[0]->part_num);
+        $this->assertEquals($inventoryPart->part_num, $allStickeredParts[1]->part_num);
+    }
+
+    /** @test */
+    public function it_can_add_a_new_stickered_part()
+    {
+        $this->signIn();
+        $inventoryPart = create('App\InventoryPart');
+
+        $stickeredPart = $inventoryPart->addStickeredPart();
+
+        $this->assertCount(1, $inventoryPart->stickeredParts);
+        $this->assertEquals($stickeredPart->part_num, $inventoryPart->stickeredParts->first()->part_num);
+    }
+
+    /** @test */
+    public function it_can_remove_a_stickered_part()
+    {
+        $this->signIn();
+        $stickeredPart = create('App\StickeredPart');
+        $inventoryPart = InventoryPart::where('part_num', $stickeredPart->part_num)->first();
+
+        $stickeredParts = $inventoryPart->removeStickeredPart();
+
+        $this->assertCount(0, $stickeredParts);
     }
 }

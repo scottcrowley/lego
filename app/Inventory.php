@@ -53,6 +53,16 @@ class Inventory extends Model
     }
 
     /**
+     * An inventory has many stickered parts
+     *
+     * @return hasMany
+     */
+    public function stickeredParts()
+    {
+        return $this->hasMany(StickeredPart::class);
+    }
+
+    /**
      * Getter for set->name
      *
      * @return string

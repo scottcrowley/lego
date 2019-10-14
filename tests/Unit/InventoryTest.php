@@ -36,4 +36,15 @@ class InventoryTest extends TestCase
 
         $this->assertEquals($set->name, $inventory->set->name);
     }
+
+    /** @test */
+    public function it_can_retrieve_details_about_all_stickered_parts()
+    {
+        $this->signIn();
+
+        $inventory = create('App\Inventory');
+        $stickeredPart = create('App\StickeredPart', ['inventory_id' => $inventory->id]);
+
+        $this->assertEquals($stickeredPart->part_num, $inventory->stickeredParts->first()->part_num);
+    }
 }

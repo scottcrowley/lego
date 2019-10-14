@@ -162,3 +162,12 @@ $factory->define(App\ThemeLabel::class, function (Faker $faker) {
         'theme_label' => $top->name.' / '.$middle->name.' / '.$child->name
     ];
 });
+
+$factory->define(App\StickeredPart::class, function (Faker $faker) {
+    $inventoryPart = factory(App\InventoryPart::class)->create();
+    return [
+        'inventory_id' => $inventoryPart->inventory_id,
+        'part_num' => $inventoryPart->part_num,
+        'color_id' => $inventoryPart->color_id
+    ];
+});

@@ -168,6 +168,7 @@ class ApiLegoController extends Controller
                 ->with('part.partImageUrl')
                 ->with('color')
                 ->with('userParts')
+                ->with('stickeredParts')
                 ->get()
         );
 
@@ -175,6 +176,7 @@ class ApiLegoController extends Controller
             $part->dimmed = false;
             $part->append('location_name');
             $part->append('quantity_label');
+            $part->append('stickered_parts_count');
         })->values();
 
         return $parts->paginate($this->defaultPerPage);
