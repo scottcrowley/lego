@@ -11,7 +11,7 @@ class StorageLocationPartsFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'category_label', 'color', 'exclude_assigned'];
+    protected $filters = ['sort', 'name', 'part_num', 'part_category_id', 'category_label', 'color', 'exclude_assigned'];
 
     /**
      * exlude all results that have an existing storage location except the given location_id

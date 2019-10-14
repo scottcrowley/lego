@@ -83,6 +83,7 @@ abstract class Filters
                 foreach ($criteria as $field => $sortOrder) {
                     $sortOrder = strtolower($sortOrder);
 
+                    // use non natural sort
                     if ($first[$field] < $second[$field]) {
                         return $sortOrder === 'asc' ? -1 : 1;
                     } elseif ($first[$field] > $second[$field]) {
@@ -96,19 +97,6 @@ abstract class Filters
 
         $comparer = $makeComparer($sort);
         return $this->collection = $this->collection->sort($comparer);
-
-        //return $this->collection = $this->collection->sortBy($field, SORT_NATURAL);
-    }
-
-    /**
-     * Sort the collection by a given field in descending order.
-     *
-     * @param  string $field
-     * @return \Illuminate\Support\Collection
-     */
-    protected function sortdesc($field)
-    {
-        //return $this->collection = $this->collection->sortBy($field, SORT_NATURAL, true);
     }
 
     /**

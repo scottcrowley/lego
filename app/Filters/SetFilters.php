@@ -11,5 +11,5 @@ class SetFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'set_num', 'theme_id', 'theme_label', 'year', 'minyear', 'maxyear', 'minpieces', 'maxpieces'];
+    protected $filters = ['sort', 'name', 'set_num', 'theme_id', 'theme_label', 'year', 'minyear', 'maxyear', 'minpieces', 'maxpieces'];
 }

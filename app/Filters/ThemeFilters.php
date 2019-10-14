@@ -9,7 +9,7 @@ class ThemeFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'parent_id'];
+    protected $filters = ['sort', 'name', 'parent_id'];
 
     /**
      * Search the collection for a given parent theme id.

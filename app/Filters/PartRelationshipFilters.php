@@ -9,7 +9,7 @@ class PartRelationshipFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'parent_part_num', 'child_part_num'];
+    protected $filters = ['sort', 'parent_part_num', 'child_part_num'];
 
     /**
      * Search the collection for a given parent partNum value.

@@ -9,5 +9,5 @@ class PartCategoryFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name'];
+    protected $filters = ['sort', 'name'];
 }

@@ -11,5 +11,5 @@ class PartFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['sort', 'sortdesc', 'name', 'part_num', 'part_category_id', 'category_label'];
+    protected $filters = ['sort', 'name', 'part_num', 'part_category_id', 'category_label'];
 }
