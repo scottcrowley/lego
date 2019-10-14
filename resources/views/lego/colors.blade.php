@@ -15,6 +15,7 @@
                     {name: 'Transparent', sortable: true, sorted: false, sortDesc: false, boolean: true, width: 'w-1/4'}]"
                 :valnames="['name', 'rgb', 'is_trans']" 
                 :allowedparams="['name']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.lego.colors') }}"></data-table>
         </div>
     </div>

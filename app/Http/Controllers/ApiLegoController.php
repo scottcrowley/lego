@@ -164,11 +164,11 @@ class ApiLegoController extends Controller
     {
         $parts = $filters->apply(
             InventoryPart::whereInventoryId($inventory->id)
-            ->with('part.storageLocation')
-            ->with('part.partImageUrl')
-            ->with('color')
-            ->with('userParts')
-            ->get()
+                ->with('part.storageLocation')
+                ->with('part.partImageUrl')
+                ->with('color')
+                ->with('userParts')
+                ->get()
         );
 
         $parts = $parts->each(function ($part, $key) {

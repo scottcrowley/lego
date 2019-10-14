@@ -50,6 +50,7 @@
                     {label: 'button', text: 'Remove Part', url: '{{ url('/api/users/storage/locations/'.$location->id.'/parts/toggle/{part_num}') }}', successMsg: 'Part association successfully updated!'},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id']"
+                :sort-order="['name', 'color_name']"
                 endpoint="{{ route('api.users.storage.locations.parts.individual', $location->id) }}"></data-grid>
         </div>
     </div>

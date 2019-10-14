@@ -16,6 +16,7 @@
                     {name: 'Category', sortable: false, sorted: false, sortDesc: false, boolean: false, width: 'w-1/4'}]"
                 :valnames="['part_num', 'name', 'category_label']"
                 :allowedparams="['name', 'part_num', 'part_category_id']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.lego.parts') }}"></data-table>
         </div>
     </div>

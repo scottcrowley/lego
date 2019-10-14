@@ -32,6 +32,7 @@
                     {label: 'Quantity', field: 'quantity', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear', 'theme_label', 'minpieces', 'maxpieces']"
+                :sort-order="['-year', 'theme_label', 'name']"
                 endpoint="/api/users/sets"></data-grid-with-filters>
         </div>
     </div>

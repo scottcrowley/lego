@@ -28,6 +28,7 @@
                     {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'location_id', 'color_name', 'location_name', 'category_label']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.users.parts.individual') }}"></data-grid-with-filters>
         </div>
     </div>

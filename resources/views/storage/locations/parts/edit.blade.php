@@ -52,6 +52,7 @@
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'exclude_assigned', 'category_label']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.users.storage.locations.parts.edit', $location->id) }}"></data-grid-with-filters>
         </div>
     </div>

@@ -53,6 +53,7 @@
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'exclude_spare', 'location_name']"
+                :sort-order="['location_name', 'name', 'color_name']"
                 endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-grid-inventory-parts>
         </div>
     </div>

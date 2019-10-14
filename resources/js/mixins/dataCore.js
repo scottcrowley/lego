@@ -12,6 +12,10 @@ export default {
             type: Array,
             default: []
         },
+        sortOrder: {
+            type: Array,
+            default: []
+        },
         endpoint: {
             type: String,
             default: ''
@@ -25,6 +29,7 @@ export default {
             loading: true,
             sortedCol: '',
             sortdesc: false,
+            sortCols: [],
             presentParamsString: '',
             perpage: this.per_page,
             defaultPage: 0,
@@ -40,15 +45,14 @@ export default {
 
             let page = url.searchParams.get('page');
             let sort = url.searchParams.get('sort');
-            let sortdesc = url.searchParams.get('sortdesc');
             let perpage = url.searchParams.get('perpage');
-            let updateSort = (sort != null || sortdesc != null) ? true : false;
+            let updateSort = (sort != null && sort != '') ? true : false;
 
-            if (sort != null) {
-                this.sortedCol = sort;
-            } else if (sortdesc != null) {
-                this.sortdesc = true;
-                this.sortedCol = sortdesc;
+            if (updateSort) {
+                let sortCols = this.getSortColumns(sort);
+
+                this.sortdesc = (sortCols[0].substr(0,1) == '-');
+                this.sortedCol = (this.sortdesc) ? sortCols[0].substr(1) : sortCols[0];
             }
 
             if (page) {
@@ -73,12 +77,16 @@ export default {
                 urlParams.forEach(this.addParamToQuery);
             }
         },
+        getSortColumns(sort) {
+            let sortCols = sort.split(',');
+            this.sortCols = sortCols;
+            return sortCols;
+        },
         addParamToQuery(param) {
             let details = param.split('=');
             if (
                 details[0] != 'page'
                 && details[0] != 'sort'
-                && details[0] != 'sortdesc'
                 && this.allowedparams.includes(details[0])
             ) {
                 this.presentParamsString = this.presentParamsString + '&' + param;

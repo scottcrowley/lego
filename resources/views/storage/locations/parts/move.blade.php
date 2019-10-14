@@ -34,6 +34,7 @@
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.users.storage.locations.parts', $location->id) }}"></data-grid-move-location>
         </div>
     </div>

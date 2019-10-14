@@ -26,6 +26,7 @@
                     {label: 'Storage Location', field: 'owned_part_location_name', title: false, sortable: false, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'category_label']"
+                :sort-order="['name']"
                 endpoint="{{ route('api.lego.parts') }}"></data-grid-with-filters>
         </div>
     </div>

@@ -38,6 +38,7 @@
                     {name: 'Spare', sortable: true, sorted: false, sortDesc: false, boolean: true, width: 'w-12'}]"
                 :valnames="['part_num', 'name', 'quantity', 'color_name', 'location_name', 'is_spare']"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color']"
+                :sort-order="['location_name', 'name', 'color_name']"
                 endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-table>
         </div>
     </div>

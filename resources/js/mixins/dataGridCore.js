@@ -42,26 +42,22 @@ export default {
         let updateSort = this.checkUriParams();
         if (!updateSort) {
             this.checkSortDefault();
-        } else {
-            this.updateSortSelect();
         }
-
+        
+        this.updateSortSelect();
         this.getResults();
     },
 
     methods: {
         checkSortDefault() {
-            let cols = this.valnames;
+            let sortCols = this.sortOrder;
 
-            cols.forEach((col, index) => {
-                if (col.sortable && col.sorted) {
-                    document.getElementById('selectSort').value = this.sortedCol = col.field;
-                    if (col.sortdesc) {
-                        this.sortdesc = true;
-                        document.getElementById('selectOrder').value = 1;
-                    }
-                }
-            });
+            if (sortCols[0] != '') {
+                this.sortdesc = (sortCols[0].substr(0,1) == '-');
+                this.sortedCol = (this.sortdesc) ? sortCols[0].substr(1) : sortCols[0];
+            }
+
+            this.sortCols = sortCols;
         },
         updateSortSelect() {
             document.getElementById('selectSort').value = this.sortedCol;
@@ -85,7 +81,7 @@ export default {
 
             let params = '?page=' + page + '&perpage=' + this.perpage;
             if (this.sortedCol != '') {
-                params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
+                params = params + '&sort=' + this.sortCols.join(',');
             }
 
             params = params + this.presentParamsString;
@@ -109,6 +105,8 @@ export default {
             
             if (value != '' && value != this.sortedCol) {
                 this.sortedCol = value;
+                let col = (this.sortdesc ? '-' : '') + value;
+                this.sortCols = [col];
                 this.getResults();
             }
         },
@@ -117,6 +115,8 @@ export default {
             
             if (value != this.sortdesc) {
                 this.sortdesc = value;
+                let col = (value ? '-' : '') + this.sortedCol;
+                this.sortCols[0] = col;
                 this.getResults();
             }
         },

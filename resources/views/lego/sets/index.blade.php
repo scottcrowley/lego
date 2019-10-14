@@ -18,6 +18,7 @@
                     {name: 'Pieces', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-16'}]"
                 :valnames="['set_num', 'name', 'theme_label', 'year', 'num_parts']"
                 :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear']"
+                :sort-order="['-year', 'theme_label', 'name']"
                 endpoint="/api/lego/sets"></data-table>
         </div>
     </div>

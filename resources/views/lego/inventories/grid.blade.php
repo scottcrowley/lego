@@ -31,6 +31,7 @@
                     {label: 'Pieces', field: 'num_parts', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false, link: false, linkUrl: ''},
                     ]"
                 :allowedparams="['name', 'set_num', 'theme_id', 'year', 'minyear', 'maxyear', 'theme_label', 'minpieces', 'maxpieces']"
+                :sort-order="['-year', 'name']"
                 endpoint="{{ route('api.lego.inventories') }}"></data-grid-with-filters>
         </div>
     </div>
