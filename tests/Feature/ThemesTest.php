@@ -75,7 +75,7 @@ class ThemesTest extends TestCase
         $themeA = create('App\Theme', ['name' => 'A Theme']);
         $themeB = create('App\Theme', ['name' => 'B Theme']);
 
-        $this->get(route('api.lego.themes', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.themes', ['sort' => '-name']))
             ->assertSeeInOrder([$themeC->name, $themeB->name, $themeA->name]);
     }
 

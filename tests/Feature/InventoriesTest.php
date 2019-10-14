@@ -257,7 +257,7 @@ class InventoriesTest extends TestCase
         create('App\Inventory', ['set_num' => $setA->set_num]);
         create('App\Inventory', ['set_num' => $setB->set_num]);
 
-        $this->get(route('api.lego.sets', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.sets', ['sort' => '-name']))
             ->assertSeeInOrder([$setC->name, $setB->name, $setA->name]);
     }
 }

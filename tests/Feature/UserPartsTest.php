@@ -184,7 +184,7 @@ class UserPartsTest extends TestCase
         create('App\UserPart', ['part_num' => $partA->part_num]);
         create('App\UserPart', ['part_num' => $partB->part_num]);
 
-        $this->get(route('api.users.parts.all', ['sortdesc' => 'name']))
+        $this->get(route('api.users.parts.all', ['sort' => '-name']))
             ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
 }

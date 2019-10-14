@@ -58,7 +58,7 @@ class ColorsTest extends TestCase
         $colorA = create('App\Color', ['name' => 'A Color']);
         $colorB = create('App\Color', ['name' => 'B Color']);
 
-        $this->get(route('api.lego.colors', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.colors', ['sort' => '-name']))
             ->assertSeeInOrder([$colorC->name, $colorB->name, $colorA->name]);
     }
 }

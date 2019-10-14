@@ -101,7 +101,7 @@ class PartsTest extends TestCase
         $partA = create('App\Part', ['name' => 'A Part']);
         $partB = create('App\Part', ['name' => 'B Part']);
 
-        $this->get(route('api.lego.parts', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.parts', ['sort' => '-name']))
             ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
 

@@ -69,7 +69,7 @@ class PartRelationshipsTest extends TestCase
         $relationshipA = create('App\PartRelationship', ['parent_part_num' => $parentA->part_num]);
         $relationshipB = create('App\PartRelationship', ['parent_part_num' => $parentB->part_num]);
 
-        $this->get(route('api.lego.part_relationships', ['sortdesc' => 'parent_part_num']))
+        $this->get(route('api.lego.part_relationships', ['sort' => '-parent_part_num']))
             ->assertSeeInOrder([$relationshipC->parent_part_num, $relationshipB->parent_part_num, $relationshipA->parent_part_num]);
     }
 
@@ -103,7 +103,7 @@ class PartRelationshipsTest extends TestCase
         $relationshipA = create('App\PartRelationship', ['child_part_num' => $childA->part_num]);
         $relationshipB = create('App\PartRelationship', ['child_part_num' => $childB->part_num]);
 
-        $this->get(route('api.lego.part_relationships', ['sortdesc' => 'child_part_num']))
+        $this->get(route('api.lego.part_relationships', ['sort' => '-child_part_num']))
             ->assertSeeInOrder([$relationshipC->child_part_num, $relationshipB->child_part_num, $relationshipA->child_part_num]);
     }
 }

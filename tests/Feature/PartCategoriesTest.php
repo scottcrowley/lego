@@ -58,7 +58,7 @@ class PartCategoriesTest extends TestCase
         $categoriesA = create('App\PartCategory', ['name' => 'A Category']);
         $categoriesB = create('App\PartCategory', ['name' => 'B Category']);
 
-        $this->get(route('api.lego.part_categories', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.part_categories', ['sort' => '-name']))
             ->assertSeeInOrder([$categoriesC->name, $categoriesB->name, $categoriesA->name]);
     }
 }

@@ -165,7 +165,7 @@ class StorageLocationsTest extends TestCase
         $location->togglePart($userPartA);
         $location->togglePart($userPartB);
 
-        $this->get(route('api.users.storage.locations.parts', ['location' => $location->id, 'sortdesc' => 'name']))
+        $this->get(route('api.users.storage.locations.parts', ['location' => $location->id, 'sort' => '-name']))
             ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
 

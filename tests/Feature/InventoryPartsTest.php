@@ -173,7 +173,7 @@ class InventoryPartsTest extends TestCase
         create('App\InventoryPart', ['inventory_id' => $inventory->id, 'part_num' => $partA->part_num]);
         create('App\InventoryPart', ['inventory_id' => $inventory->id, 'part_num' => $partB->part_num]);
 
-        $this->get(route('api.lego.inventory_parts', ['inventory' => $inventory->id, 'sortdesc' => 'name']))
+        $this->get(route('api.lego.inventory_parts', ['inventory' => $inventory->id, 'sort' => '-name']))
             ->assertSeeInOrder([$partC->name, $partB->name, $partA->name]);
     }
 

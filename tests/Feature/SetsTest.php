@@ -180,7 +180,7 @@ class SetsTest extends TestCase
         $setA = create('App\Set', ['name' => 'A Set']);
         $setB = create('App\Set', ['name' => 'B Set']);
 
-        $this->get(route('api.lego.sets', ['sortdesc' => 'name']))
+        $this->get(route('api.lego.sets', ['sort' => '-name']))
             ->assertSeeInOrder([$setC->name, $setB->name, $setA->name]);
     }
 
