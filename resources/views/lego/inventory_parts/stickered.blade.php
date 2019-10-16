@@ -16,26 +16,23 @@
                     <p class="text-sm md:text-base font-normal tracking-wide"><span class="font-semibold">Pieces:</span> {{ $inventory->set->num_parts }}</p>
                 </div>
                 <div class="mt-auto self-end">
-                    <a href="{{ route('lego.inventory_parts.stickered', $inventory->id) }}" class="btn is-primary px-3 py-1 text-xs">Manage Stickered Parts</a>
-                    <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Go Back</a>
+                    <a href="{{ url()->previous() }}" class="btn is-primary px-3 py-1 text-xs">Done</a>
                 </div>
             </div>
         </div>
     </div>
     <div class="rounded shadow">
         <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
-            <div class="flex-1">Lego Set Inventory Parts</div>
-            <a href="{{ route('lego.inventory_parts.index', $inventory->id) }}" class="btn is-outlined is-header-btn text-sm">View as list</a>
+            <div class="flex-1">Lego Set Inventory Stickered Parts</div>
         </div>
         <div class="bg-white px-4 pb-6 rounded-b">
-            <data-grid-inventory-parts 
+            <data-grid-stickered-parts 
                 label="Parts" 
                 image_field="ldraw_image_url" 
                 image_label_field="image_url" 
                 per_page="100" 
                 :allow_image_swap=true
-                selection_get_endpoint="{{ route('api.lego.inventory_parts.selection.get', $inventory->id) }}"
-                selection_update_endpoint="{{ route('api.lego.inventory_parts.selection.update') }}"
+                stickered-end-point="{{ route('api.lego.inventory_parts.stickered.add', $inventory->id) }}"
                 :filters="[
                     {label: 'Name', param: 'name', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
@@ -52,11 +49,10 @@
                     {label: 'Category', field: 'category_label', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: true, sortdesc: false, boolean: false},
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
-                    {label: 'Stickered', field: 'stickered_parts_count', title: false, sortable: false, sorted: false, sortdesc: false, boolean: false},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'exclude_spare', 'location_name']"
                 :sort-order="['location_name', 'name', 'color_name']"
-                endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-grid-inventory-parts>
+                endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-grid-stickered-parts>
         </div>
     </div>
 </div>

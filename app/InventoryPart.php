@@ -25,7 +25,7 @@ class InventoryPart extends Model
      *
      * @var array
      */
-    protected $hidden = ['userParts'];
+    protected $hidden = ['userParts', 'stickeredParts'];
 
     /**
      * Base url for a parts ldraw image

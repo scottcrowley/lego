@@ -167,10 +167,56 @@ class InventoryPartTest extends TestCase
     {
         $this->signIn();
         $stickeredPart = create('App\StickeredPart');
-        $inventoryPart = InventoryPart::where('part_num', $stickeredPart->part_num)->first();
+        $inventoryPart = InventoryPart::where([
+            ['part_num', '=', $stickeredPart->part_num],
+            ['color_id', '=', $stickeredPart->color_id],
+        ])->first();
 
         $stickeredParts = $inventoryPart->removeStickeredPart();
 
         $this->assertCount(0, $stickeredParts);
+    }
+
+    /** @test */
+    public function it_can_add_a_new_stickered_part_through_api()
+    {
+        $this->signIn();
+        $inventoryPart = create('App\InventoryPart');
+
+        $response = ($this->post(route('api.lego.inventory_parts.stickered.add', $inventoryPart->inventory_id), [
+            'part_num' => $inventoryPart->part_num,
+            'color_id' => $inventoryPart->color_id,
+        ]))->getData();
+
+        $this->assertDatabaseHas('stickered_parts', [
+            'inventory_id' => $inventoryPart->inventory_id,
+            'part_num' => $inventoryPart->part_num,
+            'color_id' => $inventoryPart->color_id,
+        ]);
+        $this->assertEquals($inventoryPart->part_num, $response[0]->part_num);
+        $this->assertCount(1, $response);
+    }
+
+    /** @test */
+    public function it_can_remove_a_stickered_part_through_api()
+    {
+        $this->signIn();
+        $stickeredPart = create('App\StickeredPart');
+        $stickeredPart2 = create('App\StickeredPart', ['inventory_id' => $stickeredPart->inventory_id]);
+
+        $inventoryPart = InventoryPart::where([
+            ['part_num', '=', $stickeredPart->part_num],
+            ['color_id', '=', $stickeredPart->color_id],
+        ])->first();
+
+        $response = ($this->delete(
+            route(
+                'api.lego.inventory_parts.stickered.remove',
+                [$inventoryPart->inventory_id, $stickeredPart->part_num, $stickeredPart->color_id]
+            )
+        ))->getData();
+
+        $this->assertCount(1, $response);
+        $this->assertDatabaseMissing('stickered_parts', ['id' => $stickeredPart->id]);
     }
 }

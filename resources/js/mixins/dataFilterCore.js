@@ -39,17 +39,14 @@ export default {
             return newParams;
         },
         populateFilters() {
-            let defaultSet = false;
+            let defaultExist = false;
             this.filters.forEach((f, index) => {
                 this.filterParams[index] = f.param;
                 let filterName = 'filter_' + f.param;
-                let defaultExist = (f.defaultvalue && f.defaultvalue != '');
+                defaultExist = (f.defaultvalue && f.defaultvalue != '');
                 this.filterModels[filterName] = (defaultExist) ? f.defaultvalue : '';
-                if (defaultExist) {
-                    defaultSet = true;
-                }
             });
-            this.filtersShow = defaultSet;
+            this.filtersShow = defaultExist;
         },
         populateFilterParams(currentParams) {
             let paramList = currentParams.split('&');

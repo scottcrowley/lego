@@ -87,6 +87,9 @@ Route::group([
         Route::get('/inventory-parts-grid/{inventory}', function (Inventory $inventory) {
             return view('lego.inventory_parts.grid', compact('inventory'));
         })->name('lego.inventory_parts.grid');
+        Route::get('/inventory-parts-grid/{inventory}/stickered', function (Inventory $inventory) {
+            return view('lego.inventory_parts.stickered', compact('inventory'));
+        })->name('lego.inventory_parts.stickered');
         Route::get('/inventory-parts/{inventory}', function (Inventory $inventory) {
             return view('lego.inventory_parts.index', compact('inventory'));
         })->name('lego.inventory_parts.index');
@@ -120,6 +123,8 @@ Route::group([
     Route::get('/inventory_parts/{inventory}', 'ApiLegoController@getInventoryParts')->name('api.lego.inventory_parts');
     Route::get('/inventory_parts/selection/{inventory}', 'ApiLegoController@getPartSelection')->name('api.lego.inventory_parts.selection.get');
     Route::post('/inventory_parts/selection', 'ApiLegoController@updatePartSelection')->name('api.lego.inventory_parts.selection.update');
+    Route::post('/inventory_parts/{inventory}/stickered', 'ApiLegoController@addStickeredPart')->name('api.lego.inventory_parts.stickered.add');
+    Route::delete('/inventory_parts/{inventory}/stickered/{part}/{color}', 'ApiLegoController@removeStickeredPart')->name('api.lego.inventory_parts.stickered.remove');
 });
 
 Route::group([

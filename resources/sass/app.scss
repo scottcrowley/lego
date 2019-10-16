@@ -112,6 +112,25 @@
     }
 }
 
+.field-group-special {
+    & label {
+        @apply text-xs font-bold text-secondary-dark;
+    }
+    & input {
+        @apply border h-auto ml-1 p-1 rounded text-secondary-dark text-xs w-10;
+        padding: .25rem; 
+        height: auto;
+    }
+}
+
+input:focus {
+    @apply outline-none;
+}
+
+input:disabled {
+    @apply text-secondary-light border-secondary-lighter;
+}
+
 // media specific declarations
 @screen sm {
     .card-container {

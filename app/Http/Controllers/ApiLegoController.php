@@ -9,6 +9,7 @@ use App\Theme;
 use App\Inventory;
 use App\PartCategory;
 use App\InventoryPart;
+use App\StickeredPart;
 use App\PartRelationship;
 use App\Filters\SetFilters;
 use App\Filters\PartFilters;
@@ -213,5 +214,33 @@ class ApiLegoController extends Controller
         Cache::put($request['inventory_id'], $cachedInventory, now()->addDays(2));
 
         return $cachedInventory;
+    }
+
+    public function addStickeredPart(Inventory $inventory)
+    {
+        $data = request()->validate([
+            'part_num' => ['required', 'exists:parts'],
+            'color_id' => ['required', 'exists:colors,id'],
+        ]);
+        StickeredPart::create([
+            'inventory_id' => $inventory->id,
+            'part_num' => $data['part_num'],
+            'color_id' => $data['color_id'],
+        ]);
+
+        return $inventory->stickeredParts;
+    }
+
+    public function removeStickeredPart(Inventory $inventory, Part $part, Color $color)
+    {
+        $inventory
+            ->stickeredParts()
+            ->where([
+                ['part_num', '=', $part->part_num],
+                ['color_id', '=', $color->id],
+            ])
+            ->first()
+            ->delete();
+        return $inventory->stickeredParts;
     }
 }

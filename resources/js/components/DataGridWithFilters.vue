@@ -149,7 +149,7 @@
                 filtersShow: false,
                 filterParams: [],
                 filterModels: {},
-                preResultsFunction: 'checkFilters'
+                // preResultsFunction: 'checkFilters'
             }
         },
         
