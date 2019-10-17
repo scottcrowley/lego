@@ -30,7 +30,7 @@
                 label="Parts" 
                 image_field="ldraw_image_url" 
                 image_label_field="image_url" 
-                per_page="100" 
+                per_page="250" 
                 :allow_image_swap=true
                 stickered-end-point="{{ route('api.lego.inventory_parts.stickered.add', $inventory->id) }}"
                 :filters="[
@@ -51,7 +51,7 @@
                     {label: 'Spare', field: 'is_spare', title: false, sortable: true, sorted: false, sortdesc: false, boolean: true},
                     ]"
                 :allowedparams="['name', 'part_num', 'part_category_id', 'color_id', 'color', 'category_label', 'exclude_spare', 'location_name']"
-                :sort-order="['location_name', 'name', 'color_name']"
+                :sort-order="['name', 'color_name']"
                 endpoint="{{ route('api.lego.inventory_parts', $inventory->id) }}"></data-grid-stickered-parts>
         </div>
     </div>
