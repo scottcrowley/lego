@@ -20,14 +20,21 @@
                 change_method="updateSortOrder"
                 default_label=""
             />
-            <select-menu-special
-                select_id="selectPerPage"
-                parent_classes="ml-auto"
-                :options_list="[{label: '10', value: 10}, {label: '15', value: 15}, {label: '25', value: 25}, {label: '50', value: 50}, {label: '75', value: 75}, {label: '100', value: 100}]"
-                change_method="updatePerPage"
-                default_label="Per Page"
-                default_value=0
-            />
+            <div class="relative ml-auto">
+                <select id="selectPerPage" class="w-full" @change="updatePerPage">
+                    <option value="0">Per Page</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="250">250</option>
+                    <option :value="allData.total">All</option>
+                </select>
+                <div class="select-menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current h-4 w-4">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path>
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <div class="mt-4 mb-6 flex flex-col md:flex-row items-center" v-show="!loading">
