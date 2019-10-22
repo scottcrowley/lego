@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Sets
+@endsection
+
 @section('content')
 <div class="w-full">
     <div class="rounded shadow">

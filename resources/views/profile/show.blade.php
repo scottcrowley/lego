@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Profile
+@endsection
+
 @section('content')
 <div class="flex items-center w-full">
     <div class="w-full sm:w-3/4 lg:w-1/2 mx-2 sm:mx-auto">

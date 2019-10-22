@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Part Categories
+@endsection
+
 @section('content')
 <div class="container flex mx-auto justify-center">
     <div class="w-3/4">

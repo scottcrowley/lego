@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Location Parts: {{ $location->nickname ?: $location->name }}
+@endsection
+
 @section('content')
 <div class="w-full px-3 sm:px-0">
     <div class="bg-white border mb-8 md:mx-auto md:p-6 md:w-2/3 p-3 rounded-lg shadow-md w-full">
@@ -19,12 +23,12 @@
                     <p class="title text-md md:text-xl">{{ $location->name }}</p>
                 @endif
             </div>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Nickname:</span> {{ $location->nickname ?: 'None' }}</p>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Description:</span> {{ $location->description }}</p>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Type:</span> {{ $location->type->name }}</p>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Parts in Location:</span> {{ $location->parts->unique('part_num')->count() }}</p>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Individual Parts in Location:</span> {{ $location->parts->count() }}</p>
-            <p class="text-sm md:text-base mb-2 font-hairline tracking-wide"><span class="font-semibold">Total Pieces in Location:</span> {{ $location->parts->sum('quantity') }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Nickname:</span> {{ $location->nickname ?: 'None' }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Description:</span> {{ $location->description }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Type:</span> {{ $location->type->name }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Parts in Location:</span> {{ $location->parts->unique('part_num')->count() }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Individual Parts in Location:</span> {{ $location->parts->count() }}</p>
+            <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Total Pieces in Location:</span> {{ $location->parts->sum('quantity') }}</p>
         </div>
         <div class="pt-2 md:flex">
             <a href="{{ route('storage.locations.parts.edit', $location->id) }}" class="btn is-primary is-narrow block">Edit Parts in Location</a>

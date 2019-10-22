@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Inventory: {{ $inventory->set->set_num }} - {{ $inventory->set->name }}
+@endsection
+
 @section('content')
 <div class="w-full px-3 sm:px-0">
     <div class="flex flex-col lg:flex-row bg-white border mb-8 mx-auto md:p-6 md:w-2/3 p-3 rounded-lg shadow-md w-full" style="width: 95%;">

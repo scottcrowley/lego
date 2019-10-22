@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Edit Location Type: {{ $type->name }}
+@endsection
+
 @section('content')
 <div class="w-3/4 lg:w-1/2">
     <div class="rounded shadow">
