@@ -12,15 +12,15 @@
         "fideloper/proxy": "^4.0",
         "kitetail/zttp": "^0.4.0",
         "laravel/framework": "^6.0",
-        "laravel/telescope": "^2.1",
         "laravel/tinker": "^1.0",
         "sc-laravel-presets/default-tailwindcss": "dev-master",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {
-        "facade/ignition": "^1.4",
         "beyondcode/laravel-dump-server": "^1.0",
+        "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
+        "laravel/telescope": "^2.1",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.0"
