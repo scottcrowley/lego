@@ -88,7 +88,7 @@ class ImportUserParts extends Command
 
     protected function start()
     {
-        $this->info('>> Please wait while we import all your sets from Rebrickable <<');
+        $this->info('>> Please wait while we import all your parts from Rebrickable <<');
         return $this->confirm('>> This command can take a VERY long time to execute <<');
     }
 
