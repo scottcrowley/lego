@@ -18,10 +18,7 @@ class ImportSets extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-sets 
-                            {--theme= : Update only sets with this theme_id}
-                            {--start= : Where in the Set collection to begin processing}
-                            {--end= : Where in the Set collection to stop processing}';
+    protected $signature = 'lego:import-sets';
 
     /**
      * The console command description.
@@ -43,34 +40,6 @@ class ImportSets extends Command
      * @var null
      */
     protected $sets = null;
-
-    /**
-     * Set start option
-     *
-     * @var int
-     */
-    protected $start = 0;
-
-    /**
-     * Set end option
-     *
-     * @var int
-     */
-    protected $end = 0;
-
-    /**
-     * Splice begin position.
-     *
-     * @var int
-     */
-    protected $begin = 0;
-
-    /**
-     * Limit results. $end - $start
-     *
-     * @var int
-     */
-    protected $limit = 0;
 
     /**
      * Create a new command instance.
@@ -95,16 +64,10 @@ class ImportSets extends Command
 
         $this->processStart = microtime(true);
 
-        $this->start = ($this->option('start')) ? ((int) $this->option('start')) : 1;
-        $this->end = ($this->option('end')) ? ((int) $this->option('end')) : 0;
-
         $this->info('');
-        if ($this->okToTruncate()) {
-            $this->truncateTable();
-        }
+        $this->truncateTables();
         $this->setupApiInstance();
         $this->getRebrickableSets();
-        // $this->sets = $this->spliceCollection($this->sets);
         $this->importSets();
 
         $this->info('');
@@ -114,8 +77,9 @@ class ImportSets extends Command
     protected function start()
     {
         $this->info('');
-        $this->info('');
         $this->info('>> To avoid issues, please use the lego:import-themes command before running this command <<');
+        $this->info('>> This command will import all Sets and create set image urls if applicable <<');
+        $this->info('>> This command will also overwrite any data in the sets and set_image_urls tables  <<');
         return $this->confirm('This process can take a VERY long time to execute. Continue?');
     }
 
@@ -126,14 +90,9 @@ class ImportSets extends Command
         $this->api = new RebrickableApiLego();
     }
 
-    protected function okToTruncate()
+    protected function truncateTables()
     {
-        return $this->confirm('Do you want to overwrite all Sets that are currently in the database?');
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
+        $this->updateStatus('Truncating tables...');
 
         Schema::disableForeignKeyConstraints();
         Set::truncate();
@@ -145,19 +104,8 @@ class ImportSets extends Command
     {
         $this->updateStatus('Getting Sets from Rebrickable...');
 
-        if ($this->option('theme')) {
-            $this->api->setUrlParam('theme_id', $this->option('theme'));
-        }
-
-        $this->api->setUrlParam('ordering', 'set_num');
-
-        if ($this->end > 0 && $this->end <= 1000) {
-            $this->sets = $this->api->getAll('sets', 1);
-            $this->info('=========== '.count($this->sets).' limited Sets retrieved.');
-            return;
-        }
-
         $this->sets = $this->api->getAllSets();
+
         $this->info('=========== '.count($this->sets).' Sets retrieved.');
     }
 
@@ -178,7 +126,7 @@ class ImportSets extends Command
             foreach ($sets as $set) {
                 yield $set;
             }
-        })->chunk(5000)->each(function ($allSets) use (&$progress, &$processed) {
+        })->chunk(1000)->each(function ($allSets) use (&$progress, &$processed) {
             $setList = $imgList = [];
             foreach ($allSets as $set) {
                 $setList[] = [
@@ -207,28 +155,6 @@ class ImportSets extends Command
         });
 
         $this->processed = $processed;
-
-        // foreach ($sets as $set) {
-        //     Set::updateOrCreate(
-        //         ['set_num' => $set['set_num']],
-        //         [
-        //             'name' => $set['name'],
-        //             'year' => $set['year'],
-        //             'theme_id' => $set['theme_id'],
-        //             'num_parts' => $set['num_parts'],
-        //         ]
-        //     );
-
-        //     if ($set['set_img_url']) {
-        //         SetImageUrl::updateOrCreate(
-        //             ['set_num' => $set['set_num']],
-        //             ['image_url' => $set['set_img_url']]
-        //         );
-        //     }
-
-        //     $this->processed++;
-        //     $progress->advance();
-        // }
 
         $progress->finish();
     }
