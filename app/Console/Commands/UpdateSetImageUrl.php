@@ -6,6 +6,8 @@ use App\Set;
 use App\SetImageUrl;
 use Illuminate\Console\Command;
 use App\Gateways\RebrickableApiLego;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\LazyCollection;
 
 class UpdateSetImageUrl extends Command
 {
@@ -16,10 +18,7 @@ class UpdateSetImageUrl extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:set-image-url 
-                            {--theme= : Update only sets with this theme_id}
-                            {--start= : Where in the Set collection to begin processing}
-                            {--end= : Where in the Set collection to stop processing}';
+    protected $signature = 'lego:set-image-url';
 
     /**
      * The console command description.
@@ -27,13 +26,6 @@ class UpdateSetImageUrl extends Command
      * @var string
      */
     protected $description = 'Updates the image url for all sets. Data is retrieved from Rebrickable';
-
-    /**
-     * Set image urls collection from existing table
-     *
-     * @var null
-     */
-    protected $setImageUrls = null;
 
     /**
      * Sets from database
@@ -64,20 +56,6 @@ class UpdateSetImageUrl extends Command
     protected $api = null;
 
     /**
-     * Set start option
-     *
-     * @var int
-     */
-    protected $start = 0;
-
-    /**
-     * Set end option
-     *
-     * @var int
-     */
-    protected $end = 0;
-
-    /**
      * Create a new command instance.
      *
      * @return void
@@ -100,14 +78,11 @@ class UpdateSetImageUrl extends Command
 
         $this->processStart = microtime(true);
 
-        $this->start = ($this->option('start')) ? ((int) $this->option('start')) - 1 : 0;
-        $this->end = ($this->option('end')) ? ((int) $this->option('end')) - 1 : 0;
-
         $this->info('');
-        $this->getCurrentSetImages();
         $this->setupApiInstance();
+        $this->truncateTable();
+        $this->getAllDbSets();
         $this->getRebrickableSets();
-        $this->spliceSets();
         $this->processSets();
         $this->displayMissingSets();
 
@@ -117,14 +92,10 @@ class UpdateSetImageUrl extends Command
 
     protected function start()
     {
-        return $this->confirm('>> This command can take a VERY long time to execute <<');
-    }
-
-    protected function getCurrentSetImages()
-    {
-        $this->updateStatus('Getting current set images...');
-
-        $this->setImageUrls = SetImageUrl::all();
+        $this->info('>> It is advisable to run the lego:import-sets command before running this command <<');
+        $this->info('>> This command will add set image urls for all sets on Rebrickable, if applicable <<');
+        $this->info('>> This command will also overwrite all images listed in the set-image-urls table <<');
+        return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
     protected function setupApiInstance()
@@ -134,8 +105,39 @@ class UpdateSetImageUrl extends Command
         $this->api = new RebrickableApiLego;
     }
 
+    protected function truncateTable()
+    {
+        $this->updateStatus('Truncating table...');
+
+        Schema::disableForeignKeyConstraints();
+        SetImageUrl::truncate();
+        Schema::enableForeignKeyConstraints();
+    }
+
+    protected function getAllDbSets()
+    {
+        $this->updateStatus('Getting Sets from database...');
+
+        $this->allDbSets = Set::all()->pluck('set_num');
+
+        $this->info('=========== '.count($this->allDbSets).' Sets retrieved.');
+
+        return $this->allDbSets;
+    }
+
+    protected function getRebrickableSets()
+    {
+        $this->updateStatus('Getting Sets from Rebrickable...');
+
+        $this->sets = $this->api->getAllSets();
+
+        $this->info('=========== '.count($this->sets).' Sets retrieved.');
+    }
+
     protected function processSets()
     {
+        $this->updateStatus('Processing new Set images...');
+
         $sets = $this->sets;
 
         if (! $sets->count()) {
@@ -143,43 +145,46 @@ class UpdateSetImageUrl extends Command
             $this->goodbye();
         }
 
-        $this->processed = $sets->count();
-
-        $allDbSets = $this->getAllDbSets();
-
-        $images = $this->setImageUrls;
-
-        $this->updateStatus('Processing new set images...');
+        $processed = $this->processed;
+        $allDbSets = $this->allDbSets;
+        $missingSets = $this->missingSets;
 
         $setsProgress = $this->output->createProgressBar($sets->count());
         $setsProgress->start();
 
-        foreach ($sets as $set) {
-            if (! $allDbSets->contains($set['set_num'])) {
-                $this->missingSets[] = $set['set_num'];
-                continue;
+        LazyCollection::make(function () use ($sets) {
+            foreach ($sets as $set) {
+                yield $set;
             }
-
-            if (! $images->contains(
-                function ($value, $key) use ($set) {
-                    return $value->set_num == $set['set_num'] && $value->image_url == $set['set_img_url'];
+        })->chunk(1000)->each(function ($allSets) use (&$setsProgress, $allDbSets, &$missingSets, &$processed) {
+            $imgList = [];
+            foreach ($allSets as $set) {
+                if (! $allDbSets->contains($set['set_num'])) {
+                    $missingSets[] = $set['set_num'];
+                    continue;
                 }
-            )
-                && ! is_null($set['set_img_url'])
-            ) {
-                $newImageUrl = SetImageUrl::create([
-                    'set_num' => $set['set_num'],
-                    'image_url' => $set['set_img_url']
-                ]);
-                $this->setImageUrls->push($newImageUrl);
+
+                if ($set['set_img_url']) {
+                    $imgList[] = [
+                        'set_num' => $set['set_num'],
+                        'image_url' => $set['set_img_url']
+                    ];
+
+                    $processed++;
+                }
+
+                $setsProgress->advance();
             }
 
-            $setsProgress->advance();
-        }
+            if (count($imgList)) {
+                SetImageUrl::insert($imgList);
+            }
+        });
+
+        $this->missingSets = $missingSets;
+        $this->processed = $processed;
 
         $setsProgress->finish();
-
-        return true;
     }
 
     protected function displayMissingSets()
@@ -188,53 +193,7 @@ class UpdateSetImageUrl extends Command
             $this->info('');
             $this->info('');
             $missing = implode(', ', $this->missingSets);
-            $this->warn('The following '.count($this->missingSets).' sets are missing from the database: '.$missing);
-        }
-    }
-
-    protected function getAllDbSets()
-    {
-        $this->updateStatus('Getting sets from database...');
-
-        if ($this->option('theme')) {
-            return $this->allDbSets = Set::whereThemeId($this->option('theme'))->get()->pluck('set_num');
-        }
-        return $this->allDbSets = Set::all()->pluck('set_num');
-    }
-
-    protected function getRebrickableSets()
-    {
-        $this->updateStatus('Getting sets from Rebrickable...');
-
-        if ($this->option('theme')) {
-            $this->api->setUrlParam('theme_id', $this->option('theme'));
-        }
-        $this->sets = $this->api->getAllSets();
-    }
-
-    protected function calculateSetSplice()
-    {
-        $setCount = $this->sets->count();
-
-        if ($this->start > $setCount) {
-            $this->start = 0;
-        }
-
-        if (($this->start > $this->end) || (($this->end - $this->start) > $setCount)) {
-            $this->end = $setCount - $this->start;
-        } elseif ($this->start > 0 && $this->end > 0 && $this->end < $setCount) {
-            $this->end = ($this->end - $this->start) + 1;
-        } elseif ($this->start == 0 && $this->end > 0) {
-            $this->end = $this->end + 1;
-        }
-    }
-
-    protected function spliceSets()
-    {
-        $this->calculateSetSplice();
-
-        if ($this->start > 0 || $this->end > 0) {
-            $this->sets = $this->sets->splice($this->start, $this->end);
+            $this->warn('The following '.count($this->missingSets).' Sets are missing from the database: '.$missing);
         }
     }
 }
