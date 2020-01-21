@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use App\Set;
 use App\SetImageUrl;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiLego;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\LazyCollection;
 
 class UpdateSetImageUrl extends Command
@@ -49,13 +47,6 @@ class UpdateSetImageUrl extends Command
     protected $missingSets = [];
 
     /**
-     * RebrickableApiLego instance
-     *
-     * @var null
-     */
-    protected $api = null;
-
-    /**
      * Create a new command instance.
      *
      * @return void
@@ -79,17 +70,20 @@ class UpdateSetImageUrl extends Command
         $this->processStart = microtime(true);
 
         $this->info('');
-        $this->setupApiInstance();
-        $this->truncateTable();
+        $this->setupApiLegoInstance();
+        $this->truncateTable(new SetImageUrl(), true);
         $this->getAllDbSets();
         $this->getRebrickableSets();
         $this->processSets();
         $this->displayMissingSets();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('>> It is advisable to run the lego:import-sets command before running this command <<');
@@ -98,22 +92,11 @@ class UpdateSetImageUrl extends Command
         return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiLego;
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        Schema::disableForeignKeyConstraints();
-        SetImageUrl::truncate();
-        Schema::enableForeignKeyConstraints();
-    }
-
+    /**
+     * Retrieve all sets from the database
+     *
+     * @return \Illuminate\Support\Collection
+     */
     protected function getAllDbSets()
     {
         $this->updateStatus('Getting Sets from database...');
@@ -125,6 +108,11 @@ class UpdateSetImageUrl extends Command
         return $this->allDbSets;
     }
 
+    /**
+     * Retrieve all sets from Rebrickable
+     *
+     * @return void
+     */
     protected function getRebrickableSets()
     {
         $this->updateStatus('Getting Sets from Rebrickable...');
@@ -134,6 +122,11 @@ class UpdateSetImageUrl extends Command
         $this->info('=========== '.count($this->sets).' Sets retrieved.');
     }
 
+    /**
+     * Process for inserting set image urls
+     *
+     * @return void
+     */
     protected function processSets()
     {
         $this->updateStatus('Processing new Set images...');
@@ -187,6 +180,11 @@ class UpdateSetImageUrl extends Command
         $setsProgress->finish();
     }
 
+    /**
+     * Display any missing sets discovered during import
+     *
+     * @return void
+     */
     protected function displayMissingSets()
     {
         if (count($this->missingSets)) {

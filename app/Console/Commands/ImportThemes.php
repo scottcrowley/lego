@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Theme;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiLego;
-use Illuminate\Support\Facades\Schema;
 
 class ImportThemes extends Command
 {
@@ -24,13 +22,6 @@ class ImportThemes extends Command
      * @var string
      */
     protected $description = 'Imports all themes from Rebrickable';
-
-    /**
-     * RebrickableApiLego instance
-     *
-     * @var null
-     */
-    protected $api = null;
 
     /**
      * Rebrickable Themes
@@ -61,36 +52,28 @@ class ImportThemes extends Command
         $this->start();
 
         $this->info('');
-        $this->setupApiInstance();
-        $this->truncateTable();
+        $this->setupApiLegoInstance();
+        $this->truncateTable(new Theme(), true);
         $this->getRebrickableThemes();
         $this->importThemes();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('>> Please wait while we import all the themes from Rebrickable <<');
     }
 
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiLego();
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        Schema::disableForeignKeyConstraints();
-        Theme::truncate();
-        Schema::enableForeignKeyConstraints();
-    }
-
+    /**
+     * Retrieve all themes from Rebrickable
+     *
+     * @return void
+     */
     protected function getRebrickableThemes()
     {
         $this->updateStatus('Getting all Themes from Rebrickable...');
@@ -99,6 +82,11 @@ class ImportThemes extends Command
         $this->info('=========== '.count($this->themes).' themes retrieved.');
     }
 
+    /**
+     * Process to add themes to database
+     *
+     * @return void
+     */
     protected function importThemes()
     {
         $this->updateStatus('Importing Rebrickable Themes into Database...');
@@ -106,8 +94,10 @@ class ImportThemes extends Command
         $themes = $this->themes;
 
         if (! $themes->count()) {
-            return false;
+            $this->warn('** No Themes retrieved from Rebrickable **');
+            $this->goodbye();
         }
+
         $progress = $this->output->createProgressBar($themes->count());
         $progress->start();
 

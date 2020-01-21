@@ -46,23 +46,19 @@ class CalculateCategoryPartCount extends Command
         $this->start();
 
         $this->info('');
-        $this->truncateTable();
+        $this->truncateTable(new CategoryPartCount());
         $this->updateCount();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('>> Please wait while we update the part count for each Part Category <<');
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        CategoryPartCount::truncate();
     }
 
     protected function updateCount()
@@ -87,7 +83,7 @@ class CalculateCategoryPartCount extends Command
 
     protected function getPartCategories()
     {
-        $this->updateStatus('Getting part categories...');
+        $this->updateStatus('Getting part categories from database...');
 
         return PartCategory::with('parts')->get();
     }

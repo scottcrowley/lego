@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\UserSet;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiUser;
 
 class ImportUserSets extends Command
 {
@@ -23,13 +22,6 @@ class ImportUserSets extends Command
      * @var string
      */
     protected $description = 'Imports all the user sets from Rebrickable';
-
-    /**
-     * RebrickableApiUser instance
-     *
-     * @var null
-     */
-    protected $api = null;
 
     /**
      * Rebrickable User Sets
@@ -55,39 +47,36 @@ class ImportUserSets extends Command
      */
     public function handle()
     {
+        if (! $this->start()) {
+            return false;
+        }
+
         $this->processStart = microtime(true);
 
-        $this->start();
-
         $this->info('');
-        $this->setupApiInstance();
-        $this->truncateTable();
+        $this->setupApiUserInstance();
+        $this->truncateTable(new UserSet());
         $this->getRebrickableUserSets();
         $this->importSets();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('>> Please wait while we import all your sets from Rebrickable <<');
+        return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiUser();
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        UserSet::truncate();
-    }
-
+    /**
+     * Retrieve all user sets from Rebrickable
+     *
+     * @return void
+     */
     protected function getRebrickableUserSets()
     {
         $this->updateStatus('Getting all User Sets from Rebrickable...');
@@ -95,9 +84,14 @@ class ImportUserSets extends Command
         $this->sets = $this->api->getAll('sets');
     }
 
+    /**
+     * Process to import all user sets
+     *
+     * @return void
+     */
     protected function importSets()
     {
-        $this->updateStatus('Importing Rebrickable Sets into Database...');
+        $this->updateStatus('Importing User Sets into Database...');
 
         $sets = $this->sets;
 

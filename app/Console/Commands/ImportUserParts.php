@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use App\UserPart;
-use ArrayIterator;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiUser;
 
 class ImportUserParts extends Command
 {
@@ -26,13 +24,6 @@ class ImportUserParts extends Command
     protected $description = 'Imports all the user parts from Rebrickable';
 
     /**
-     * RebrickableApiUser instance
-     *
-     * @var null
-     */
-    protected $api = null;
-
-    /**
      * Rebrickable User Part count
      *
      * @var int
@@ -42,7 +33,7 @@ class ImportUserParts extends Command
     /**
      * First page of User Parts from Rebrickable
      *
-     * @var collection
+     * @var \Illuminate\Support\Collection
      */
     protected $firstPage;
 
@@ -77,35 +68,29 @@ class ImportUserParts extends Command
         $this->processStart = microtime(true);
 
         $this->info('');
-        $this->setupApiInstance();
-        $this->truncateTable();
+        $this->setupApiUserInstance();
+        $this->truncateTable(new UserPart());
         $this->getRebrickablePartCount();
         $this->importParts();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('>> Please wait while we import all your parts from Rebrickable <<');
-        return $this->confirm('>> This command can take a VERY long time to execute <<');
+        return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiUser();
-    }
-
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        UserPart::truncate();
-    }
-
+    /**
+     * Get user part count from Rebrickable
+     *
+     * @return void
+     */
     protected function getRebrickablePartCount()
     {
         $this->updateStatus('Getting total number User Parts from Rebrickable...');
@@ -115,13 +100,6 @@ class ImportUserParts extends Command
         $this->partCount = (int) $this->api->getPartCount();
 
         $this->pageCount = (int) ceil($this->partCount / $this->maxPerPage);
-    }
-
-    protected function getRebrickableUserParts($page = 1)
-    {
-        $this->updateStatus('Getting page '.$page.'/'.$this->pageCount.' of User Parts from Rebrickable...');
-
-        return $this->api->getPartsByPage($page, $this->maxPerPage);
     }
 
     protected function importParts()
@@ -157,41 +135,18 @@ class ImportUserParts extends Command
             $progress->finish();
             $this->info('');
         }
+    }
 
-        // $parts = new ArrayIterator($this->parts->toArray());
-        // $parts = $this->parts;
+    /**
+     * Retrive user parts from Rebrickable for a given page
+     *
+     * @param mixed $page
+     * @return void
+     */
+    protected function getRebrickableUserParts($page = 1)
+    {
+        $this->updateStatus('Getting page '.$page.'/'.$this->pageCount.' of User Parts from Rebrickable...');
 
-        // if (! $parts->count()) {
-        //     return false;
-        // }
-        // $progress = $this->output->createProgressBar($parts->count());
-        // $progress->start();
-
-        // while ($part = $parts->current()) {
-        // foreach ($parts as $part) {
-            // UserPart::create([
-            //     'part_num' => $part['part']['part_num'],
-            //     'color_id' => $part['color']['id'],
-            //     'quantity' => $part['quantity']
-            // ]);
-            // dump($part['part']['part_num'].' - '.$part['color']['id'].' - '.$part['quantity']);
-
-            // $this->processed++;
-            // $progress->advance();
-            // $parts->next();
-        // }
-
-        // foreach ($parts as $part) {
-        //     UserPart::create([
-        //         'part_num' => $part['part']['part_num'],
-        //         'color_id' => $part['color']['id'],
-        //         'quantity' => $part['quantity']
-        //     ]);
-
-        //     $this->processed++;
-        //     $progress->advance();
-        // }
-
-        // $progress->finish();
+        return $this->api->getPartsByPage($page, $this->maxPerPage);
     }
 }

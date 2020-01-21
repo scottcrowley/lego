@@ -6,7 +6,6 @@ use App\Part;
 use App\PartCategory;
 use App\PartImageUrl;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiLego;
 
 class UpdatePartImageUrl extends Command
 {
@@ -17,10 +16,7 @@ class UpdatePartImageUrl extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:part-image-url 
-                            {--category= : The only part_category_id to update}
-                            {--start= : Where in the PartCategory collection to begin processing}
-                            {--end= : Where in the PartCategory collection to stop processing}';
+    protected $signature = 'lego:part-image-url';
 
     /**
      * The console command description.
@@ -28,13 +24,6 @@ class UpdatePartImageUrl extends Command
      * @var string
      */
     protected $description = 'Updates the image url for all parts in each PartCategory. Data is retrieved from Rebrickable';
-
-    /**
-     * Part image urls collection from existing table
-     *
-     * @var null
-     */
-    protected $partImageUrls = null;
 
     /**
      * Part categories from database
@@ -56,27 +45,6 @@ class UpdatePartImageUrl extends Command
      * @var array
      */
     protected $missingParts = [];
-
-    /**
-     * RebrickableApiLego instance
-     *
-     * @var null
-     */
-    protected $api = null;
-
-    /**
-     * Part Category start option
-     *
-     * @var int
-     */
-    protected $start = 0;
-
-    /**
-     * Part Category end option
-     *
-     * @var int
-     */
-    protected $end = 0;
 
     /**
      * Create a new command instance.
@@ -101,64 +69,45 @@ class UpdatePartImageUrl extends Command
 
         $this->processStart = microtime(true);
 
-        $this->start = ($this->option('start')) ? ((int) $this->option('start')) - 1 : 0;
-        $this->end = ($this->option('end')) ? ((int) $this->option('end')) - 1 : 0;
-
         $this->info('');
-        $this->getCurrentPartImages();
+        $this->setupApiLegoInstance();
+        $this->truncateTable(new PartImageUrl(), true);
         $this->getPartCategories();
-        $this->setupApiInstance();
         $this->processPartCategories();
         $this->displayMissingParts();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
-        return $this->confirm('>> This command can take a VERY long time to execute <<');
+        $this->info('>> It is advisable to make sure parts are up to date in the DB before running this command <<');
+        $this->info('>> This command will add part image urls for all parts in the database, if applicable <<');
+        $this->info('>> This command will also overwrite all images listed in the part-image-urls table <<');
+        return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
-    protected function getCurrentPartImages()
-    {
-        $this->updateStatus('Getting current part images...');
-
-        $this->partImageUrls = PartImageUrl::all();
-    }
-
+    /**
+     * Retrieve all part_categories from the database
+     *
+     * @return void
+     */
     protected function getPartCategories()
     {
-        $this->updateStatus('Getting part categories...');
-
-        if ($this->option('category')) {
-            $this->partCategories = PartCategory::findOrFail($this->option('category'));
-            return;
-        }
+        $this->updateStatus('Getting all part categories from database...');
 
         $this->partCategories = PartCategory::all();
-
-        $this->calculatePartCategorySplice();
-
-        if ($this->start > 0 || $this->end > 0) {
-            $this->partCategories = $this->partCategories->splice($this->start, $this->end);
-        }
     }
 
-    protected function getAllParts()
-    {
-        $this->updateStatus('Getting all parts...');
-
-        $this->allParts = Part::all()->pluck('part_num');
-    }
-
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiLego;
-    }
-
+    /**
+     * processPartCategories
+     *
+     * @return void
+     */
     protected function processPartCategories()
     {
         if (! $this->partCategories->count()) {
@@ -166,23 +115,17 @@ class UpdatePartImageUrl extends Command
             $this->goodbye();
         }
 
+        $this->updateStatus('Processing each part category...');
+
         $this->processed = 0;
 
         $this->getAllParts();
-
-        $this->updateStatus('Getting parts from Rebrickable...');
-
-        if ($this->option('category')) {
-            return $this->getRebrickableParts($this->option('category'));
-        }
-
-        $this->updateStatus('Processing new part images...');
 
         $categoryProgress = $this->output->createProgressBar($this->partCategories->count());
         $categoryProgress->start();
 
         foreach ($this->partCategories as $category) {
-            $this->getRebrickableParts($category->id);
+            $this->getRebrickableParts($category);
 
             $this->api->resetRequest();
 
@@ -192,19 +135,29 @@ class UpdatePartImageUrl extends Command
         $categoryProgress->finish();
     }
 
-    protected function displayMissingParts()
+    /**
+     * Retrieve all parts from the database
+     *
+     * @return void
+     */
+    protected function getAllParts()
     {
-        if (count($this->missingParts)) {
-            $this->info('');
-            $this->info('');
-            $missing = implode(', ', $this->missingParts);
-            $this->warn('The following parts are missing from the database: '.$missing);
-        }
+        $this->updateStatus('Getting all parts from database...');
+
+        $this->allParts = Part::all()->pluck('part_num');
     }
 
+    /**
+     * Retrieve all parts from Rebrickable for a given category
+     *
+     * @param PartCategory $category
+     * @return bool
+     */
     protected function getRebrickableParts($category)
     {
-        $this->api->setUrlParam('part_cat_id', $category);
+        $this->updateStatus('Getting Rebrickable parts for category: '.$category->name.'...');
+
+        $this->api->setUrlParam('part_cat_id', $category->id);
         $parts = $this->api->getAllParts();
 
         if ($parts->count()) {
@@ -214,25 +167,10 @@ class UpdatePartImageUrl extends Command
         return true;
     }
 
-    protected function calculatePartCategorySplice()
-    {
-        $partCategoryCount = $this->partCategories->count();
-
-        if ($this->start > $partCategoryCount) {
-            $this->start = 0;
-        }
-
-        if (($this->start > $this->end) || (($this->end - $this->start) > $partCategoryCount)) {
-            $this->end = $partCategoryCount - $this->start;
-        } elseif ($this->start > 0 && $this->end > 0 && $this->end < $partCategoryCount) {
-            $this->end = ($this->end - $this->start) + 1;
-        } elseif ($this->start == 0 && $this->end > 0) {
-            $this->end = $this->end + 1;
-        }
-    }
-
     protected function processParts($parts)
     {
+        $this->updateStatus('Adding part image urls...');
+
         $this->processed = $this->processed + count($parts);
 
         $images = $this->partImageUrls;
@@ -247,18 +185,11 @@ class UpdatePartImageUrl extends Command
                 continue;
             }
 
-            if (! $images->contains(
-                function ($value, $key) use ($part) {
-                    return $value->part_num == $part['part_num'] && $value->image_url == $part['part_img_url'];
-                }
-            )
-                && ! is_null($part['part_img_url'])
-            ) {
+            if (! is_null($part['part_img_url'])) {
                 $newImageUrl = PartImageUrl::create([
                     'part_num' => $part['part_num'],
                     'image_url' => $part['part_img_url']
                 ]);
-                $this->partImageUrls->push($newImageUrl);
             }
 
             $partsProgress->advance();
@@ -267,5 +198,20 @@ class UpdatePartImageUrl extends Command
         $partsProgress->finish();
 
         return true;
+    }
+
+    /**
+     * Display any missing parts discovered during import
+     *
+     * @return void
+     */
+    protected function displayMissingParts()
+    {
+        if (count($this->missingParts)) {
+            $this->info('');
+            $this->info('');
+            $missing = implode(', ', $this->missingParts);
+            $this->warn('The following parts are missing from the database: '.$missing);
+        }
     }
 }

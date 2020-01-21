@@ -24,6 +24,11 @@ class UpdateThemeHierarchy extends Command
      */
     protected $description = 'Updates the Theme hierarchy label';
 
+    /**
+     * Themes that have been processed
+     *
+     * @var array
+     */
     protected $processedThemes = [];
 
     /**
@@ -43,32 +48,56 @@ class UpdateThemeHierarchy extends Command
      */
     public function handle()
     {
+        $this->start();
         $this->processStart = microtime(true);
 
         $this->info('');
         $this->getThemeHeirarchy();
-
-        if (! count($this->processedThemes)) {
-            $this->warn('** No Themes found in the database **');
-            $this->goodbye();
-        }
-
-        $this->processed = count($this->processedThemes);
-
-        $this->truncateTable();
+        $this->validateHeirarchy();
+        $this->truncateTable(new ThemeLabel());
         $this->updateThemeLabels();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details
+     *
+     * @return void
+     */
+    protected function start()
+    {
+        $this->info('>> This command updates the Theme Heirarchy for all Themes in the Database <<');
+    }
+
+    /**
+     * Validate the processedThemes
+     *
+     * @return bool
+     */
+    protected function validateHeirarchy()
+    {
+        if (count($this->processedThemes)) {
+            return true;
+        }
+
+        $this->warn('** No Themes found in the database **');
+        $this->goodbye();
+    }
+
+    /**
+     * getThemeHeirarchy
+     *
+     * @return void
+     */
     protected function getThemeHeirarchy()
     {
-        $this->updateStatus('Getting theme hierarchy...');
+        $this->updateStatus('Getting all Themes from the Database...');
 
         $allThemes = Theme::all();
 
         $themes = [];
+
+        $this->updateStatus('Calculating Theme hierarchy...');
 
         if ($allThemes->count()) {
             foreach ($allThemes as $theme) {
@@ -84,6 +113,13 @@ class UpdateThemeHierarchy extends Command
         $this->processedThemes = $themes;
     }
 
+    /**
+     * Creates the Theme Heirarchy based on a given theme
+     *
+     * @param array $theme
+     * @param \Illuminate\Support\Collection $themes
+     * @return array
+     */
     protected function themeParentHierarchy($theme, $themes)
     {
         if (count($theme)) {
@@ -117,13 +153,6 @@ class UpdateThemeHierarchy extends Command
         return $theme;
     }
 
-    protected function truncateTable()
-    {
-        $this->updateStatus('Truncating table...');
-
-        ThemeLabel::truncate();
-    }
-
     protected function updateThemeLabels()
     {
         $this->updateStatus('Updating themes...');
@@ -140,6 +169,7 @@ class UpdateThemeHierarchy extends Command
                 'theme_label' => $theme['theme_label']
             ]);
 
+            $this->processed++;
             $progress->advance();
         }
 

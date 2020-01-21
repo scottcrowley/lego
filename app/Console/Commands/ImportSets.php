@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use App\Set;
 use App\SetImageUrl;
 use Illuminate\Console\Command;
-use App\Gateways\RebrickableApiLego;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\LazyCollection;
 
 class ImportSets extends Command
@@ -26,13 +24,6 @@ class ImportSets extends Command
      * @var string
      */
     protected $description = 'Imports all sets from Rebrickable';
-
-    /**
-     * RebrickableApiLego instance
-     *
-     * @var null
-     */
-    protected $api = null;
 
     /**
      * Rebrickable Sets
@@ -65,15 +56,19 @@ class ImportSets extends Command
         $this->processStart = microtime(true);
 
         $this->info('');
-        $this->truncateTables();
-        $this->setupApiInstance();
+        $this->truncateTable(new Set(), true);
+        $this->truncateTable(new SetImageUrl(), true);
+        $this->setupApiLegoInstance();
         $this->getRebrickableSets();
         $this->importSets();
-
-        $this->info('');
         $this->goodbye();
     }
 
+    /**
+     * Display command details and request confirmation to continue
+     *
+     * @return bool
+     */
     protected function start()
     {
         $this->info('');
@@ -83,23 +78,11 @@ class ImportSets extends Command
         return $this->confirm('This process can take a VERY long time to execute. Continue?');
     }
 
-    protected function setupApiInstance()
-    {
-        $this->updateStatus('Setting up api instance...');
-
-        $this->api = new RebrickableApiLego();
-    }
-
-    protected function truncateTables()
-    {
-        $this->updateStatus('Truncating tables...');
-
-        Schema::disableForeignKeyConstraints();
-        Set::truncate();
-        SetImageUrl::truncate();
-        Schema::enableForeignKeyConstraints();
-    }
-
+    /**
+     * Retrieve all sets from Rebrickable
+     *
+     * @return void
+     */
     protected function getRebrickableSets()
     {
         $this->updateStatus('Getting Sets from Rebrickable...');
@@ -109,6 +92,11 @@ class ImportSets extends Command
         $this->info('=========== '.count($this->sets).' Sets retrieved.');
     }
 
+    /**
+     * Process for importing sets
+     *
+     * @return void
+     */
     protected function importSets()
     {
         $this->updateStatus('Importing Rebrickable Sets into Database...');

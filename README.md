@@ -100,50 +100,58 @@ If there is already data imported into these tables, they should first be trunca
 There are several other Lego setup commands that have been created to help speed up data retrieval. The mostly populate additional tables based on data imported in the main table structure. The commands should be run after every re-import that is performed.
 
 ### Commands
+* #### Import All Themes From Rebrickable
+    * This will import all the Themes found on Rebrickable into the database.
+    * ***IMPORTANT*** - The `themes` table, in the database, is emptied when executing this command.
+
+        ```bash
+        php artisan lego:import-themes
+        ```
+* #### Import All Sets From Rebrickable
+    * This will import all the Sets found on Rebrickable into the database.
+    * ***IMPORTANT*** - The `sets` & `set_image_urls` tables, in the database, are emptied when executing this command.
+
+        ```bash
+        php artisan lego:import-sets
+        ```
+* #### Update Set Image Url
+    * This will update the urls associated with every Set found in the `sets` table of the database.
+    * ***IMPORTANT*** - The `set_image_urls` table, in the database, is emptied when executing this command.
+    
+        ```bash
+        php artisan lego:set-image-url
+        ```
+* #### Update The Theme Hierarchy
+    * This will update the Theme hierarchy for every Theme in the themes table of the database.
+    * ***IMPORTANT*** - The `theme_labels` table, in the database, is emptied when executing this command.
+    
+        ```bash
+        php artisan lego:theme-hierarchy
+        ```
 * #### Category Part Counts
     * This will update all the part counts associated with every Category found in the `part_categories` database table.
+    * ***IMPORTANT*** - The `category_part_count` table, in the database, is emptied when executing this command.
 
         ```bash
         php artisan lego:category-part-count
         ```
 * #### Update Part Image Url
     * This will update the urls associated with every Part found in the `parts` table of the database.
+    * ***IMPORTANT*** - The `part_image_urls` table, in the database, is emptied when executing this command.
 
         ```bash
         php artisan lego:part-image-url
         ```
-    * ***Options:***
-        * `--category` - Allows you to specify only process parts associated with the given `part_category_id`. i.e. `php artisan lego:part-image-url --category=1` to only process parts associated with the *Baseplates* category.
-        * `--start` - Allows you to specify which row to start processing on. Can be useful if you only want to process a certain set of parts. i.e. `php artisan lego:part-image-url --start=1000` to start processing parts after row 1000.
-        * `--end` - Allows you to specify which row to end processing on. Can be useful if you only want to process a certain set of parts. i.e. `php artisan lego:part-image-url --end=1000` to end processing parts at row 1000.
-        * Use both `--start` and `--end` to specify a range of parts to process. i.e. `php artisan lego:part-image-url --start=1000 --end=2000` to process parts from row 1000 to 2000.
-* #### Update Set Image Url
-    * This will update the urls associated with every Set found in the `sets` table of the database.
-    
-        ```bash
-        php artisan lego:set-image-url
-        ```
-    * ***Options:***
-        * `--theme` - Allows you to specify only process sets associated with the given `theme_id`. i.e. `php artisan lego:set-image-url --theme=4` to only process sets associated with the *Expert Builder* theme.
-        * `--start` - Allows you to specify which row to start processing on. Can be useful if you only want to process a certain numnber of sets. i.e. `php artisan lego:set-image-url --start=1000` to start processing sets after row 1000.
-        * `--end` - Allows you to specify which row to end processing on. Can be useful if you only want to process a certain number of sets. i.e. `php artisan lego:set-image-url --end=1000` to end processing sets at row 1000.
-        * Use both `--start` and `--end` to specify a range of sets to process. i.e. `php artisan lego:set-image-url --start=1000 --end=2000` to process sets from row 1000 to 2000.
-* #### Update The Theme Hierarchy
-    * This will update the Theme hierarchy for every Theme in the themes table of the database.
-    
-        ```bash
-        php artisan lego:theme-hierarchy
-        ```
 * #### Import All User Sets From Rebrickable
     * This will import all the User Sets found on Rebrickable into the database.
-    * ***IMPORTANT*** - The user_sets table, in the database, is emptied when executing this command.
+    * ***IMPORTANT*** - The `user_sets` table, in the database, is emptied when executing this command.
     
         ```bash
         php artisan lego:import-user-sets
         ```
 * #### Import All User Parts From Rebrickable
     * This will import all the User Parts found on Rebrickable into the database.
-    * ***IMPORTANT*** - This command can take a VERY long time to execute. Also, the user_parts table, in the database, is emptied when executing this command.
+    * ***IMPORTANT*** - This command can take a VERY long time to execute. Also, the `user_parts` table, in the database, is emptied when executing this command.
     
         ```bash
         php artisan lego:import-user-parts
