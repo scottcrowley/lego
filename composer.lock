@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4318c451c7e8fff428507e84d9077c88",
+    "content-hash": "314cad9eac7a1337e5f92f7df782ce51",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -3420,6 +3420,99 @@
                 "environment"
             ],
             "time": "2019-09-10T21:37:39+00:00"
+        },
+        {
+            "name": "wapmorgan/unified-archive",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wapmorgan/UnifiedArchive.git",
+                "reference": "748303c5387c3fe211112ccc61ae79109e8ccc0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wapmorgan/UnifiedArchive/zipball/748303c5387c3fe211112ccc61ae79109e8ccc0b",
+                "reference": "748303c5387c3fe211112ccc61ae79109e8ccc0b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": ">=5.5.0"
+            },
+            "replace": {
+                "wapmorgan/cam": "1.0.2"
+            },
+            "require-dev": {
+                "docopt/docopt": "~1.0",
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "bin-ncompress": "TAR.Z support",
+                "docopt/docopt": "Requirement for cam (Console Archive Manager)",
+                "ext-bz2": "BZ2 and TAR.BZ2 support",
+                "ext-phar": "TAR support",
+                "ext-rar": "RAR support",
+                "ext-xz": "XZ and TAR.XZ support",
+                "ext-zip": "ZIP support",
+                "ext-zlib": "GZ and TAR.GZ support",
+                "gemorroj/archive7z": "7ZIP support",
+                "pear/archive_tar": "another TAR support",
+                "phpclasses/php-iso-file": "ISO support",
+                "wapmorgan/cab-archive": "CAB support"
+            },
+            "bin": [
+                "bin/cam"
+            ],
+            "type": "library",
+            "extra": {
+                "phar-builder": {
+                    "compression": "BZip2",
+                    "name": "cam.phar",
+                    "output-dir": "./",
+                    "entry-point": "bin/cam",
+                    "include": [
+                        "bin",
+                        "src",
+                        "vendor"
+                    ],
+                    "events": {
+                        "command.package.start": "git describe --tags > bin/version.txt",
+                        "command.package.end": "chmod +x cam.phar && rm bin/version.txt"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "wapmorgan\\UnifiedArchive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "wapmorgan",
+                    "email": "wapmorgan@gmail.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "UnifiedArchive - unified interface to all popular archive formats (zip, 7z, rar, gz, bz2, xz, cab, tar, tar.gz, tar.bz2, tar.xz, tar.Z, iso) for listing, reading, extracting and creation + built-in console archive manager + PclZip-like interface for zip archives.",
+            "keywords": [
+                "7z",
+                "archive",
+                "bzip2",
+                "cab",
+                "compression",
+                "gzip",
+                "iso",
+                "lzma2",
+                "ncompress",
+                "rar",
+                "tar",
+                "zip"
+            ],
+            "time": "2020-01-13T00:24:26+00:00"
         }
     ],
     "packages-dev": [

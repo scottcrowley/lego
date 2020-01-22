@@ -14,7 +14,8 @@
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "sc-laravel-presets/default-tailwindcss": "dev-master",
-        "staudenmeir/eloquent-has-many-deep": "^1.7"
+        "staudenmeir/eloquent-has-many-deep": "^1.7",
+        "wapmorgan/unified-archive": "^0.1.3"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
