@@ -53,7 +53,7 @@ class ImportThemes extends Command
 
         $this->info('');
         $this->setupApiLegoInstance();
-        $this->truncateTable(new Theme(), true);
+        $this->truncateTable(new Theme());
         $this->getRebrickableThemes();
         $this->importThemes();
         $this->goodbye();

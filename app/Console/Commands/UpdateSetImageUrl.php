@@ -71,7 +71,7 @@ class UpdateSetImageUrl extends Command
 
         $this->info('');
         $this->setupApiLegoInstance();
-        $this->truncateTable(new SetImageUrl(), true);
+        $this->truncateTable(new SetImageUrl());
         $this->getAllDbSets();
         $this->getRebrickableSets();
         $this->processSets();

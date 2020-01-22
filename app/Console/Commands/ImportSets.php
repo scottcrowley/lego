@@ -56,8 +56,8 @@ class ImportSets extends Command
         $this->processStart = microtime(true);
 
         $this->info('');
-        $this->truncateTable(new Set(), true);
-        $this->truncateTable(new SetImageUrl(), true);
+        $this->truncateTable(new Set());
+        $this->truncateTable(new SetImageUrl());
         $this->setupApiLegoInstance();
         $this->getRebrickableSets();
         $this->importSets();

@@ -71,7 +71,7 @@ class UpdatePartImageUrl extends Command
 
         $this->info('');
         $this->setupApiLegoInstance();
-        $this->truncateTable(new PartImageUrl(), true);
+        $this->truncateTable(new PartImageUrl());
         $this->getPartCategories();
         $this->processPartCategories();
         $this->displayMissingParts();
