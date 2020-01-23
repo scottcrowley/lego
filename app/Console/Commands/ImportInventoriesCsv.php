@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Theme;
+use App\Inventory;
 use Illuminate\Console\Command;
 
-class ImportThemesCsv extends Command
+class ImportInventoriesCsv extends Command
 {
     use CommandHelpers, CsvHelpers;
 
@@ -14,21 +14,21 @@ class ImportThemesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-themes-csv';
+    protected $signature = 'lego:import-inventories-csv';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Imports all Themes from Rebrickable using their generated csv file.';
+    protected $description = 'Imports all Inventories from Rebrickable using their generated csv file.';
 
     /**
      * CSV File Url
      *
      * @var string
      */
-    protected $url = 'https://cdn.rebrickable.com/media/downloads/themes.csv.gz';
+    protected $url = 'https://cdn.rebrickable.com/media/downloads/inventories.csv.gz';
 
     /**
      * Names to be used as keys for import
@@ -48,8 +48,8 @@ class ImportThemesCsv extends Command
 
         $this->keys = collect([
             'id',
-            'name',
-            'parent_id',
+            'version',
+            'set_num',
         ]);
     }
 
@@ -67,8 +67,8 @@ class ImportThemesCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
-        $this->truncateTable(new Theme());
-        $this->importThemes();
+        $this->truncateTable(new Inventory());
+        $this->importInventories();
         $this->cleanUp();
         $this->goodbye();
     }
@@ -80,37 +80,37 @@ class ImportThemesCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Themes from Rebrickable <<');
+        $this->info('>> Please wait while we import all the Inventories from Rebrickable <<');
     }
 
     /**
-     * Process to add themes to database
+     * Process to add inventories to database
      *
      * @return void
      */
-    protected function importThemes()
+    protected function importInventories()
     {
-        $this->updateStatus('Importing Rebrickable Themes into Database...');
+        $this->updateStatus('Importing Rebrickable Inventories into Database...');
 
         $processed = $this->processed;
 
         $this->lazyCollection()
             ->chunk(1000)
-            ->each(function ($themes) use (&$processed) {
-                $themeList = [];
-                foreach ($themes as $themeRow) {
-                    $theme = $this->keys->combine(str_getcsv($themeRow), ',');
-                    $themeList[] = [
-                        'id' => $theme['id'],
-                        'name' => $theme['name'],
-                        'parent_id' => ($theme['parent_id'] != '') ? intval($theme['parent_id']) : null,
+            ->each(function ($inventories) use (&$processed) {
+                $inventoryList = [];
+                foreach ($inventories as $inventoryRow) {
+                    $inventory = $this->keys->combine(str_getcsv($inventoryRow), ',');
+                    $inventoryList[] = [
+                        'id' => intval($inventory['id']),
+                        'version' => intval($inventory['version']),
+                        'set_num' => $inventory['set_num'],
                     ];
 
                     $processed++;
                 }
 
-                if (count($themeList)) {
-                    Theme::insert($themeList);
+                if (count($inventoryList)) {
+                    Inventory::insert($inventoryList);
                 }
             });
 

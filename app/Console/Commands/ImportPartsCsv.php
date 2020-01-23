@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Theme;
+use App\Part;
 use Illuminate\Console\Command;
 
-class ImportThemesCsv extends Command
+class ImportPartsCsv extends Command
 {
     use CommandHelpers, CsvHelpers;
 
@@ -14,21 +14,21 @@ class ImportThemesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-themes-csv';
+    protected $signature = 'lego:import-parts-csv';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Imports all Themes from Rebrickable using their generated csv file.';
+    protected $description = 'Imports all Parts from Rebrickable using their generated csv file.';
 
     /**
      * CSV File Url
      *
      * @var string
      */
-    protected $url = 'https://cdn.rebrickable.com/media/downloads/themes.csv.gz';
+    protected $url = 'https://cdn.rebrickable.com/media/downloads/parts.csv.gz';
 
     /**
      * Names to be used as keys for import
@@ -47,9 +47,10 @@ class ImportThemesCsv extends Command
         parent::__construct();
 
         $this->keys = collect([
-            'id',
+            'part_num',
             'name',
-            'parent_id',
+            'part_category_id',
+            'part_material_id',
         ]);
     }
 
@@ -67,8 +68,8 @@ class ImportThemesCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
-        $this->truncateTable(new Theme());
-        $this->importThemes();
+        $this->truncateTable(new Part());
+        $this->importParts();
         $this->cleanUp();
         $this->goodbye();
     }
@@ -80,37 +81,38 @@ class ImportThemesCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Themes from Rebrickable <<');
+        $this->info('>> Please wait while we import all the Parts from Rebrickable <<');
     }
 
     /**
-     * Process to add themes to database
+     * Process to add parts to database
      *
      * @return void
      */
-    protected function importThemes()
+    protected function importParts()
     {
-        $this->updateStatus('Importing Rebrickable Themes into Database...');
+        $this->updateStatus('Importing Rebrickable Parts into Database...');
 
         $processed = $this->processed;
 
         $this->lazyCollection()
             ->chunk(1000)
-            ->each(function ($themes) use (&$processed) {
-                $themeList = [];
-                foreach ($themes as $themeRow) {
-                    $theme = $this->keys->combine(str_getcsv($themeRow), ',');
-                    $themeList[] = [
-                        'id' => $theme['id'],
-                        'name' => $theme['name'],
-                        'parent_id' => ($theme['parent_id'] != '') ? intval($theme['parent_id']) : null,
+            ->each(function ($parts) use (&$processed) {
+                $partList = [];
+                foreach ($parts as $partRow) {
+                    $part = $this->keys->combine(str_getcsv($partRow), ',');
+                    $partList[] = [
+                        'part_num' => $part['part_num'],
+                        'name' => $part['name'],
+                        'part_category_id' => intval($part['part_category_id']),
+                        'part_material_id' => intval($part['part_material_id']),
                     ];
 
                     $processed++;
                 }
 
-                if (count($themeList)) {
-                    Theme::insert($themeList);
+                if (count($partList)) {
+                    Part::insert($partList);
                 }
             });
 

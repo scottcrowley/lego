@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Theme;
+use App\Set;
 use Illuminate\Console\Command;
 
-class ImportThemesCsv extends Command
+class ImportSetsCsv extends Command
 {
     use CommandHelpers, CsvHelpers;
 
@@ -14,21 +14,21 @@ class ImportThemesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-themes-csv';
+    protected $signature = 'lego:import-sets-csv';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Imports all Themes from Rebrickable using their generated csv file.';
+    protected $description = 'Imports all Sets from Rebrickable using their generated csv file.';
 
     /**
      * CSV File Url
      *
      * @var string
      */
-    protected $url = 'https://cdn.rebrickable.com/media/downloads/themes.csv.gz';
+    protected $url = 'https://cdn.rebrickable.com/media/downloads/sets.csv.gz';
 
     /**
      * Names to be used as keys for import
@@ -47,9 +47,11 @@ class ImportThemesCsv extends Command
         parent::__construct();
 
         $this->keys = collect([
-            'id',
+            'set_num',
             'name',
-            'parent_id',
+            'year',
+            'theme_id',
+            'num_parts',
         ]);
     }
 
@@ -67,8 +69,8 @@ class ImportThemesCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
-        $this->truncateTable(new Theme());
-        $this->importThemes();
+        $this->truncateTable(new Set());
+        $this->importSets();
         $this->cleanUp();
         $this->goodbye();
     }
@@ -80,37 +82,39 @@ class ImportThemesCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Themes from Rebrickable <<');
+        $this->info('>> Please wait while we import all the Sets from Rebrickable <<');
     }
 
     /**
-     * Process to add themes to database
+     * Process to add sets to database
      *
      * @return void
      */
-    protected function importThemes()
+    protected function importSets()
     {
-        $this->updateStatus('Importing Rebrickable Themes into Database...');
+        $this->updateStatus('Importing Rebrickable Sets into Database...');
 
         $processed = $this->processed;
 
         $this->lazyCollection()
             ->chunk(1000)
-            ->each(function ($themes) use (&$processed) {
-                $themeList = [];
-                foreach ($themes as $themeRow) {
-                    $theme = $this->keys->combine(str_getcsv($themeRow), ',');
-                    $themeList[] = [
-                        'id' => $theme['id'],
-                        'name' => $theme['name'],
-                        'parent_id' => ($theme['parent_id'] != '') ? intval($theme['parent_id']) : null,
+            ->each(function ($sets) use (&$processed) {
+                $setList = [];
+                foreach ($sets as $setRow) {
+                    $set = $this->keys->combine(str_getcsv($setRow), ',');
+                    $setList[] = [
+                        'set_num' => $set['set_num'],
+                        'name' => $set['name'],
+                        'year' => intval($set['year']),
+                        'theme_id' => ($set['theme_id'] != '') ? intval($set['theme_id']) : null,
+                        'num_parts' => intval($set['num_parts']),
                     ];
 
                     $processed++;
                 }
 
-                if (count($themeList)) {
-                    Theme::insert($themeList);
+                if (count($setList)) {
+                    Set::insert($setList);
                 }
             });
 
