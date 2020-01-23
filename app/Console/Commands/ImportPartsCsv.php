@@ -61,16 +61,23 @@ class ImportPartsCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->start()) {
+            return false;
+        }
 
-        $this->start();
+        $this->processStart = microtime(true);
 
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new Part());
         $this->importParts();
         $this->cleanUp();
+
+        $this->info('');
+        $this->info('');
+        $this->call('lego:category-part-count');
         $this->goodbye();
     }
 
@@ -81,7 +88,10 @@ class ImportPartsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Parts from Rebrickable <<');
+        $this->info('>> This command will import all the Parts from Rebrickable                     <<');
+        $this->info('>> It is advisable that you first update the Part Categories by running either <<');
+        $this->info('>> the lego:import-part-categories or lego:import-part-categories-csv commands <<');
+        return $this->confirm('Continue?');
     }
 
     /**
@@ -99,8 +109,7 @@ class ImportPartsCsv extends Command
             ->chunk(1000)
             ->each(function ($parts) use (&$processed) {
                 $partList = [];
-                foreach ($parts as $partRow) {
-                    $part = $this->keys->combine(str_getcsv($partRow), ',');
+                foreach ($parts as $part) {
                     $partList[] = [
                         'part_num' => $part['part_num'],
                         'name' => $part['name'],

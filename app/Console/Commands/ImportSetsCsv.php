@@ -62,13 +62,16 @@ class ImportSetsCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->start()) {
+            return false;
+        }
 
-        $this->start();
+        $this->processStart = microtime(true);
 
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new Set());
         $this->importSets();
         $this->cleanUp();
@@ -76,13 +79,16 @@ class ImportSetsCsv extends Command
     }
 
     /**
-     * Display command details
+     * Display command details and request confirmation to continue
      *
      * @return bool
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Sets from Rebrickable <<');
+        $this->info('>> This command will import all the Sets from Rebrickable             <<');
+        $this->info('>> It is advisable that you first update the Themes by running either <<');
+        $this->info('>> the lego:import-themes or lego:import-themes-csv commands          <<');
+        return $this->confirm('Continue?');
     }
 
     /**
@@ -100,8 +106,7 @@ class ImportSetsCsv extends Command
             ->chunk(1000)
             ->each(function ($sets) use (&$processed) {
                 $setList = [];
-                foreach ($sets as $setRow) {
-                    $set = $this->keys->combine(str_getcsv($setRow), ',');
+                foreach ($sets as $set) {
                     $setList[] = [
                         'set_num' => $set['set_num'],
                         'name' => $set['name'],

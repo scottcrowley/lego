@@ -60,13 +60,16 @@ class ImportInventoriesCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->start()) {
+            return false;
+        }
 
-        $this->start();
+        $this->processStart = microtime(true);
 
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new Inventory());
         $this->importInventories();
         $this->cleanUp();
@@ -74,13 +77,16 @@ class ImportInventoriesCsv extends Command
     }
 
     /**
-     * Display command details
+     * Display command details and request confirmation to continue
      *
      * @return bool
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Inventories from Rebrickable <<');
+        $this->info('>> This command will import all the Inventories from Rebrickable    <<');
+        $this->info('>> It is advisable that you first update the Sets by running either <<');
+        $this->info('>> the lego:import-sets or lego:import-sets-csv commands            <<');
+        return $this->confirm('Continue?');
     }
 
     /**
@@ -98,8 +104,7 @@ class ImportInventoriesCsv extends Command
             ->chunk(1000)
             ->each(function ($inventories) use (&$processed) {
                 $inventoryList = [];
-                foreach ($inventories as $inventoryRow) {
-                    $inventory = $this->keys->combine(str_getcsv($inventoryRow), ',');
+                foreach ($inventories as $inventory) {
                     $inventoryList[] = [
                         'id' => intval($inventory['id']),
                         'version' => intval($inventory['version']),

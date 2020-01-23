@@ -60,13 +60,16 @@ class ImportPartRelationshipsCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->start()) {
+            return false;
+        }
 
-        $this->start();
+        $this->processStart = microtime(true);
 
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new PartRelationship());
         $this->importPartRelationships();
         $this->cleanUp();
@@ -80,7 +83,10 @@ class ImportPartRelationshipsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we import all the Part Relationships from Rebrickable <<');
+        $this->info('>> This command will import all the Part Relationships from Rebrickable <<');
+        $this->info('>> It is advisable that you first update the Parts by running either    <<');
+        $this->info('>> the lego:import-parts-csv or lego:import-parts-csv command           <<');
+        return $this->confirm('Continue?');
     }
 
     /**
@@ -98,8 +104,7 @@ class ImportPartRelationshipsCsv extends Command
             ->chunk(1000)
             ->each(function ($partRelationships) use (&$processed) {
                 $partRelationshipList = [];
-                foreach ($partRelationships as $partRelationshipRow) {
-                    $partRelationship = $this->keys->combine(str_getcsv($partRelationshipRow), ',');
+                foreach ($partRelationships as $partRelationship) {
                     $partRelationshipList[] = [
                         'rel_type' => $partRelationship['rel_type'],
                         'child_part_num' => $partRelationship['child_part_num'],
