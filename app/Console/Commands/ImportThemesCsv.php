@@ -67,6 +67,7 @@ class ImportThemesCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new Theme());
         $this->importThemes();
         $this->cleanUp();
@@ -98,8 +99,7 @@ class ImportThemesCsv extends Command
             ->chunk(1000)
             ->each(function ($themes) use (&$processed) {
                 $themeList = [];
-                foreach ($themes as $themeRow) {
-                    $theme = $this->keys->combine(str_getcsv($themeRow), ',');
+                foreach ($themes as $theme) {
                     $themeList[] = [
                         'id' => $theme['id'],
                         'name' => $theme['name'],

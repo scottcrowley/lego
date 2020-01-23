@@ -68,6 +68,7 @@ class ImportColorsCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new Color());
         $this->importColors();
         $this->cleanUp();
@@ -100,9 +101,7 @@ class ImportColorsCsv extends Command
             ->chunk(1000)
             ->each(function ($colors) use (&$processed) {
                 $colorList = [];
-                foreach ($colors as $colorRow) {
-                    $color = $this->keys->combine(str_getcsv($colorRow), ',');
-
+                foreach ($colors as $color) {
                     //Issue on Rebrickable where they assign an id=0, which messes with the auto increment
                     if ($color['id'] == 0) {
                         $zero = $color->toArray();

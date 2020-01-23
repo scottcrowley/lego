@@ -8,6 +8,8 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
 
 trait CsvHelpers
 {
+    protected $csvDetails = null;
+
     /**
      * Reset directory
      *
@@ -31,6 +33,7 @@ trait CsvHelpers
         $csv = file_get_contents($this->url);
         if (Storage::put('csv_files/rebrickable.csv.gz', $csv)) {
             $file = UnifiedArchive::open(storage_path('app/csv_files/rebrickable.csv.gz'));
+            $this->csvDetails = $file->getFileData('rebrickable.csv.gz');
             $file->extractFiles(storage_path('app/csv_files/'));
             Storage::move('csv_files/rebrickable.csv.gz', 'csv_files/rebrickable.csv');
             return true;
@@ -49,7 +52,7 @@ trait CsvHelpers
                 if (substr($line, 0, strlen($this->keys->first())) == $this->keys->first()) {
                     continue;
                 }
-                yield $line;
+                yield $this->keys->combine(str_getcsv($line), ',');
             }
         });
     }
@@ -62,5 +65,10 @@ trait CsvHelpers
     protected function cleanUp()
     {
         Storage::delete('csv_files/rebrickable.csv');
+    }
+
+    protected function displayCsvDate()
+    {
+        $this->updateStatus('CSV file has a timestamp of '.(date('M d, Y, h:i a', $this->csvDetails->modificationTime)).' <<');
     }
 }

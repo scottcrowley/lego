@@ -66,9 +66,14 @@ class ImportPartCategoriesCsv extends Command
         $this->info('');
         $this->checkDirectory();
         $this->retrieveFile();
+        $this->displayCsvDate();
         $this->truncateTable(new PartCategory());
         $this->importPartCategories();
         $this->cleanUp();
+
+        $this->info('');
+        $this->info('');
+        $this->call('lego:category-part-count');
         $this->goodbye();
     }
 
@@ -97,8 +102,7 @@ class ImportPartCategoriesCsv extends Command
             ->chunk(1000)
             ->each(function ($partCategories) use (&$processed) {
                 $partCategoryList = [];
-                foreach ($partCategories as $partCategoryRow) {
-                    $partCategory = $this->keys->combine(str_getcsv($partCategoryRow), ',');
+                foreach ($partCategories as $partCategory) {
                     $partCategoryList[] = [
                         'id' => $partCategory['id'],
                         'name' => $partCategory['name'],
