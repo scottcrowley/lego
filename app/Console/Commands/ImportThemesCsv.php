@@ -14,7 +14,8 @@ class ImportThemesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-themes-csv';
+    protected $signature = 'lego:import-themes-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -60,7 +61,9 @@ class ImportThemesCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->start();
 
@@ -71,7 +74,14 @@ class ImportThemesCsv extends Command
         $this->truncateTable(new Theme());
         $this->importThemes();
         $this->cleanUp();
-        $this->goodbye();
+
+        if (! $this->option('bulk')) {
+            $this->info('');
+            $this->info('');
+            $this->call('lego:theme-hierarchy', ['--bulk' => true]);
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**

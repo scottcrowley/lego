@@ -14,7 +14,8 @@ class ImportSetsCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-sets-csv';
+    protected $signature = 'lego:import-sets-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -66,7 +67,9 @@ class ImportSetsCsv extends Command
             return false;
         }
 
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->checkDirectory();
@@ -75,7 +78,10 @@ class ImportSetsCsv extends Command
         $this->truncateTable(new Set());
         $this->importSets();
         $this->cleanUp();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -85,10 +91,14 @@ class ImportSetsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> This command will import all the Sets from Rebrickable             <<');
-        $this->info('>> It is advisable that you first update the Themes by running either <<');
-        $this->info('>> the lego:import-themes or lego:import-themes-csv commands          <<');
-        return $this->confirm('Continue?');
+        if (! $this->option('bulk')) {
+            $this->info('>> This command will import all the Sets from Rebrickable');
+            $this->info('   It is advisable that you first update the Themes by running either');
+            $this->info('   the lego:import-themes or lego:import-themes-csv commands');
+            return $this->confirm('Continue?');
+        }
+        $this->info('>> Please wait while we import all the Sets from Rebrickable <<');
+        return true;
     }
 
     /**

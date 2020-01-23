@@ -14,7 +14,8 @@ class ImportInventoriesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-inventories-csv';
+    protected $signature = 'lego:import-inventories-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -64,7 +65,9 @@ class ImportInventoriesCsv extends Command
             return false;
         }
 
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->checkDirectory();
@@ -73,7 +76,10 @@ class ImportInventoriesCsv extends Command
         $this->truncateTable(new Inventory());
         $this->importInventories();
         $this->cleanUp();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -83,10 +89,14 @@ class ImportInventoriesCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> This command will import all the Inventories from Rebrickable    <<');
-        $this->info('>> It is advisable that you first update the Sets by running either <<');
-        $this->info('>> the lego:import-sets or lego:import-sets-csv commands            <<');
-        return $this->confirm('Continue?');
+        if (! $this->option('bulk')) {
+            $this->info('>> This command will import all the Inventories from Rebrickable');
+            $this->info('   It is advisable that you first update the Sets by running either');
+            $this->info('   the lego:import-sets or lego:import-sets-csv commands');
+            return $this->confirm('Continue?');
+        }
+        $this->info('>> Please wait while we import all the Inventories from Rebrickable <<');
+        return true;
     }
 
     /**

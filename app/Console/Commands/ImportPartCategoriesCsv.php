@@ -14,7 +14,8 @@ class ImportPartCategoriesCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-part-categories-csv';
+    protected $signature = 'lego:import-part-categories-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -59,7 +60,9 @@ class ImportPartCategoriesCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->start();
 
@@ -71,10 +74,13 @@ class ImportPartCategoriesCsv extends Command
         $this->importPartCategories();
         $this->cleanUp();
 
-        $this->info('');
-        $this->info('');
-        $this->call('lego:category-part-count');
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->info('');
+            $this->info('');
+            $this->call('lego:category-part-count', ['--bulk' => true]);
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**

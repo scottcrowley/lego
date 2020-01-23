@@ -8,7 +8,12 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
 
 trait CsvHelpers
 {
-    protected $csvDetails = null;
+    /**
+     * Details about the csv file
+     *
+     * @var \wapmorgan\UnifiedArchive\ArchiveEntry
+     */
+    protected $csvDetails;
 
     /**
      * Reset directory
@@ -43,6 +48,11 @@ trait CsvHelpers
         $this->goodbye();
     }
 
+    /**
+     * Create a lazy collection containing yielded rows from the csv file
+     *
+     * @return \Illuminate\Support\LazyCollection
+     */
     protected function lazyCollection()
     {
         return LazyCollection::make(function () {
@@ -67,6 +77,11 @@ trait CsvHelpers
         Storage::delete('csv_files/rebrickable.csv');
     }
 
+    /**
+     * Display the formatted timestamp from the downloaded csv file
+     *
+     * @return void
+     */
     protected function displayCsvDate()
     {
         $this->updateStatus('CSV file has a timestamp of '.(date('M d, Y, h:i a', $this->csvDetails->modificationTime)).' <<');

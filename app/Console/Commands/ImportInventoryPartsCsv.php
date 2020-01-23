@@ -14,7 +14,8 @@ class ImportInventoryPartsCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-inventory-parts-csv';
+    protected $signature = 'lego:import-inventory-parts-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -66,7 +67,9 @@ class ImportInventoryPartsCsv extends Command
             return false;
         }
 
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->checkDirectory();
@@ -75,7 +78,10 @@ class ImportInventoryPartsCsv extends Command
         $this->truncateTable(new InventoryPart());
         $this->importInventoryParts();
         $this->cleanUp();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -85,12 +91,16 @@ class ImportInventoryPartsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> This command will import all the Inventory Parts from Rebrickable  <<');
-        $this->info('>> It is advisable that you first update the Parts by running either  <<');
-        $this->info('>> the lego:import-parts-csv or lego:import-parts-csv command         <<');
-        $this->info('>> Also, update the Inventories by running either the                 <<');
-        $this->info('>> lego:import-inventories-csv or lego:import-inventories-csv command <<');
-        return $this->confirm('More than 800,000 rows may be imported thus taking a VERY long time to execute. Continue?');
+        if (! $this->option('bulk')) {
+            $this->info('>> This command will import all the Inventory Parts from Rebrickable');
+            $this->info('   It is advisable that you first update the Parts by running either');
+            $this->info('   the lego:import-parts-csv or lego:import-parts-csv command');
+            $this->info('   Also, update the Inventories by running either the');
+            $this->info('   lego:import-inventories-csv or lego:import-inventories-csv command <<');
+            return $this->confirm('More than 800,000 rows may be imported thus taking a VERY long time to execute. Continue?');
+        }
+        $this->info('>> Please wait while we import all the Inventory Parts from Rebrickable <<');
+        return true;
     }
 
     /**

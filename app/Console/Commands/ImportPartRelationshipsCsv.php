@@ -14,7 +14,8 @@ class ImportPartRelationshipsCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-part-relationships-csv';
+    protected $signature = 'lego:import-part-relationships-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -64,7 +65,9 @@ class ImportPartRelationshipsCsv extends Command
             return false;
         }
 
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->checkDirectory();
@@ -73,7 +76,10 @@ class ImportPartRelationshipsCsv extends Command
         $this->truncateTable(new PartRelationship());
         $this->importPartRelationships();
         $this->cleanUp();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -83,10 +89,14 @@ class ImportPartRelationshipsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> This command will import all the Part Relationships from Rebrickable <<');
-        $this->info('>> It is advisable that you first update the Parts by running either    <<');
-        $this->info('>> the lego:import-parts-csv or lego:import-parts-csv command           <<');
-        return $this->confirm('Continue?');
+        if (! $this->option('bulk')) {
+            $this->info('>> This command will import all the Part Relationships from Rebrickable');
+            $this->info('   It is advisable that you first update the Parts by running either');
+            $this->info('   the lego:import-parts-csv or lego:import-parts-csv command');
+            return $this->confirm('Continue?');
+        }
+        $this->info('>> Please wait while we import all the Part Relationships from Rebrickable <<');
+        return true;
     }
 
     /**

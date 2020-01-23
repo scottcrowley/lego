@@ -35,7 +35,7 @@ trait CommandHelpers
     protected $api = null;
 
     /**
-     * End the command execution and display process time and processed item count
+     * End the command execution and display process time
      *
      * @return void
      */
@@ -46,10 +46,21 @@ trait CommandHelpers
         $this->info('');
         $this->info('');
         $this->info('>>>> Process completed in '.$processLabel.'! <<<<');
+        $this->displayProcessed();
+
+        die();
+    }
+
+    /**
+     * Display the number of processed items
+     *
+     * @return void
+     */
+    protected function displayProcessed()
+    {
         if ($this->processed) {
             $this->info('>>>> A total of '.$this->processed.' items were processed. <<<<');
         }
-        die();
     }
 
     /**

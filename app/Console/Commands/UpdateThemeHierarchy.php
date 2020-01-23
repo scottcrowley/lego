@@ -15,7 +15,8 @@ class UpdateThemeHierarchy extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:theme-hierarchy';
+    protected $signature = 'lego:theme-hierarchy
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -49,14 +50,20 @@ class UpdateThemeHierarchy extends Command
     public function handle()
     {
         $this->start();
-        $this->processStart = microtime(true);
+
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->getThemeHeirarchy();
         $this->validateHeirarchy();
         $this->truncateTable(new ThemeLabel());
         $this->updateThemeLabels();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -66,7 +73,7 @@ class UpdateThemeHierarchy extends Command
      */
     protected function start()
     {
-        $this->info('>> This command updates the Theme Heirarchy for all Themes in the Database <<');
+        $this->info('>> Please wait while we update the Heirarchy for all Themes in the Database <<');
     }
 
     /**
@@ -159,8 +166,10 @@ class UpdateThemeHierarchy extends Command
 
         $themes = $this->processedThemes;
 
-        $progress = $this->output->createProgressBar(count($themes));
-        $progress->start();
+        if (! $this->option('bulk')) {
+            $progress = $this->output->createProgressBar(count($themes));
+            $progress->start();
+        }
 
         foreach ($themes as $theme_id => $theme) {
             ThemeLabel::create([
@@ -170,9 +179,14 @@ class UpdateThemeHierarchy extends Command
             ]);
 
             $this->processed++;
-            $progress->advance();
+
+            if (! $this->option('bulk')) {
+                $progress->advance();
+            }
         }
 
-        $progress->finish();
+        if (! $this->option('bulk')) {
+            $progress->finish();
+        }
     }
 }

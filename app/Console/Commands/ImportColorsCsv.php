@@ -14,7 +14,8 @@ class ImportColorsCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-colors-csv';
+    protected $signature = 'lego:import-colors-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -61,7 +62,9 @@ class ImportColorsCsv extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->start();
 
@@ -72,7 +75,10 @@ class ImportColorsCsv extends Command
         $this->truncateTable(new Color());
         $this->importColors();
         $this->cleanUp();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**

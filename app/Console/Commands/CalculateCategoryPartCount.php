@@ -15,7 +15,8 @@ class CalculateCategoryPartCount extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:category-part-count';
+    protected $signature = 'lego:category-part-count
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -41,14 +42,19 @@ class CalculateCategoryPartCount extends Command
      */
     public function handle()
     {
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->start();
 
         $this->info('');
         $this->truncateTable(new CategoryPartCount());
         $this->updateCount();
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -61,26 +67,42 @@ class CalculateCategoryPartCount extends Command
         $this->info('>> Please wait while we update the part count for each Part Category <<');
     }
 
+    /**
+     * Process to update part count
+     *
+     * @return void
+     */
     protected function updateCount()
     {
         $categories = $this->getPartCategories();
 
         $this->updateStatus('Updating category part count...');
 
-        $progress = $this->output->createProgressBar($categories->count());
-        $progress->start();
+        if (! $this->option('bulk')) {
+            $progress = $this->output->createProgressBar($categories->count());
+            $progress->start();
+        }
 
         foreach ($categories as $category) {
             $category->addPartCount($category->parts->count());
 
-            $progress->advance();
+            if (! $this->option('bulk')) {
+                $progress->advance();
+            }
         }
 
         $this->processed = $categories->count();
 
-        $progress->finish();
+        if (! $this->option('bulk')) {
+            $progress->finish();
+        }
     }
 
+    /**
+     * Get all part categories from database
+     *
+     * @return void
+     */
     protected function getPartCategories()
     {
         $this->updateStatus('Getting part categories from database...');

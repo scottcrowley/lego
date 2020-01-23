@@ -14,7 +14,8 @@ class ImportPartsCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'lego:import-parts-csv';
+    protected $signature = 'lego:import-parts-csv
+                            {--bulk : Command being run with other commands}';
 
     /**
      * The console command description.
@@ -65,7 +66,9 @@ class ImportPartsCsv extends Command
             return false;
         }
 
-        $this->processStart = microtime(true);
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
 
         $this->info('');
         $this->checkDirectory();
@@ -75,10 +78,13 @@ class ImportPartsCsv extends Command
         $this->importParts();
         $this->cleanUp();
 
-        $this->info('');
-        $this->info('');
-        $this->call('lego:category-part-count');
-        $this->goodbye();
+        if (! $this->option('bulk')) {
+            $this->info('');
+            $this->info('');
+            $this->call('lego:category-part-count', ['--bulk' => true]);
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -88,10 +94,14 @@ class ImportPartsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> This command will import all the Parts from Rebrickable                     <<');
-        $this->info('>> It is advisable that you first update the Part Categories by running either <<');
-        $this->info('>> the lego:import-part-categories or lego:import-part-categories-csv commands <<');
-        return $this->confirm('Continue?');
+        if (! $this->option('bulk')) {
+            $this->info('>> This command will import all the Parts from Rebrickable');
+            $this->info('   It is advisable that you first update the Part Categories by running either');
+            $this->info('   the lego:import-part-categories or lego:import-part-categories-csv commands');
+            return $this->confirm('Continue?');
+        }
+        $this->info('>> Please wait while we import all the Parts from Rebrickable <<');
+        return true;
     }
 
     /**
