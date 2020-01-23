@@ -55,7 +55,6 @@ class ImportAllCsvFiles extends Command
             'lego:category-part-count',
             'lego:import-part-relationships-csv',
             'lego:import-inventories-csv',
-            'lego:import-inventory-parts-csv'
         ];
     }
 
@@ -74,16 +73,13 @@ class ImportAllCsvFiles extends Command
 
         $this->info('');
         foreach ($this->commandList as $command) {
-            if (
-                $command != 'lego:import-inventory-parts-csv' ||
-                ($command == 'lego:import-inventory-parts-csv' && $this->runInventoryParts)
-            ) {
-                $this->info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-                $this->call($command, ['--bulk' => true]);
-                $this->info('');
-            }
+            $this->info('');
+            $this->info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+            $this->call($command, ['--bulk' => true]);
         }
-
+        $this->info('');
+        $this->info('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
+        $this->info('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
         $this->goodbye();
     }
 
@@ -99,13 +95,8 @@ class ImportAllCsvFiles extends Command
         foreach ($this->commandList as $command) {
             $this->info('       '.$command);
         }
-        $this->info('   All of these commands may take a long time to run.');
-
-        if ($this->confirm('Continue?')) {
-            $this->runInventoryParts = $this->confirm('Do you want to import Inventory Parts? That command take as VERY long time to execute!');
-            return true;
-        }
-
-        return false;
+        $this->info('   The lego:import-inventory-parts-csv command is not included due to how memory intensive it is.');
+        $this->info('   All of these commands should take less than a minute to run.');
+        return $this->confirm('Continue?');
     }
 }
