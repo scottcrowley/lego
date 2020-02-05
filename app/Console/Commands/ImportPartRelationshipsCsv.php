@@ -110,7 +110,7 @@ class ImportPartRelationshipsCsv extends Command
 
         $processed = $this->processed;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(1000)
             ->each(function ($partRelationships) use (&$processed) {
                 $partRelationshipList = [];

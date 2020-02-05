@@ -112,7 +112,7 @@ class ImportSetsCsv extends Command
 
         $processed = $this->processed;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(1000)
             ->each(function ($sets) use (&$processed) {
                 $setList = [];

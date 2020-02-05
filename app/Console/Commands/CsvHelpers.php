@@ -53,7 +53,7 @@ trait CsvHelpers
      *
      * @return \Illuminate\Support\LazyCollection
      */
-    protected function lazyCollection()
+    protected function lazyCollectionFromCsv()
     {
         return LazyCollection::make(function () {
             $handle = fopen(storage_path('app/csv_files/rebrickable.csv'), 'r');

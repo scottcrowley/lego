@@ -105,7 +105,7 @@ class ImportThemesCsv extends Command
 
         $processed = $this->processed;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(1000)
             ->each(function ($themes) use (&$processed) {
                 $themeList = [];

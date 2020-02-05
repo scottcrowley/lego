@@ -104,7 +104,7 @@ class ImportPartCategoriesCsv extends Command
 
         $processed = $this->processed;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(1000)
             ->each(function ($partCategories) use (&$processed) {
                 $partCategoryList = [];

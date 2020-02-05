@@ -93,10 +93,9 @@ class ImportInventoryPartsCsv extends Command
     {
         if (! $this->option('bulk')) {
             $this->info('>> This command will import all the Inventory Parts from Rebrickable');
-            $this->info('   It is advisable that you first update the Parts by running either');
-            $this->info('   the lego:import-parts-csv or lego:import-parts-csv command');
-            $this->info('   Also, update the Inventories by running either the');
-            $this->info('   lego:import-inventories-csv or lego:import-inventories-csv command <<');
+            $this->info('   It is advisable that you first update the Parts by running');
+            $this->info('   the lego:import-parts-csv command');
+            $this->info('   Also, update the Inventories by running the lego:import-inventories-csv command <<');
             return $this->confirm('More than 800,000 rows may be imported thus taking a VERY long time to execute. Continue?');
         }
         $this->info('>> Please wait while we import all the Inventory Parts from Rebrickable <<');
@@ -114,7 +113,7 @@ class ImportInventoryPartsCsv extends Command
 
         $processed = $this->processed;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(500)
             ->each(function ($inventoryParts) use (&$processed) {
                 $inventoryPartList = [];

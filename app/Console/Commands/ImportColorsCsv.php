@@ -103,7 +103,7 @@ class ImportColorsCsv extends Command
         $processed = $this->processed;
         $zero = null;
 
-        $this->lazyCollection()
+        $this->lazyCollectionFromCsv()
             ->chunk(1000)
             ->each(function ($colors) use (&$processed) {
                 $colorList = [];
