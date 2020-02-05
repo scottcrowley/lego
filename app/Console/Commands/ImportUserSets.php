@@ -47,11 +47,9 @@ class ImportUserSets extends Command
      */
     public function handle()
     {
-        if (! $this->start()) {
-            return false;
-        }
-
         $this->processStart = microtime(true);
+
+        $this->start();
 
         $this->info('');
         $this->setupApiUserInstance();
@@ -69,7 +67,6 @@ class ImportUserSets extends Command
     protected function start()
     {
         $this->info('>> Please wait while we import all your sets from Rebrickable <<');
-        return $this->confirm('This command can take a VERY long time to execute. Continue?');
     }
 
     /**
