@@ -13,6 +13,10 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+beforeEach(() => {
+    cy.exec('php artisan migrate:refresh --env=cypress');
+});
+
 // Import commands.js using ES2015 syntax:
 import './commands'
 
