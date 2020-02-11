@@ -12,6 +12,7 @@
     "devDependencies": {
         "axios": "^0.19",
         "cross-env": "^5.1",
+        "cypress": "^4.0.1",
         "laravel-mix": "^4.1.2",
         "laravel-mix-tailwind": "^0.1.0",
         "lodash": "~4.17.13",
