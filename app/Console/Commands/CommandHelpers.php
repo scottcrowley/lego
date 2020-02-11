@@ -45,7 +45,7 @@ trait CommandHelpers
 
         $this->info('');
         $this->info('');
-        $this->info('>>>> Process completed in '.$processLabel.'! <<<<');
+        $this->warn('>>>> Process completed in '.$processLabel.'! <<<<');
         $this->displayProcessed();
 
         die();
@@ -59,8 +59,19 @@ trait CommandHelpers
     protected function displayProcessed()
     {
         if ($this->processed) {
-            $this->info('>>>> A total of '.$this->processed.' items were processed. <<<<');
+            $this->warn('>>>> A total of '.$this->processed.' items were processed. <<<<');
         }
+    }
+
+    /**
+     * Displays an error and exits command
+     *
+     * @return void
+     */
+    protected function displayError($message)
+    {
+        $this->error(">>>> $message <<<<");
+        die();
     }
 
     /**

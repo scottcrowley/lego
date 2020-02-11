@@ -125,7 +125,7 @@ There are several other Lego setup [commands](#list-of-other-commands) that have
 ### List of Other Commands
 
 #### Import All Themes From Rebrickable
-This command imports all the Themes into the `inventories` database table, using the Rebrickable API. It is important to note that the `themes` table, in the database, is emptied when executing this command.
+This command imports all the Themes into the `themes` database table, using the Rebrickable API. It is important to note that the `themes` table, in the database, is emptied when executing this command.
 ```zsh
 php artisan lego:import-themes
 ```
@@ -137,13 +137,13 @@ php artisan lego:import-sets
 ```
 
 #### Update Set Image Url
-This command will update the urls associated with every Set found in the `sets` table of the database. It does it by retrieving a list of all sets through the Rebrickable API and using that data along with what is in the `sets` table to add the urls. It is almost more adventageous to just run the `lego:import-sets` command, which does the same thing as this command but updates the `sets` table as well. Whenever there are any changes to the `sets` table, this command should be run. It is important to note that the `set_image_urls` table, in the database, is emptied when executing this command.
+This command will add the urls associated with every Set found in the `sets` table of the database. It does it by retrieving a list of all sets through the Rebrickable API and using that data along with what is in the `sets` table to add the urls. It is almost more adventageous to just run the `lego:import-sets` command, which does the same thing as this command but updates the `sets` table as well. Whenever there are any changes to the `sets` table, this command should be run. It is important to note that the `set_image_urls` table, in the database, is emptied when executing this command.
 ```zsh
 php artisan lego:set-image-url
 ```
 
 #### Update The Theme Hierarchy
-This command will update the Theme hierarchy for every Theme in the themes table of the database. The Theme heirarchy is used to get a visual representation of all the parent themes related to a given theme. It is important to note that the `theme_labels` table, in the database, is emptied when executing this command.
+This command will update the Theme hierarchy for every Theme in the `themes` table of the database. The Theme heirarchy is used to get a visual representation of all the parent themes related to a given theme. It is important to note that the `theme_labels` table, in the database, is emptied when executing this command.
 ```zsh
 php artisan lego:theme-hierarchy
 ```
@@ -155,10 +155,40 @@ php artisan lego:category-part-count
 ```
 
 #### Update Part Image Url
-This command will update the urls associated with every Part found in the `parts` table of the database. Whenever there are any changes to the `parts` table, this command should be run. It is important to note that the `part_image_urls` table, in the database, is emptied when executing this command.
+This command will update or add the urls associated with every Part found in the `parts` table of the database. Whenever there are any changes to the `parts` table, this command should be run as well. This command can take an extremely long time to execute (~10 min with all categories). It is important to note that the `part_image_urls` table, in the database, is emptied when executing this command unless you specify the `--no-truncate` option or when you use either the `--categories` or `--exclude-categories` options.
 ```zsh
 php artisan lego:part-image-url
 ```
+***Options:***
+The `--categories` option can be used along with the `--exclude-categories` option to specify a specialized group of parts. By default, when using either of these options, the `part_image_urls` table is not emptied.
+1. ***`--categories`*** - Include only specified category id's from the `part_categories` table. Id's must be provided in a comma separated list unless you are only specifying one category
+    ```zsh
+    php artisan lego:part-image-url --categories=60
+    ```
+    *Only processes parts that are in the category with the id of `60`, which is "`Minifig Upper Body`"*
+
+    ```zsh
+    php artisan lego:part-image-url --categories=60,59
+    ```
+    *Only processes parts that are in the categories with id's of `60` & `59`, which are "`Minifig Upper Body`" & "`Minifig Heads`" respectively*
+1. ***`--exclude-categories`*** - Excludes all the specified category id's from the `part_categories` table. Id's must be provided in a comma separated list unless you are only specifying one category
+    ```zsh
+    php artisan lego:part-image-url --exclude-categories=60
+    ```
+    *Processes all parts except for ones belonging to the category with the id of `60`, which is "`Minifig Upper Body`"*
+
+    ```zsh
+    php artisan lego:part-image-url --exclude-categories=60,59
+    ```
+    *Processes all parts except for ones belonging to the categories with id's of `60` & `59`, which are "`Minifig Upper Body`" & "`Minifig Heads`" respectively*
+1. ***`--no-truncate`*** - Specifies you do not want the `part_image_urls` table emptied when the command runs. By default, when no categories or excluded categories are specified, the `part_image_urls` table is emptied. Using this option will override this default behavior.
+    ```zsh
+    php artisan lego:part-image-url --no-truncate
+    ```
+1. ***`--force-truncate`*** - Specifies you want the `part_image_urls` table emptied when the command runs. By default, when either of the `--categories` or `--exclude-categories` options are specified, the `part_image_urls` table is not emptied. Using this option will override this default behavior and force the table to be truncated during the execution.
+    ```zsh
+    php artisan lego:part-image-url --force-truncate
+    ```
 
 #### Import All User Sets From Rebrickable
 This command imports all the User Sets into the `user_sets` database table, using the Rebrickable API. It is important to note that the `user_sets` table, in the database, is emptied when executing this command.
