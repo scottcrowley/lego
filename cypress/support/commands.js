@@ -12,11 +12,11 @@
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
 
-Cypress.command.add('create', (model, overrides = {}) => {
+Cypress.Commands.add('create', (model, overrides = {}) => {
     return cy.request(`/__testing__/create/${model}`, overrides).its('body');
 });
 
-Cypress.command.add('login', (overrides = {}) => {
+Cypress.Commands.add('login', (overrides = {}) => {
     return cy.request('/__testing__/login', overrides);
 });
 

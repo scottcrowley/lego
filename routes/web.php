@@ -23,6 +23,7 @@ if (App::environment() === 'testing') {
         $user = factory('App\User')->create(request()->all());
 
         auth()->login($user);
+        return $user;
     });
 }
 

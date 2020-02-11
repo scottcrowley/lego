@@ -41,7 +41,7 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'sitename-cypress') {
+if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'lego-cypress.test') {
     \Dotenv\Dotenv::create(base_path(), '.env.cypress')->overload();
 }
 

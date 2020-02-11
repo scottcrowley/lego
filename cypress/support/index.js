@@ -14,7 +14,7 @@
 // ***********************************************************
 
 beforeEach(() => {
-    cy.exec('php artisan migrate:refresh --env=cypress');
+    cy.exec('php artisan migrate:fresh --env=cypress');
 });
 
 // Import commands.js using ES2015 syntax:
