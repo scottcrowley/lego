@@ -83,6 +83,7 @@ class StorageLocation extends Model
         }
         $success = 0;
         $thisParts = $this->parts;
+
         $parts->each(function ($part) use ($newLocation, $thisParts, &$success) {
             if (! $part instanceof \App\UserPart && $part['part_num'] != '') {
                 $part = UserPart::where('part_num', $part['part_num'])->first();

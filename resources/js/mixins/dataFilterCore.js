@@ -74,6 +74,10 @@ export default {
                     value = this.filters[index].value;
                 }
                 if (value != '') {
+                    value = value.trim();
+                    if (value.endsWith(',')) {
+                        value = value.slice(0,-1);
+                    }
                     this.presentParamsString = this.presentParamsString + '&' + p + '=' + value;
                 }
             });

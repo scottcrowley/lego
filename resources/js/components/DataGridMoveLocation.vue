@@ -76,10 +76,11 @@
 
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
-                <div class="card-content cursor-pointer" @click.prevent="selectPart($event, index)">
+                <div class="card-content relative">
+                    <div class="absolute w-full flex bg-secondary-lightest -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-light font-semibold" @click.prevent="selectPart($event, index)">Selected</div>
                     <div class="card-image">
-                        <img class="" :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null" @click.prevent="swapImageUrl($event)">
-                        <div class="w-24 h-24 my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
+                        <img class="" :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null">
+                        <div class="w-24 h-24 my-0 mx-auto p-0" v-else></div>
                     </div>
                     <div class="card-body">
                         <div v-for="valname in valnames">
@@ -193,7 +194,11 @@
             },
 
             selectPart(event, index) {
-                event.target.classList.toggle('border-primary');
+                event.target.parentElement.classList.toggle('border-primary');
+                event.target.classList.toggle('bg-primary-lightest');
+                event.target.classList.toggle('bg-secondary-lightest');
+                event.target.classList.toggle('text-secondary-dark');
+                event.target.classList.toggle('text-secondary-light');
                 this.partsSelected[index] = ! this.partsSelected[index];
                 this.selected = this.checkSelected();
                 this.updateMoveBtn();
@@ -256,6 +261,10 @@
             finalizeMove(count) {
                 document.querySelectorAll('.card-container .border-primary').forEach(el => { 
                     el.classList.remove('border-primary'); 
+                    el.firstElementChild.classList.remove('bg-primary-lightest');
+                    el.firstElementChild.classList.add('bg-secondary-lightest');
+                    el.firstElementChild.classList.remove('text-secondary-dark');
+                    el.firstElementChild.classList.add('text-secondary-light');
                 });
                 this.getResults(this.currentPage);
                 this.updateSelected();

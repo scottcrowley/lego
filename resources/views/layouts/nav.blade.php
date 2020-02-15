@@ -60,6 +60,7 @@
                     <div slot="dropdown-items">
                         <a href="{{ route('storage.types.index') }}">Types</a>
                         <a href="{{ route('storage.locations.index') }}">Locations</a>
+                        <a href="{{ route('storage.locations.parts.unassigned') }}">Unassigned Parts</a>
                     </div>
                 </dropdown>
             @endif

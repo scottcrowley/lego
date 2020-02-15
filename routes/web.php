@@ -82,6 +82,10 @@ Route::group([
         $allLocations = StorageLocation::where('id', '<>', $location->id)->get()->sortBy('location_name')->values();
         return view('storage.locations.parts.move', compact('location', 'allLocations'));
     })->name('storage.locations.parts.move');
+    Route::get('/parts/unassigned', function () {
+        $allLocations = StorageLocation::all()->sortBy('location_name')->values();
+        return view('storage.locations.parts.unassigned', compact('allLocations'));
+    })->name('storage.locations.parts.unassigned');
 });
 
 Route::group([
@@ -149,6 +153,8 @@ Route::group([
     Route::get('/sets', 'ApiUserController@getSets')->name('api.users.sets');
     Route::get('/parts/all', 'ApiUserController@getAllParts')->name('api.users.parts.all');
     Route::get('/parts/individual', 'ApiUserController@getAllIndividualParts')->name('api.users.parts.individual');
+    Route::get('/storage/locations/parts/unassigned', 'ApiUserController@getAllUnassignedParts')->name('api.users.storage.locations.unassigned.parts');
+    Route::post('/storage/locations/parts/unassigned/{location}', 'ApiUserController@moveUnassignedParts')->name('api.users.storage.locations.unassigned.parts.move');
     Route::get('/storage/locations/{location}/parts', 'ApiUserController@getStorageLocationParts')->name('api.users.storage.locations.parts');
     Route::post('/storage/locations/{location}/parts/{newLocation}', 'ApiUserController@moveStorageLocationParts')->name('api.users.storage.locations.parts.move');
     Route::get('/storage/locations/{location}/parts/individual', 'ApiUserController@getStorageLocationIndividualParts')->name('api.users.storage.locations.parts.individual');

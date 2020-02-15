@@ -111,9 +111,27 @@ class ApiUserController extends Controller
         return $parts->paginate($this->defaultPerPage);
     }
 
+    /**
+     * Move parts from one storage location to another
+     *
+     * @param StorageLocation $location
+     * @param StorageLocation $newLocation
+     * @return void
+     */
     public function moveStorageLocationParts(StorageLocation $location, StorageLocation $newLocation)
     {
         return $location->movePartsTo(request()->all(), $newLocation);
+    }
+
+    /**
+     * Move unassigned part to a given storage location
+     *
+     * @param StorageLocation $location
+     * @return void
+     */
+    public function moveUnassignedParts(StorageLocation $location)
+    {
+        return $location->movePartsTo(request()->all(), $location);
     }
 
     /**
@@ -138,6 +156,19 @@ class ApiUserController extends Controller
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public function editStorageLocationParts(StorageLocation $location, StorageLocationPartsFilters $filters)
+    {
+        $parts = $filters->apply(UserPart::all())->unique('part_num')->values();
+
+        return $parts->paginate($this->defaultPerPage);
+    }
+
+    /**
+     * get all user parts that are not currently assigned to a location
+     *
+     * @param StorageLocationPartsFilters $filters
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getAllUnassignedParts(StorageLocationPartsFilters $filters)
     {
         $parts = $filters->apply(UserPart::all())->unique('part_num')->values();
 
