@@ -33,7 +33,8 @@ return [
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => database_path(env('DB_DATABASE', 'database.sqlite')),
+            // 'database' => database_path(env('DB_DATABASE', 'database.sqlite')), //changed to work with cypress
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
