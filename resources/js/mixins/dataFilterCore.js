@@ -73,11 +73,14 @@ export default {
                 if (value === true) {
                     value = this.filters[index].value;
                 }
-                if (value != '') {
+                if (typeof value == 'string') {
                     value = value.trim();
                     if (value.endsWith(',')) {
                         value = value.slice(0,-1);
                     }
+                }
+
+                if (value != '') {
                     this.presentParamsString = this.presentParamsString + '&' + p + '=' + value;
                 }
             });

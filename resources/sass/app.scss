@@ -100,13 +100,12 @@
 }
 
 .dim-container {
-    @apply w-full rounded relative border border-transparent;
+    @apply w-full rounded relative;
     
     &.dim {
         @apply border-primary;
         
-        & .card-content {
-            @apply border-none;
+        & .card-body, & .card-image {
             opacity: .3;
         }
     }

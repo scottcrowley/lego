@@ -73,26 +73,30 @@
 
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
-                <div :class="(data.dimmed) ? 'dim' : ''" class="dim-container">
-                    <div class="card-content z-20">
-                        <div class="card-image">
-                            <div class="w-full my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
-                            <img :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-else class="" @click.prevent="swapImageUrl($event)">
-                        </div>
-                        <div class="card-body z-10" @click.prevent="toggleSelection($event, index)">
-                            <div class="z-0">
-                                <p :class="(valname.title) ? 'title' : ''" class="relative" v-for="valname in valnames" style="z-index: -1;">
-                                    <span v-if="!valname.link">
-                                        <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
-                                        {{ (
-                                            (valname.boolean === true) ? (
-                                                (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
-                                            ) : data[valname.field]
-                                        ) }}
-                                    </span>
-                                    <a :href="generateLinkUrl(valname.linkUrl, index)" v-else>{{ data[valname.field] }}</a>
-                                </p>
-                            </div>
+                <div class="card-content dim-container" :class="(data.dimmed) ? 'dim' : ''">
+                    <div 
+                        class="absolute w-full flex -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-dark font-semibold z-20" 
+                        :class="(data.dimmed) ? 'bg-primary-lightest' : 'bg-secondary-lightest'"
+                        @click.prevent="toggleSelection($event, index)"
+                        v-text="(data.dimmed) ? 'Mark as not found' : 'Mark as found'"
+                    ></div>
+                    <div class="card-image">
+                        <div class="w-full my-0 mx-auto p-0" v-if="data[image_field] == '' || data[image_field] == null"></div>
+                        <img :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-else class="" @click.prevent="swapImageUrl($event)">
+                    </div>
+                    <div class="card-body">
+                        <div class="z-0">
+                            <p :class="(valname.title) ? 'title' : ''" class="relative" v-for="valname in valnames" style="z-index: -1;">
+                                <span v-if="!valname.link">
+                                    <span class="font-bold" v-if="!valname.title">{{ valname.label }}:</span> 
+                                    {{ (
+                                        (valname.boolean === true) ? (
+                                            (data[valname.field] == true || data[valname.field] == 't') ? 'Yes' : 'No'
+                                        ) : data[valname.field]
+                                    ) }}
+                                </span>
+                                <a :href="generateLinkUrl(valname.linkUrl, index)" v-else>{{ data[valname.field] }}</a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -162,15 +166,10 @@
             },
 
             toggleSelection(event, index) {
-                let el = event.target.closest('.dim-container');
-                let selected = ! el.classList.contains('dim');
+                let selected = ! event.target.closest('.dim-container').classList.contains('dim');
+                this.dataSet[index].dimmed = ! this.dataSet[index].dimmed;
                 
-                this.toggleDim(el);
                 this.updateCache(this.dataSet[index], selected);
-            },
-
-            toggleDim(el) {
-                el.classList.toggle('dim');
             },
 
             getCachedSelected() {
