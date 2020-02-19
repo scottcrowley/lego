@@ -11,31 +11,37 @@
                     <a class="block sm:inline sm:pr-3 sm:mb-2 no-underline hover:underline text-primary-darker text-sm" href="{{ url('/login') }}">{{ __('Login') }}</a>
                     <a class="block sm:inline no-underline hover:underline text-primary-darker text-sm" href="{{ url('/register') }}">{{ __('Register') }}</a>
                 @else
-                    <dropdown>
-                        <div slot="link" class="block md:hidden">
-                            <button class="burger" style="outline: none;">
-                                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-                            </button>
-                        </div>
-                        <button slot="link" class="hidden md:block btn is-primary is-small" style="outline: none;">{{ Auth::user()->name }}</button>
+                    <div data-cy="main-menu">
+                        <dropdown>
+                            <div slot="link" class="block md:hidden">
+                                <button class="burger" style="outline: none;">
+                                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                                </button>
+                            </div>
+                            <button slot="link" class="hidden md:block btn is-primary is-small" style="outline: none;">{{ Auth::user()->name }}</button>
 
-                        <div slot="dropdown-items" class="text-right pr-3 pl-10">
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
-                        </div>
-                    </dropdown>
+                            <div slot="dropdown-items" class="text-right pr-3 pl-10">
+                                <a href="{{ route('dashboard') }}">Dashboard</a>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    data-cy="logout-button">{{ __('Logout') }}</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                    @csrf
+                                </form>
+                            </div>
+                        </dropdown>
+                    </div>
                 @endguest
             </div>
         </div>
         <div class="flex item-end justify-center mb-2 mt-2 md:mt-3">
             @if (auth()->check())
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Your Legos</a>
+                    <a href="#"
+                        slot="link" 
+                        class="dropdown-toggle toggle-closed" 
+                        data-cy="menu-your-legos"
+                    >Your Legos</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('legouser.sets.grid') }}">Sets</a>
                         <a href="{{ route('legouser.parts.all') }}">Parts - All</a>
@@ -45,7 +51,11 @@
                     </div>
                 </dropdown>
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Lego</a>
+                    <a href="#" 
+                        slot="link" 
+                        class="dropdown-toggle toggle-closed"
+                        data-cy="menu-lego"
+                    >Lego</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('lego.sets.grid') }}">Sets</a>
                         <a href="{{ route('lego.themes') }}">Themes</a>
@@ -56,7 +66,11 @@
                     </div>
                 </dropdown>
                 <dropdown>
-                    <a slot="link" class="dropdown-toggle toggle-closed" href="#">Storage</a>
+                    <a href="#" 
+                        slot="link" 
+                        class="dropdown-toggle toggle-closed"
+                        data-cy="menu-storage"
+                    >Storage</a>
                     <div slot="dropdown-items">
                         <a href="{{ route('storage.types.index') }}">Types</a>
                         <a href="{{ route('storage.locations.index') }}">Locations</a>

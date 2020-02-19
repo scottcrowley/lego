@@ -13,7 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-beforeEach(() => {
+after(() => {
     cy.exec('php artisan migrate:fresh --env=cypress');
 });
 

@@ -1,6 +1,9 @@
 <template>
     <div class="dropdown-menu" ref="dropdowncontainer">
-        <div role="button" class="dropdown-toggle-wrap" @click.prevent="toggle($event)" >
+        <div role="button" 
+            class="dropdown-toggle-wrap" 
+            @click.prevent="toggle($event)"
+        >
             <slot name="link"></slot>
         </div>
 

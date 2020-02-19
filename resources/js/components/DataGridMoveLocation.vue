@@ -13,8 +13,18 @@
                         default_value=""
                     />
                 </div>
-                <button class="mt-3 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveSelectedDisabled" @click.prevent="moveSelected()">Move Selected</button>
-                <button class="mt-1 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" :disabled="moveAllDisabled" @click.prevent="moveAll()">Move All</button>
+                <button 
+                    data-cy="button-move-selected"
+                    class="mt-3 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" 
+                    :disabled="moveSelectedDisabled" 
+                    @click.prevent="moveSelected()"
+                >Move Selected</button>
+                <button 
+                    data-cy="button-move-all"
+                    class="mt-1 sm:mt-0 sm:ml-3 w-full sm:w-auto block sm:inline btn is-narrow is-primary" 
+                    :disabled="moveAllDisabled" 
+                    @click.prevent="moveAll()"
+                >Move All</button>
             </form>
             <p v-else>There are currently no other storage locations in the database.</p>
         </div>
@@ -77,7 +87,11 @@
         <div class="card-container" v-show="!loading">
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content relative">
-                    <div class="absolute w-full flex bg-secondary-lightest -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-light font-semibold" @click.prevent="selectPart($event, index)">Selected</div>
+                    <div 
+                        class="absolute w-full flex bg-secondary-lightest -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-light font-semibold" 
+                        @click.prevent="selectPart($event, index)"
+                        data-cy="select-part-button"
+                    >Selected</div>
                     <div class="card-image">
                         <img class="" :src="data[image_field]" :alt="data['name']" :data-alt-image="data[image_label_field]" v-if="data[image_field] != '' && data[image_field] != null">
                         <div class="w-24 h-24 my-0 mx-auto p-0" v-else></div>
