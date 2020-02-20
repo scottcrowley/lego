@@ -15,7 +15,7 @@ describe('Filters', () => {
             cy.get('.card-container .card').should('have.length', 6);
             cy.get('[data-cy=form-filters]').should('not.be.visible');
             cy.get('[data-cy=filters-show-button]').click();
-            cy.get('[data-cy=form-filters]').should('be.visible').find('input').should('have.length', 3);
+            cy.get('[data-cy=form-filters]').should('be.visible').find('input').should('have.length', 4);
 
             cy.get('#filter_name').type('brick');
             cy.get('[data-cy=filters-apply-button]').click();
@@ -52,6 +52,20 @@ describe('Filters', () => {
             cy.get('#filter_part_num').clear().type('30, 00');
             cy.get('[data-cy=filters-apply-button]').click();
             cy.get('.card-container .card').should('have.length', 2);
+        });
+
+        it('can filter using a storage location value', () => {
+            cy.visit('/legouser/parts/all');
+    
+            cy.get('[data-cy=filters-show-button]').click();
+
+            cy.get('#filter_location_name').type('bin');
+            cy.get('[data-cy=filters-apply-button]').click();
+            cy.get('.card-container .card').should('have.length', 3);
+
+            cy.get('#filter_location_name').type(', drawer');
+            cy.get('[data-cy=filters-apply-button]').click();
+            cy.get('.card-container .card').should('have.length', 1);
         });
 
         it('can use multiple filter values', () => {
