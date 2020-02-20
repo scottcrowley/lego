@@ -1,6 +1,5 @@
 describe('Storage - Unassigned Parts', () => {
     before(() => {
-        // cy.exec('php artisan migrate:fresh --env=cypress');
         cy.exec('php artisan db:seed --class=UnassignedPartsSeeder --env=cypress');
         cy.exec('php artisan db:seed --class=StorageLocationsSeeder --env=cypress');
     });

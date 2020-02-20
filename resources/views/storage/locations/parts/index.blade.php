@@ -31,10 +31,19 @@
             <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Total Pieces in Location:</span> {{ $location->parts->sum('quantity') }}</p>
         </div>
         <div class="pt-2 md:flex">
-            <a href="{{ route('storage.locations.parts.edit', $location->id) }}" class="btn is-primary is-narrow block">Edit Parts in Location</a>
+            <a href="{{ route('storage.locations.parts.edit', $location->id) }}" 
+                class="btn is-primary is-narrow block"
+                data-cy="edit-parts-button"
+            >Edit Parts in Location</a>
             @if ($location->parts->count())
-                <a href="{{ route('storage.locations.parts.individual', $location->id) }}" class="btn is-primary is-narrow block mt-1 ml-0 md:mt-0 md:ml-1">View Individual Pieces</a>
-                <a href="{{ route('storage.locations.parts.move', $location->id) }}" class="btn is-primary is-narrow block mt-1 ml-0 md:mt-0 md:ml-auto">Move Parts</a>
+                <a href="{{ route('storage.locations.parts.individual', $location->id) }}" 
+                    class="btn is-primary is-narrow block mt-1 ml-0 md:mt-0 md:ml-1"
+                    data-cy="individual-parts-button"
+                >View Individual Pieces</a>
+                <a href="{{ route('storage.locations.parts.move', $location->id) }}" 
+                    class="btn is-primary is-narrow block mt-1 ml-0 md:mt-0 md:ml-auto"
+                    data-cy="move-parts-button"
+                >Move Parts</a>
             @endif
         </div>
     </div>

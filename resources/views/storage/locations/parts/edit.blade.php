@@ -28,7 +28,10 @@
             <p class="text-sm md:text-base mb-2 font-normal tracking-wide"><span class="font-semibold">Parts in Location:</span> {{ $location->parts->count() }}</p>
         </div>
         <div class="pt-2">
-            <a href="{{ route('storage.locations.parts.index', $location->id) }}" class="btn is-primary is-narrow block md:inline">View Parts in Location</a>
+            <a href="{{ route('storage.locations.parts.index', $location->id) }}" 
+                class="btn is-primary is-narrow block md:inline"
+                data-cy="view-parts-button"
+            >View Parts in Location</a>
         </div>
     </div>
     <div class="rounded shadow">
