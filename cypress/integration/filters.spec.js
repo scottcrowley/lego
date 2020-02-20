@@ -68,6 +68,20 @@ describe('Filters', () => {
             cy.get('.card-container .card').should('have.length', 1);
         });
 
+        it.only('can filter individual parts using a color value', () => {
+            cy.visit('/legouser/parts/individual');
+    
+            cy.get('[data-cy=filters-show-button]').click();
+
+            cy.get('#filter_color').type('b');
+            cy.get('[data-cy=filters-apply-button]').click();
+            cy.get('.card-container .card').should('have.length', 8);
+
+            cy.get('#filter_color').type(', dark');
+            cy.get('[data-cy=filters-apply-button]').click();
+            cy.get('.card-container .card').should('have.length', 3);
+        });
+
         it('can use multiple filter values', () => {
             cy.visit('/legouser/parts/all');
     

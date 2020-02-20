@@ -22,6 +22,7 @@
                     {label: 'Part Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Category', param: 'category_label', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Storage Location', param: 'location_name', type: 'text', classes: 'flex-1 ml-3'},
+                    {label: 'Color', param: 'color', type: 'text', classes: 'flex-1 ml-3'},
                     ]"
                 :valnames="[
                     {label: 'Name', field: 'name', title: true, sortable: true, sorted: true, sortdesc: false, boolean: false},
@@ -31,7 +32,7 @@
                     {label: 'Quantity', field: 'quantity', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     {label: 'Location', field: 'location_name', title: false, sortable: true, sorted: false, sortdesc: false, boolean: false},
                     ]"
-                :allowedparams="['name', 'part_num', 'part_category_id', 'location_id', 'color_name', 'location_name', 'category_label']"
+                :allowedparams="['name', 'part_num', 'part_category_id', 'location_id', 'color', 'location_name', 'category_label']"
                 :sort-order="['name']"
                 endpoint="{{ route('api.users.parts.individual') }}"></data-grid-with-filters>
         </div>
