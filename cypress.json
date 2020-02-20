@@ -1,3 +1,5 @@
 {
-    "baseUrl": "http://lego-cypress.test"
+    "baseUrl": "http://lego-cypress.test",
+    "viewportWidth": 1200,
+    "viewportHeight": 1000
 }

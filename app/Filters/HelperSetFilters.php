@@ -23,7 +23,12 @@ trait HelperSetFilters
      */
     protected function set_num($value)
     {
-        return $this->collection = $this->collection->where('set_num', $value);
+        return $this->collection =
+            $this->processMultipleFilters(
+                $this->collection,
+                'set_num',
+                $this->getMultipleFilters($value)
+            );
     }
 
     /**

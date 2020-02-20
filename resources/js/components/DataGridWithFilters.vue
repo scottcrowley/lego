@@ -3,17 +3,27 @@
         <div class="w-full md:w-3/4 mb-5 mx-auto border border-t-0 rounded-b-lg px-4 py-4">
             <div class="flex">
                 <p class="title">Filters:</p>
-                <button class="block ml-auto btn is-small is-narrow" @click.prevent="filtersShow = !filtersShow" v-text="(filtersShow) ? 'hide' : 'show'"></button>
+                <button class="block ml-auto btn is-small is-narrow" 
+                    @click.prevent="filtersShow = !filtersShow" 
+                    v-text="(filtersShow) ? 'hide' : 'show'"
+                    data-cy="filters-show-button"
+                ></button>
             </div>
             <div class="ml-2 pt-4" v-show="filtersShow">
-                <form @submit.prevent="applyFilters()">
+                <form data-cy="form-filters" @submit.prevent="applyFilters()">
                     <div class="field-group flex items-center mb-2" v-for="filter in filters">
                         <label :for="'filter_'+filter.param" v-text="filter.label"></label>
                         <input :type="filter.type" :name="'filter_'+filter.param" :id="'filter_'+filter.param" :class="filter.classes" v-model="filterModels['filter_'+filter.param]">
                     </div>
                     <div class="field-group flex items-center mb-2">
-                        <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
-                        <button class="btn ml-3" @click.prevent="clearFilters()">Clear Filters</button>
+                        <button class="btn is-primary" 
+                            @click.prevent="applyFilters()"
+                            data-cy="filters-apply-button"
+                        >Apply Filters</button>
+                        <button class="btn ml-3" 
+                            @click.prevent="clearFilters()"
+                            data-cy="filters-clear-button"
+                        >Clear Filters</button>
                     </div>
                 </form>
             </div>
