@@ -46,8 +46,8 @@
                         <a href="{{ route('legouser.sets.grid') }}">Sets</a>
                         <a href="{{ route('legouser.parts.all') }}">Parts - All</a>
                         <a href="{{ route('legouser.parts.individual') }}">Parts - Individual</a>
-                        <a href="{{ route('legouser.loose_parts') }}">Loose Parts</a>
-                        <a href="{{ route('legouser.lost_parts') }}">Lost Parts</a>
+                        {{-- <a href="{{ route('legouser.loose_parts') }}">Loose Parts</a>
+                        <a href="{{ route('legouser.lost_parts') }}">Lost Parts</a> --}}
                     </div>
                 </dropdown>
                 <dropdown>

@@ -68,7 +68,7 @@ describe('Filters', () => {
             cy.get('.card-container .card').should('have.length', 1);
         });
 
-        it.only('can filter individual parts using a color value', () => {
+        it('can filter individual parts using a color value', () => {
             cy.visit('/legouser/parts/individual');
     
             cy.get('[data-cy=filters-show-button]').click();

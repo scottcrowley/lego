@@ -22,8 +22,6 @@
                     {label: 'Set Number', param: 'part_num', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Theme', param: 'theme_label', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Year', param: 'year', type: 'text', classes: 'flex-1 ml-3'},
-                    {label: 'Minimum Year', param: 'minyear', type: 'text', classes: 'flex-1 ml-3'},
-                    {label: 'Maximum Year', param: 'maxyear', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Minimum Pieces', param: 'minpieces', type: 'text', classes: 'flex-1 ml-3'},
                     {label: 'Maximum Pieces', param: 'maxpieces', type: 'text', classes: 'flex-1 ml-3'},
                     ]"
