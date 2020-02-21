@@ -13,8 +13,9 @@
         <div class="bg-white px-8 py-6 rounded-b">
             <data-table 
                 label="Themes" 
+                per_page="50" 
                 :colnames="[
-                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-3/5'},
+                    {name: 'Name', sortable: true, sorted: true, sortDesc: false, boolean: false, width: 'w-3/5', link: true, linkUrl: '/lego/sets-grid?theme_label={name}'},
                     {name: 'Parent Themes', sortable: true, sorted: false, sortDesc: false, boolean: false, width: 'w-2/5'}]"
                 :valnames="['name', 'parents_label']"
                 :allowedparams="['name', 'parent_id']"

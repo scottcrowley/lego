@@ -34,6 +34,9 @@ export default {
             perpage: this.per_page,
             defaultPage: 0,
             location: null,
+            currentPage: 1,
+            preResultsFunction: null,
+            postResultsFunction: null
         }
     },
 
@@ -77,6 +80,20 @@ export default {
                 urlParams.forEach(this.addParamToQuery);
             }
         },
+        checkSortDefault() {
+            let sortCols = this.sortOrder;
+
+            if (! sortCols.length) {
+                return;
+            }
+
+            if (sortCols[0] != '') {
+                this.sortdesc = (sortCols[0].substr(0,1) == '-');
+                this.sortedCol = (this.sortdesc) ? sortCols[0].substr(1) : sortCols[0];
+            }
+
+            this.sortCols = sortCols;
+        },
         getSortColumns(sort) {
             let sortCols = sort.split(',');
             this.sortCols = sortCols;
@@ -94,6 +111,43 @@ export default {
         },
         updateUri(params) {
             history.pushState(null, null, params);
+        },
+        getResults(page = 1) {
+            this.loading = true;
+
+            if (this.preResultsFunction) {
+                this[this.preResultsFunction]();
+            }
+
+            if (!page && this.defaultPage == 0) {
+                page = 1;
+            } else if (this.defaultPage != 0) {
+                page = this.defaultPage;
+                this.defaultPage = 0;
+            }
+
+            this.currentPage = (this.currentPage != page) ? page : this.currentPage;
+
+            let params = '?page=' + page + '&perpage=' + this.perpage;
+            if (this.sortedCol != '') {
+                params = params + '&sort=' + this.sortCols.join(',');
+            }
+
+            params = params + this.presentParamsString;
+
+            axios.get(this.endpoint + params)
+                .then(response => {
+                    this.loading = false;
+                    this.allData = response.data;
+                    this.dataSet = response.data.data;
+                    this.updateUri(params);
+                    if (this.postResultsFunction !== null) {
+                        this[this.postResultsFunction]();
+                    }
+                })
+                .catch(error => {
+                    this.processError(error);
+                });
         },
         processError(error) {
             if (error.response) {
@@ -115,6 +169,21 @@ export default {
                 console.log('Error', error.message);
             }
             console.log('Config', error.config);
-        }
+        },
+        generateLinkUrl(url, index) {
+            let token = url.match(/\{.+\}/ig);
+            if (token == null) {
+                return url;
+            }
+
+            let key = token[0].substr(1, token[0].length - 2);
+            let value = this.dataSet[index][key];
+            
+            if (value) {
+                return url.replace(token[0], value);
+            }
+
+            return url;
+        },
     }
 }

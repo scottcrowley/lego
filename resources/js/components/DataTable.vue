@@ -38,11 +38,14 @@
                         <span v-if="valname == 'rgb'" 
                             class="mr-1 -mb-px inline-block border border-secondary-darker w-3 h-3" 
                             :style="showColor(data[valname])"></span>
-                        {{ (
-                            (colnames[vIndex].boolean === true) ? (
-                                (data[valname] == true || data[valname] == 't') ? 'Yes' : 'No'
-                            ) : data[valname]
-                        ) }}
+                        <span v-if="!colnames[vIndex].link">
+                            {{ (
+                                (colnames[vIndex].boolean === true) ? (
+                                    (data[valname] == true || data[valname] == 't') ? 'Yes' : 'No'
+                                ) : data[valname]
+                            ) }}
+                        </span>
+                        <a :href="generateLinkUrl(colnames[vIndex].linkUrl, index)" v-else>{{ data[valname] }}</a>
                     </div>
                 </div>
             </div>
@@ -93,93 +96,51 @@
             let updateSort = this.checkUriParams();
             if (!updateSort) {
                 this.checkSortDefault();
-            } else {
-                this.updateSortedColumn();
             }
+            this.updateSortedColumn();
 
             this.getResults();
         },
 
         methods: {
-            checkSortDefault() {
-                let cols = this.colnames;
-
-                cols.forEach((col, index) => {
-                    if (col.sortable && col.sorted) {
-                        let element = document.getElementById('colnames').childNodes[index];
-                        element.classList.add('sorted-col');
-                        this.sortedCol = this.valnames[index];
-                        if (col.sortdesc) {
-                            this.sortdesc = true;
-                            element.classList.add('desc');
-                        }
-                    }
-                });
-            },
             updateSort(event) {
                 let classList = event.target.classList;
-                if (! classList.contains('sortable-col')) return;
+                if (! classList.contains('sortable-col')) {
+                    return;
+                }
 
-                let cols = event.target.parentElement.childNodes;
+                let parent = document.querySelector('#colnames');
+                let colIndex = Array.prototype.indexOf.call(parent.children, event.target);
+                this.sortdesc = false;
+                this.sortedCol = this.valnames[colIndex];
 
                 if (classList.contains('sorted-col')) {
                     this.sortdesc = (classList.contains('desc')) ? false : true;
-                } else {
-                    this.sortdesc = false;
+                } 
+                this.sortCols = (this.sortdesc) ? ['-' + this.sortedCol] : [this.sortedCol];
 
-                    cols.forEach((col, index) => {
-                        if (col == event.target) {
-                            this.sortedCol = this.valnames[index];
-                        }
-                    });
-                }
                 this.updateSortedColumn();
                 
                 this.getResults();
             },
             updateSortedColumn() {
-                let cols = this.colnames;
-                let trs = document.getElementById('colnames').childNodes;
-                let classList = [];
+                if (this.sortedCol == '') {
+                    return;
+                }
 
-                cols.forEach((col, index) => {
-                    classList = trs[index].classList;
-                    classList.remove('sorted-col','desc');
-                    if (this.valnames[index] == this.sortedCol && col.sortable) {
-                        classList.add('sorted-col');
-                        if (this.sortdesc) {
-                            classList.add('desc');
-                        }
-                    }
+                let colIndex = this.valnames.findIndex(c => c == this.sortedCol);
+                let colHeads = document.querySelectorAll('#colnames div');
+
+                colHeads.forEach(col => {
+                    col.classList.remove('sorted-col','desc');
                 });
-            },
-            getResults(page = 1) {
-                this.loading = true;
 
-                if (!page && this.defaultPage == 0) {
-                    page = 1;
-                } else if (this.defaultPage != 0) {
-                    page = this.defaultPage;
-                    this.defaultPage = 0;
+                if (this.colnames[colIndex].sortable) {
+                    colHeads[colIndex].classList.add('sorted-col');
+                    if (this.sortdesc) {
+                        colHeads[colIndex].classList.add('desc');
+                    }
                 }
-
-                let params = '?page=' + page;
-                if (this.sortedCol != '') {
-                    params = params + '&sort' + (this.sortdesc ? 'desc' : '') + '=' + this.sortedCol;
-                }
-
-                params = params + this.presentParamsString;
-
-                axios.get(this.endpoint + params)
-                    .then(response => {
-                        this.loading = false;
-                        this.allData = response.data;
-                        this.dataSet = response.data.data;
-                        this.updateUri(params);
-                    })
-                    .catch(function(error) {
-                        this.processError(error);
-                    });
             },
             showColor(rgb) {
                 return 'background-color: #' + rgb;
