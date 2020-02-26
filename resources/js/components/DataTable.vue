@@ -19,7 +19,7 @@
             <div class="" v-show="!loading">
                 <div id="colnames" class="flex">
                     <div v-for="colname in colnames" 
-                        class="px-1 py-0 text-xs text-secondary-darker font-semibold text-left"
+                        class="px-1 py-0 text-xs text-secondary-700 font-semibold text-left"
                         :class="calculateClass(colname)" 
                         v-text="colname.name" 
                         @click.prevent="updateSort($event)"></div>
@@ -32,11 +32,11 @@
                 </div>
                 <div class="flex" v-for="(data, index) in dataSet" :key="index" v-show="!loading">
                     <div 
-                        class="p-1 text-xs text-secondary-dark font-hairline text-left"
+                        class="p-1 text-xs text-secondary-600 font-hairline text-left"
                         :class="(colnames[vIndex].width != '') ? colnames[vIndex].width : ''" 
                         v-for="(valname, vIndex) in valnames">
                         <span v-if="valname == 'rgb'" 
-                            class="mr-1 -mb-px inline-block border border-secondary-darker w-3 h-3" 
+                            class="mr-1 -mb-px inline-block border border-secondary-700 w-3 h-3" 
                             :style="showColor(data[valname])"></span>
                         <span v-if="!colnames[vIndex].link">
                             {{ (

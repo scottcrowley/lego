@@ -1,0 +1,28 @@
+/* Dropdown menu - Hat-tip to Jeffery Way. */
+.dropdown-toggle {
+    > button:focus {
+        @apply outline-none;
+    }
+}
+
+.dropdown-menu-link {
+    @apply block no-underline text-sm leading-loose px-4 text-secondary-800;
+
+    &:hover {
+        @apply no-underline;
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.dropdown-toggle-link::after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.255em;
+    vertical-align: 0.2em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid #0000;
+    border-bottom: 0;
+    border-left: 0.3em solid #0000;
+}

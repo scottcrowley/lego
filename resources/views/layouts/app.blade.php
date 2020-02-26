@@ -8,14 +8,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        @yield('title') - Lego Project
+        @yield('title', config('app.name', 'Laravel')) - Lego Project
     </title>
+
+    <!-- Fonts -->
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     @yield('head')
 </head>
-<body class="bg-primary-lightest h-screen antialiased">
+<body class="bg-primary-100 h-screen antialiased">
     <div id="app" v-cloak>
         @include('layouts.nav')
 
@@ -26,7 +28,6 @@
         <flash message="{{ session('flash.message') }}" baselevel="{{ session('flash.level') }}"></flash>
     </div>
 
-    <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
     @yield('scripts')
 </body>

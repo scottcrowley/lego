@@ -2,14 +2,14 @@
     <div class="mx-auto h-full flex flex-col">
         <div class="flex items-center pt-3">
             <div class="text-center sm:text-left md:ml-0">
-                <a href="{{ url('/') }}" class="text-lg font-hairline text-primary-darker no-underline hover:underline">
+                <a href="{{ url('/') }}" class="text-lg font-hairline text-primary-700 no-underline hover:underline">
                     {{ config('app.name', 'Laravel') }}
                 </a>
             </div>
             <div class="ml-auto">
                 @guest
-                    <a class="block sm:inline sm:pr-3 sm:mb-2 no-underline hover:underline text-primary-darker text-sm" href="{{ url('/login') }}">{{ __('Login') }}</a>
-                    <a class="block sm:inline no-underline hover:underline text-primary-darker text-sm" href="{{ url('/register') }}">{{ __('Register') }}</a>
+                    <a class="block sm:inline sm:pr-3 sm:mb-2 no-underline hover:underline text-primary-700 text-sm" href="{{ url('/login') }}">{{ __('Login') }}</a>
+                    <a class="block sm:inline no-underline hover:underline text-primary-700 text-sm" href="{{ url('/register') }}">{{ __('Register') }}</a>
                 @else
                     <div data-cy="main-menu">
                         <dropdown>

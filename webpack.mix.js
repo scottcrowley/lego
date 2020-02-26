@@ -1,7 +1,4 @@
-let mix = require('laravel-mix');
-
-require('laravel-mix-tailwind');
-// require('laravel-mix-purgecss');
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -14,10 +11,12 @@ require('laravel-mix-tailwind');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css')
-   .tailwind();
+// mix.js('resources/js/app.js', 'public/js')
+//    .sass('resources/sass/app.scss', 'public/css');
 
-if (mix.inProduction()) {
-  mix.version();
-}
+mix.js('resources/js/app.js', 'public/js')
+   .postCss('resources/css/app.css', 'public/css', [
+      require('postcss-import'),
+      require('tailwindcss'),
+      require('postcss-nesting'),
+    ]);

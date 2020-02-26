@@ -7,7 +7,7 @@
 @section('content')
 <div class="w-full px-3 sm:px-0">
     <div class="rounded shadow">
-        <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
+        <div class="flex font-medium text-lg text-primary-700 bg-primary-500 p-3 rounded-t">
             <div>Unassigned User Parts</div>
         </div>
         <div class="bg-white p-4 pb-6 rounded-b">

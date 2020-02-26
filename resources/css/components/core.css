@@ -1,0 +1,162 @@
+[v-cloak] { display: none; }
+
+body {
+    @apply text-sm font-normal text-secondary-700 text-left font-sans bg-secondary-100;
+}
+
+.container {
+    @apply w-full px-1 mx-auto;
+}
+
+.row {
+    @apply flex flex-wrap -mx-4
+}
+
+.col-10, .col-8, .col-6, .col-4, .offset-4, .offset-6, .offset-8 {
+    @apply relative w-full px-4;
+}
+
+.card {
+    @apply relative w-full flex flex-col min-w-0 bg-white break-words border border-secondary-300 rounded;
+
+    & .card-header {
+        @apply mb-0 bg-secondary-200 px-5 py-3 border-b border-secondary-300;
+    }
+
+    & .card-body {
+        @apply flex-1 p-5;
+    }
+}
+
+.alert-success, .alert-warning, .alert-danger {
+    @apply block w-full mt-1 text-xs;
+}
+
+.success, .alert-success {
+    @apply text-success-800;
+}
+
+.warning, .alert-warning {
+    @apply text-warning-700;
+}
+
+.danger, .alert-danger {
+    @apply text-danger-800;
+}
+
+div {
+    &.success, &.warning, &.danger {
+        @apply py-4 px-6 border rounded;
+    }
+    &.success {
+        @apply text-success-700 bg-success-200 border-success-400;
+    }
+
+    &.warning {
+        @apply text-warning-700 bg-warning-200 border-warning-400;
+    }
+
+    &.danger {
+        @apply text-danger-700 bg-danger-200 border-danger-400;
+    }
+}
+
+.alert {
+    @apply relative py-3 px-5 mb-4 mt-0 text-base text-left border border-transparent rounded;
+
+    &.alert-success {
+        @apply text-success-700 bg-success-200 border-success-400;
+    }
+
+    &.alert-warning {
+        @apply text-warning-700 bg-warning-200 border-warning-400;
+    }
+
+    &.alert-danger {
+        @apply text-danger-700 bg-danger-200 border-danger-400;
+    }
+}
+
+.is-invalid {
+    @apply border-red-600;
+}
+
+.form-group {
+    @apply mb-4 items-center;
+
+    &label {
+        @apply leading-relaxed;
+    }
+}
+
+.checkbox-label {
+    @apply inline-flex items-center;
+
+    & :first-child {
+        @apply mr-2;
+    }
+}
+
+.offset-4, .offset-6, .offset-8, .offset-10 {
+    @apply ml-auto;
+}
+
+.offset-4 {
+    @apply w-2/3;
+}
+
+.offset-6 {
+    @apply w-1/2;
+}
+
+.offset-8 {
+    @apply w-1/3;
+}
+
+.offset-10 {
+    @apply w-1/6;
+}
+
+@screen sm {
+    .container {
+        @apply max-w-xl;
+    }
+}
+
+@screen md {
+    .container {
+        @apply max-w-3xl;
+    }
+    
+    .col-10, .col-8, .col-6, .col-4 {
+        @apply flex-grow-0 flex-shrink-0
+    }
+
+    .col-10 {
+        @apply w-5/6;
+    }
+
+    .col-8 {
+        @apply w-2/3;
+    }
+
+    .col-6 {
+        @apply w-1/2;
+    }
+
+    .col-4 {
+        @apply w-1/3;
+    }
+}
+
+@screen lg {
+    .container {
+        @apply max-w-4xl;
+    }
+}
+
+@screen xl {
+    .container {
+        @apply max-w-6xl;
+    }
+}

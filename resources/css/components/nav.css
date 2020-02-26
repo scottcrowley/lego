@@ -1,0 +1,88 @@
+.navbar {
+    @apply relative flex flex-wrap items-center justify-between py-2 px-4;
+}
+.navbar > .container {
+    @apply flex flex-wrap items-center justify-between;
+}
+
+.navbar-brand {
+    @apply inline bg-transparent py-1 mr-4 text-xl no-underline whitespace-no-wrap text-secondary-700;
+
+    &:hover {
+        @apply text-secondary-900;
+    }
+}
+
+.navbar .nav-link {
+    @apply inline px-4 py-2 text-secondary-600 no-underline; 
+    
+    &:hover {
+        @apply text-secondary-800 no-underline;
+    }
+}
+
+.dropdown-menu .nav-link {
+    @apply block pb-0;
+}
+
+.subnav {
+    &.collapsable {
+        @apply hidden;
+    }
+
+    & a {
+        @apply text-left ml-2;
+
+        &:hover {
+            @apply border-b-2 border-secondary-500 text-secondary-900;
+        }
+    }
+
+    & a:first-child {
+        @apply ml-0;
+    }
+}
+
+.dropdown-menu .subnav {
+    @apply block;
+
+    & a {
+        @apply block no-underline text-sm leading-loose px-4 text-secondary-800 text-left ml-0;
+
+        &:hover {
+            @apply border-none no-underline text-secondary-800;
+            background: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+@screen sm {
+}
+
+@screen md {
+    .navbar {
+        @apply justify-start flex-row flex-no-wrap;
+    }
+
+    .navbar > .container {
+        @apply flex-no-wrap;
+    }
+
+    .navbar .nav-link {
+        @apply px-2;
+    }
+
+    .subnav.collapsable {
+        @apply block mr-auto;
+    }
+
+    .dropdown-menu .subnav {
+        @apply hidden;
+    }
+}
+
+@screen lg {
+}
+
+@screen xl {
+}
