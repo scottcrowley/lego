@@ -3,8 +3,25 @@ const { colors } = require('tailwindcss/defaultTheme');
 module.exports = {
   theme: {
     extend: {
+      // fontFamily: {
+      //   sans: [
+      //     'Nunito', 
+      //     '-apple-system',
+      //     'BlinkMacSystemFont',
+      //     '"Segoe UI"',
+      //     'Roboto',
+      //     '"Helvetica Neue"',
+      //     'Arial',
+      //     '"Noto Sans"',
+      //     'sans-serif',
+      //     '"Apple Color Emoji"',
+      //     '"Segoe UI Emoji"',
+      //     '"Segoe UI Symbol"',
+      //     '"Noto Color Emoji"',
+      //   ]
+      // },
       screens: {
-        '2xl': '1600px'
+        'xxl': '1600px'
       },
       colors: {
         primary: colors.orange,

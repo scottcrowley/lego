@@ -1,4 +1,6 @@
 /node_modules
+/node_modules-branch
+/node_modules-master
 /public/hot
 /public/css/app.css
 /public/js/app.js

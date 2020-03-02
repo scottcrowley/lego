@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-    @apply w-full px-1 mx-auto;
+    @apply px-1 mx-auto;
 }
 
 .row {
@@ -14,18 +14,6 @@ body {
 
 .col-10, .col-8, .col-6, .col-4, .offset-4, .offset-6, .offset-8 {
     @apply relative w-full px-4;
-}
-
-.card {
-    @apply relative w-full flex flex-col min-w-0 bg-white break-words border border-secondary-300 rounded;
-
-    & .card-header {
-        @apply mb-0 bg-secondary-200 px-5 py-3 border-b border-secondary-300;
-    }
-
-    & .card-body {
-        @apply flex-1 p-5;
-    }
 }
 
 .alert-success, .alert-warning, .alert-danger {
@@ -118,16 +106,9 @@ div {
 }
 
 @screen sm {
-    .container {
-        @apply max-w-xl;
-    }
 }
 
 @screen md {
-    .container {
-        @apply max-w-3xl;
-    }
-    
     .col-10, .col-8, .col-6, .col-4 {
         @apply flex-grow-0 flex-shrink-0
     }
@@ -150,13 +131,7 @@ div {
 }
 
 @screen lg {
-    .container {
-        @apply max-w-4xl;
-    }
 }
 
 @screen xl {
-    .container {
-        @apply max-w-6xl;
-    }
 }

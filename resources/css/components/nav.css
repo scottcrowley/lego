@@ -6,10 +6,10 @@
 }
 
 .navbar-brand {
-    @apply inline bg-transparent py-1 mr-4 text-xl no-underline whitespace-no-wrap text-secondary-700;
+    @apply inline bg-transparent py-1 mr-6 ml-4 text-xl no-underline whitespace-no-wrap text-secondary-700;
 
     &:hover {
-        @apply text-secondary-900;
+        @apply text-secondary-900 no-underline;
     }
 }
 
@@ -31,20 +31,32 @@
     }
 
     & a {
-        @apply text-left ml-2;
+        @apply block no-underline text-left;
 
         &:hover {
-            @apply border-b-2 border-secondary-500 text-secondary-900;
+            @apply no-underline text-secondary-900;
         }
     }
 
-    & a:first-child {
-        @apply ml-0;
+    & .dropdown {
+        @apply ml-4;
+
+        &:first-child {
+            @apply ml-0;
+        }
     }
 }
 
 .dropdown-menu .subnav {
     @apply block;
+
+    & .dropdown-menu {
+        @apply -ml-8 mt-0;
+    }
+
+    & .dropdown {
+        @apply ml-0;
+    }
 
     & a {
         @apply block no-underline text-sm leading-loose px-4 text-secondary-800 text-left ml-0;
@@ -73,7 +85,7 @@
     }
 
     .subnav.collapsable {
-        @apply block mr-auto;
+        @apply flex mr-auto;
     }
 
     .dropdown-menu .subnav {
@@ -85,4 +97,10 @@
 }
 
 @screen xl {
+}
+
+@screen xxl {
+    .navbar > .container {
+        @apply max-w-screen-xl;
+    }
 }
