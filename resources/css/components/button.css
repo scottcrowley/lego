@@ -1,0 +1,83 @@
+.btn {
+    @apply inline font-normal text-center select-none text-sm leading-relaxed py-1 px-3 border border-transparent rounded bg-secondary-100 text-secondary-800 outline-none;
+    /* @apply bg-secondary-100 text-secondary-800 font-normal text-sm font-semibold py-2 px-4 rounded; */
+    cursor: pointer;
+
+    &.is-primary {
+        @apply bg-primary-500 text-white border-primary-600;
+
+        &:hover {
+            @apply bg-primary-700 border-primary-800 text-white;
+        }
+    }
+
+    &.is-outlined {
+        background: transparent;
+        @apply border;
+    }
+
+    &.is-header-btn {
+        @apply .shadow .bg-white .text-sm .text-secondary-800;
+    }
+
+    &.is-small, &.is-header-btn {
+        @apply text-xs py-1 px-3;
+    }
+
+    &:hover {
+        @apply bg-secondary-300 text-secondary-800 border-secondary-400;
+    }
+
+    &.is-narrow, &.is-header-btn {
+        @apply py-1 px-2;
+    }
+
+    &:focus, :active {
+        @apply outline-none;
+    }
+
+    &.is-super-small {
+        @apply .text-xs .py-1 .px-1;
+    }
+}
+
+.btn-text {
+    @apply bg-transparent text-secondary-700 p-0 border-none no-underline;
+    cursor: pointer;
+
+    &.is-primary {
+        @apply text-primary-500 bg-transparent border-none;
+
+        &:hover {
+            @apply text-primary-700 bg-transparent border-none;
+        }
+    }
+
+    &.is-small {
+        @apply text-xs;
+    }
+
+    &:hover {
+        @apply text-secondary-800 bg-transparent border-none;
+    }
+}
+
+button.burger {
+    @apply flex items-center px-3 py-2 border rounded text-primary-500 border-primary-600;
+
+    &:hover {
+        @apply text-white bg-primary-500;
+    }
+}
+
+button.btn {
+    outline: none;
+}
+
+button.btn:disabled, .btn.is-disabled {
+    @apply .cursor-default .bg-secondary-400;
+
+    &:hover {
+        @apply .bg-secondary-400;
+    }
+}

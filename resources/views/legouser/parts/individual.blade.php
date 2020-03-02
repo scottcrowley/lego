@@ -7,7 +7,7 @@
 @section('content')
 <div class="w-full px-3 sm:px-0">
     <div class="rounded shadow">
-        <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
+        <div class="flex text-lg text-primary-900 bg-primary-500 p-3 rounded-t">
             <div>Your Lego Parts - Individual</div>
         </div>
         <div class="bg-white px-4 pb-6 rounded-b">

@@ -8,7 +8,7 @@
 <div class="flex items-center flex-col">
     <div class="w-3/4 lg:w-1/2 mx-auto">
         <div class="rounded shadow">
-            <div class="font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
+            <div class="font-medium text-lg text-primary-700 bg-primary-500 p-3 rounded-t">
                 Edit {{ $user->username }}'s Profile
             </div>
             <form method="POST" action="{{ route('profile.update') }}">
