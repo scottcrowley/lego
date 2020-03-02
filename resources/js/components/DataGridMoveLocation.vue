@@ -88,7 +88,7 @@
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content relative">
                     <div 
-                        class="absolute w-full flex bg-secondary-lightest -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-light font-semibold" 
+                        class="absolute w-full flex bg-secondary-200 -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-400 font-semibold" 
                         @click.prevent="selectPart($event, index)"
                         data-cy="select-part-button"
                     >Selected</div>
@@ -209,10 +209,10 @@
 
             selectPart(event, index) {
                 event.target.parentElement.classList.toggle('border-primary');
-                event.target.classList.toggle('bg-primary-lightest');
-                event.target.classList.toggle('bg-secondary-lightest');
-                event.target.classList.toggle('text-secondary-dark');
-                event.target.classList.toggle('text-secondary-light');
+                event.target.classList.toggle('bg-primary-100');
+                event.target.classList.toggle('bg-secondary-200');
+                event.target.classList.toggle('text-secondary-600');
+                event.target.classList.toggle('text-secondary-400');
                 this.partsSelected[index] = ! this.partsSelected[index];
                 this.selected = this.checkSelected();
                 this.updateMoveBtn();
@@ -275,10 +275,10 @@
             finalizeMove(count) {
                 document.querySelectorAll('.card-container .border-primary').forEach(el => { 
                     el.classList.remove('border-primary'); 
-                    el.firstElementChild.classList.remove('bg-primary-lightest');
-                    el.firstElementChild.classList.add('bg-secondary-lightest');
-                    el.firstElementChild.classList.remove('text-secondary-dark');
-                    el.firstElementChild.classList.add('text-secondary-light');
+                    el.firstElementChild.classList.remove('bg-primary-100');
+                    el.firstElementChild.classList.add('bg-secondary-200');
+                    el.firstElementChild.classList.remove('text-secondary-600');
+                    el.firstElementChild.classList.add('text-secondary-400');
                 });
                 this.getResults(this.currentPage);
                 this.updateSelected();

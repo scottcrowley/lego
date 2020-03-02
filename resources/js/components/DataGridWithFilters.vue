@@ -11,11 +11,11 @@
             </div>
             <div class="ml-2 pt-4" v-show="filtersShow">
                 <form data-cy="form-filters" @submit.prevent="applyFilters()">
-                    <div class="field-group flex items-center mb-2" v-for="filter in filters">
+                    <div class="field-group flex items-center" v-for="filter in filters">
                         <label :for="'filter_'+filter.param" v-text="filter.label"></label>
                         <input :type="filter.type" :name="'filter_'+filter.param" :id="'filter_'+filter.param" :class="filter.classes" v-model="filterModels['filter_'+filter.param]">
                     </div>
-                    <div class="field-group flex items-center mb-2">
+                    <div class="field-group flex items-center">
                         <button class="btn is-primary" 
                             @click.prevent="applyFilters()"
                             data-cy="filters-apply-button"

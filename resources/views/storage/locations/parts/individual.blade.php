@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="rounded shadow">
-        <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
+        <div class="flex text-lg text-primary-900 bg-primary-500 p-3 rounded-t">
             <div>Storage Location Individual Parts</div>
         </div>
         <div class="bg-white p-4 pb-6 rounded-b">

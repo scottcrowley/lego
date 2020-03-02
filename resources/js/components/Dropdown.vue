@@ -1,48 +1,50 @@
 <template>
-    <div class="dropdown-menu" ref="dropdowncontainer">
-        <div role="button" 
-            class="dropdown-toggle-wrap" 
-            @click.prevent="toggle($event)"
+    <div class="dropdown relative">
+        <div class="dropdown-toggle"
+             aria-haspopup="true"
+             :aria-expanded="isOpen"
+             @click.prevent="isOpen = !isOpen"
         >
-            <slot name="link"></slot>
+            <slot name="trigger"></slot>
         </div>
 
-        <div v-show="open" class="dropdown-items-wrap">
-            <slot name="dropdown-items"></slot>
+        <div v-show="isOpen"
+             class="dropdown-menu absolute bg-white py-2 rounded shadow-lg mt-2 z-10"
+             :class="align === 'left' ? 'left-0' : 'right-0'"
+             :style="{ width }"
+        >
+            <slot></slot>
         </div>
     </div>
 </template>
 
 <script>
+    // Dropdown menu - Hat-tip to Jeffery Way.
     export default {
+        props: {
+            width: { default: 'auto' },
+            align: { default: 'left' }
+        },
         data() {
-            return {
-                open: false
+            return { isOpen: false }
+        },
+        watch: {
+            isOpen(isOpen) {
+                if (isOpen) {
+                    document.addEventListener('click', this.closeIfClickedOutside);
+                }
             }
         },
-
-        created() {
-            window.addEventListener('click', this.close);
-        },
-
-        beforeDestroy() {
-            window.removeEventListener('click', this.close);
-        },
-
         methods: {
-            toggle(e) {
-                this.open = ! this.open;
-                // this.toggleClasses(e);
-            },
+            closeIfClickedOutside(event) {
+                let dropdown = event.target.closest('.dropdown');
 
-            // toggleClasses(e) {
-            //     e.target.classList.toggle('toggle-open');
-            //     e.target.classList.toggle('toggle-closed');
-            // },
-
-            close(e) {
-                if (! this.$refs.dropdowncontainer.contains(e.target)) {
-                    this.open = false;
+                if (
+                    ! dropdown
+                    || (dropdown && !this.$el.contains(dropdown))
+                ) {
+                    this.isOpen = false;
+                    document.removeEventListener('click', this.closeIfClickedOutside);
                 }
             }
         }

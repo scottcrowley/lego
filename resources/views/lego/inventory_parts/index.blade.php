@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="rounded shadow">
-        <div class="flex font-medium text-lg text-primary-darker bg-primary p-3 rounded-t">
+        <div class="flex text-lg text-primary-900 bg-primary-500 p-3 rounded-t">
             <div class="flex-1">Lego Set Inventory Parts</div>
             <a href="{{ route('lego.inventory_parts.grid', $inventory->id) }}" class="btn is-outlined is-header-btn text-sm">View as grid</a>
         </div>

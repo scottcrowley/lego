@@ -7,11 +7,11 @@
             </div>
             <div class="ml-2 pt-4" v-show="filtersShow">
                 <form @submit.prevent="applyFilters()">
-                    <div class="field-group flex items-center mb-2" v-for="filter in filters">
+                    <div class="field-group flex items-center" v-for="filter in filters">
                         <label :for="'filter_'+filter.param" v-text="filter.label"></label>
                         <input :type="filter.type" :name="'filter_'+filter.param" :id="'filter_'+filter.param" :class="filter.classes" v-model="filterModels['filter_'+filter.param]">
                     </div>
-                    <div class="field-group flex items-center mb-2">
+                    <div class="field-group flex items-center">
                         <button class="btn is-primary" @click.prevent="applyFilters()">Apply Filters</button>
                         <button class="btn ml-3" @click.prevent="clearFilters()">Clear Filters</button>
                     </div>
@@ -75,8 +75,8 @@
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content dim-container" :class="(data.dimmed) ? 'dim' : ''">
                     <div 
-                        class="absolute w-full flex -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-dark font-semibold z-20" 
-                        :class="(data.dimmed) ? 'bg-primary-lightest' : 'bg-secondary-lightest'"
+                        class="absolute w-full flex -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-600 font-semibold z-20" 
+                        :class="(data.dimmed) ? 'bg-primary-100' : 'bg-secondary-200'"
                         @click.prevent="toggleSelection($event, index)"
                         v-text="(data.dimmed) ? 'Mark as not found' : 'Mark as found'"
                     ></div>
