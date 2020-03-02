@@ -17,7 +17,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     @yield('head')
 </head>
-<body class="bg-primary-100 h-screen antialiased">
+<body>
     <div id="app" v-cloak>
         @include('layouts.nav')
 

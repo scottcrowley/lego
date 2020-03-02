@@ -30,9 +30,9 @@
                 <div class="" v-show="loading">
                     <div class="h-8 w-8 mx-auto loader loader-lg"></div>
                 </div>
-                <div class="flex" v-for="(data, index) in dataSet" :key="index" v-show="!loading">
+                <div class="flex text-xs text-secondary-600 font-light text-left" v-for="(data, index) in dataSet" :key="index" v-show="!loading">
                     <div 
-                        class="p-1 text-xs text-secondary-600 font-hairline text-left"
+                        class="p-1"
                         :class="(colnames[vIndex].width != '') ? colnames[vIndex].width : ''" 
                         v-for="(valname, vIndex) in valnames">
                         <span v-if="valname == 'rgb'" 

@@ -8,7 +8,7 @@
 <div class="container flex mx-auto justify-center">
     <div class="w-3/4">
         <div class="rounded shadow">
-            <div class="flex font-medium text-lg text-primary-700 bg-primary-500 p-3 rounded-t">
+            <div class="flex text-lg text-primary-900 bg-primary-500 p-3 rounded-t">
                 <div>Lego Part Categories</div>
             </div>
             <div class="bg-white px-8 py-6 rounded-b">

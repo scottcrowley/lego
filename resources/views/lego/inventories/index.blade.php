@@ -7,7 +7,7 @@
 @section('content')
 <div class="w-full">
     <div class="rounded shadow">
-        <div class="flex font-medium text-lg text-primary-700 bg-primary-500 p-3 rounded-t">
+        <div class="flex text-lg text-primary-900 bg-primary-500 p-3 rounded-t">
             <div class="flex-1">Lego Set Inventories</div>
             <a href="{{ route('lego.inventories.grid') }}" class="btn is-outlined is-header-btn text-sm">View as grid</a>
         </div>
