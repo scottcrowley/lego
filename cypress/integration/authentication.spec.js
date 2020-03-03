@@ -20,7 +20,7 @@ describe('Authentication', () => {
     it('can log out a user', () => {
         cy.login().then(() => {
             cy.visit('/dashboard');
-            cy.get('[data-cy=main-menu] .dropdown-toggle-wrap').click();
+            cy.get('[data-cy=main-menu] .dropdown-toggle-link').click();
             cy.get('[data-cy=logout-button]').click();
             cy.visit('/dashboard');
             cy.url().should('include', '/login');
