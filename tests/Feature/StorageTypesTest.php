@@ -58,7 +58,10 @@ class StorageTypesTest extends TestCase
         $this->get(route('storage.types.index'))
             ->assertSee('New Storage Type');
 
-        $this->assertDatabaseHas('storage_types', $type);
+        $this->assertDatabaseHas('storage_types', [
+            'name' => $type['name'],
+            'description' => $type['description'],
+        ]);
     }
 
     /** @test */
