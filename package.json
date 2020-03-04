@@ -13,7 +13,7 @@
         "@tailwindcss/custom-forms": "^0.2.1",
         "axios": "^0.19.2",
         "cross-env": "^5.2.1",
-        "cypress": "^4.0.2",
+        "cypress": "^4.1.0",
         "laravel-mix": "^4.1.4",
         "lodash": "^4.17.15",
         "popper.js": "^1.16.1",
