@@ -42,7 +42,7 @@ $app->singleton(
 );
 
 if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'lego-cypress.test') {
-    \Dotenv\Dotenv::create(base_path(), '.env.cypress')->overload();
+    \Dotenv\Dotenv::createImmutable(base_path(), '.env.cypress')->load();
 }
 
 /*
