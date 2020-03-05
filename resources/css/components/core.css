@@ -9,7 +9,7 @@ body {
 }
 
 .row {
-    @apply flex flex-wrap -mx-4
+    @apply flex flex-wrap -mx-4;
 }
 
 .col-10, .col-8, .col-6, .col-4, .offset-4, .offset-6, .offset-8 {
@@ -110,7 +110,7 @@ div {
 
 @screen md {
     .col-10, .col-8, .col-6, .col-4 {
-        @apply flex-grow-0 flex-shrink-0
+        @apply flex-grow-0 flex-shrink-0;
     }
 
     .col-10 {

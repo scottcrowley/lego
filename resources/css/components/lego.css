@@ -38,35 +38,31 @@ body {
 }
 
 .card-container {
-    @apply flex flex-wrap -mx-2;
+    @apply grid grid-cols-1 col-gap-0 row-gap-3;
 
     &.dashboard {
-        @apply w-auto flex-no-wrap justify-start flex-col items-center px-2 mx-0;
+        @apply w-3/4 mx-auto row-gap-4;
 
         & .card {
-            @apply h-auto w-48 border border-secondary-600 rounded-lg bg-white p-4 pr-3 mt-8 shadow-md;
+            @apply w-full border border-secondary-600 rounded-lg bg-white p-8 shadow-lg;
 
             & .card-header {
-                @apply text-secondary-800 font-semibold text-xs text-right;
+                @apply text-secondary-800 font-semibold text-lg text-center;
             }
 
             & .card-body {
-                @apply text-left text-green-600 font-thin text-xl mt-1;
+                @apply text-center text-green-600 font-thin text-3xl mt-1;
             }
         }
     }
 
     & .card {
-        /* @apply border border-gray-600 rounded shadow; */
-
         &.card-horizontal {
-            @apply w-full mb-3 px-2;
-
             & .card-content {
                 @apply w-full flex p-1 h-64 border rounded shadow-md overflow-hidden;
 
                 & .card-image {
-                    @apply w-2/5 m-auto overflow-hidden text-xs text-center;
+                    @apply w-2/5 m-auto overflow-hidden text-xs text-center pt-0;
                     max-width: 138px;
                     min-height: auto;
 
@@ -322,33 +318,20 @@ select {
 /* media specific declarations */
 @screen sm {
     .card-container {
+        @apply grid-cols-2 gap-3;
 
         &.dashboard { 
-            @apply flex-row flex-wrap justify-between;
-
-            & .card {
-                @apply p-8;
-
-                & .card-header {
-                    @apply text-sm;
-                }
-
-                & .card-body {
-                    @apply text-2xl mt-4;
-                }
-            }
+            @apply grid-cols-1 gap-4;
         }
 
         & .card {
             &.card-horizontal {
-                @apply w-1/2;
-    
                 & .card-content {
                     @apply block;
                     height: 22rem;
 
                     & .card-image {
-                        @apply w-3/4 block;
+                        @apply w-3/4 block pt-2;
                         max-width: 192px;
                         min-height: 146px;
 
@@ -368,14 +351,24 @@ select {
 
 @screen md {
     .card-container {
+        @apply grid-cols-3 gap-3;
 
         &.dashboard { 
-            @apply w-3/4 m-auto px-0;
+            @apply grid-cols-2 gap-4;
+
+            & .card {
+                & .card-header {
+                    @apply text-base text-right;
+                }
+
+                & .card-body {
+                    @apply text-2xl text-left;
+                }
+            }
         }
 
         & .card {
             &.card-horizontal {
-                @apply w-1/3;
                 & .card-content {
                     & .card-image {
                         max-width: 172px;
@@ -392,7 +385,6 @@ select {
 
 @screen lg {
     .card-container{
-
         &.dashboard { 
             @apply w-3/5;
         }
@@ -403,7 +395,7 @@ select {
                     @apply flex h-64;
 
                     & .card-image {
-                        @apply w-2/5;
+                        @apply w-2/5 pt-0;
                         max-width: 120px;
                         min-height: auto;
 
@@ -424,7 +416,6 @@ select {
 
 @screen xl {
     .card-container {
-
         &.dashboard { 
             @apply w-1/2;
         }

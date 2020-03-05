@@ -1,7 +1,5 @@
 .btn {
-    @apply inline font-normal text-center select-none text-sm leading-relaxed py-1 px-3 border border-secondary-300 rounded bg-secondary-100 text-secondary-800 outline-none;
-    /* @apply bg-secondary-100 text-secondary-800 font-normal text-sm font-semibold py-2 px-4 rounded; */
-    cursor: pointer;
+    @apply inline font-normal text-center select-none text-sm leading-relaxed py-1 px-3 border border-secondary-300 rounded bg-secondary-100 text-secondary-800 outline-none cursor-pointer;
 
     &.is-primary {
         @apply bg-primary-500 text-white border-primary-600;
@@ -42,8 +40,7 @@
 }
 
 .btn-text {
-    @apply bg-transparent text-secondary-700 p-0 border-none no-underline;
-    cursor: pointer;
+    @apply bg-transparent text-secondary-700 p-0 border-none no-underline cursor-pointer;
 
     &.is-primary {
         @apply text-primary-500 bg-transparent border-none;
