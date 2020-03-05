@@ -15,7 +15,7 @@
     }
 
     &.is-header-btn {
-        @apply .shadow .bg-white .text-sm .text-secondary-800;
+        @apply shadow bg-white text-sm text-secondary-800;
     }
 
     &.is-small, &.is-header-btn {
@@ -35,7 +35,7 @@
     }
 
     &.is-super-small {
-        @apply .text-xs .py-1 .px-1;
+        @apply text-xs py-1 px-1;
     }
 }
 
@@ -72,9 +72,9 @@ button.btn {
 }
 
 button.btn:disabled, .btn.is-disabled {
-    @apply .cursor-default .bg-secondary-400;
+    @apply cursor-default bg-secondary-200 text-secondary-400 border-secondary-300;
 
     &:hover {
-        @apply .bg-secondary-400;
+        @apply bg-secondary-200 text-secondary-400 border-secondary-300;
     }
 }

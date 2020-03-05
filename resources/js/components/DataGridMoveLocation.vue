@@ -88,7 +88,7 @@
             <div class="card card-horizontal" v-for="(data, index) in dataSet" :key="index">
                 <div class="card-content relative">
                     <div 
-                        class="absolute w-full flex bg-secondary-200 -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-400 font-semibold" 
+                        class="absolute w-full flex bg-secondary-200 -ml-1 -mt-1 h-8 cursor-pointer items-center justify-center text-secondary-400 font-semibold select-none" 
                         @click.prevent="selectPart($event, index)"
                         data-cy="select-part-button"
                     >Selected</div>
@@ -209,7 +209,7 @@
 
             selectPart(event, index) {
                 event.target.parentElement.classList.toggle('border-primary');
-                event.target.classList.toggle('bg-primary-100');
+                event.target.classList.toggle('bg-primary-200');
                 event.target.classList.toggle('bg-secondary-200');
                 event.target.classList.toggle('text-secondary-600');
                 event.target.classList.toggle('text-secondary-400');
@@ -275,7 +275,7 @@
             finalizeMove(count) {
                 document.querySelectorAll('.card-container .border-primary').forEach(el => { 
                     el.classList.remove('border-primary'); 
-                    el.firstElementChild.classList.remove('bg-primary-100');
+                    el.firstElementChild.classList.remove('bg-primary-200');
                     el.firstElementChild.classList.add('bg-secondary-200');
                     el.firstElementChild.classList.remove('text-secondary-600');
                     el.firstElementChild.classList.add('text-secondary-400');

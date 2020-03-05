@@ -28,9 +28,9 @@
                 showLocation: [],
             }
         },
-        mounted() {
+        created() {
             for(let i=0; i< Object.keys(this.locations).length; i++) {
-                this.showLocation[i] = false;
+                this.showLocation[i] = true;
             };
         },
         methods: {
