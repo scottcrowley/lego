@@ -20,11 +20,11 @@ class CreateInventoryPartsTable extends Migration
             $table->integer('quantity');
             $table->string('is_spare', 1);
 
-            $table->foreign('part_num')
-                ->references('part_num')
-                ->on('parts')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // $table->foreign('part_num')
+            //     ->references('part_num')
+            //     ->on('parts')
+            //     ->onUpdate('cascade')
+            //     ->onDelete('cascade');
 
             $table->foreign('color_id')
                 ->references('id')
@@ -32,11 +32,11 @@ class CreateInventoryPartsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreign('inventory_id')
-                ->references('id')
-                ->on('inventories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // $table->foreign('inventory_id')
+            //     ->references('id')
+            //     ->on('inventories')
+            //     ->onUpdate('cascade')
+            //     ->onDelete('cascade');
         });
     }
 

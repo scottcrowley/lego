@@ -18,11 +18,11 @@ class CreateInventoriesTable extends Migration
             $table->integer('version');
             $table->string('set_num', 20)->index();
 
-            $table->foreign('set_num')
-                ->references('set_num')
-                ->on('sets')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // $table->foreign('set_num')
+            //     ->references('set_num')
+            //     ->on('sets')
+            //     ->onUpdate('cascade')
+            //     ->onDelete('cascade');
         });
     }
 

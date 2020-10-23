@@ -14,21 +14,21 @@ class CreatePartRelationshipsTable extends Migration
     public function up()
     {
         Schema::create('part_relationships', function (Blueprint $table) {
-            $table->string('rel_type', 1)->nullable();
+            $table->string('rel_type', 1)->nullable()->comment('(P)rint, Pai(R), Su(B)-Part, (M)old, Pa(T)tern, (A)lternate');
             $table->string('child_part_num', 20)->index();
             $table->string('parent_part_num', 20)->index();
 
-            $table->foreign('child_part_num')
-                ->references('part_num')
-                ->on('parts')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // $table->foreign('child_part_num')
+            //     ->references('part_num')
+            //     ->on('parts')
+            //     ->onUpdate('cascade')
+            //     ->onDelete('cascade');
 
-            $table->foreign('parent_part_num')
-                ->references('part_num')
-                ->on('parts')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // $table->foreign('parent_part_num')
+            //     ->references('part_num')
+            //     ->on('parts')
+            //     ->onUpdate('cascade')
+            //     ->onDelete('cascade');
         });
     }
 

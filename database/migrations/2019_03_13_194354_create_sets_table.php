@@ -20,10 +20,10 @@ class CreateSetsTable extends Migration
             $table->unsignedBigInteger('theme_id')->nullable()->index();
             $table->integer('num_parts');
 
-            $table->foreign('theme_id')
-                ->references('id')
-                ->on('themes')
-                ->onUpdate('cascade');
+            // $table->foreign('theme_id')
+            //     ->references('id')
+            //     ->on('themes')
+            //     ->onUpdate('cascade');
         });
     }
 
