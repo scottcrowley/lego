@@ -128,6 +128,7 @@ class install extends Command
     {
         return [
             'REBRICKABLE_EMAIL' => $this->ask('Rebrickable Login Email'),
+            'REBRICKABLE_USERNAME' => $this->ask('Rebrickable Username'),
             'REBRICKABLE_PASSWORD' => $this->ask('Rebrickable Login password'),
             'REBRICKABLE_API_KEY' => $this->ask('Rebrickable API Key'),
         ];

@@ -28,7 +28,7 @@ npm run dev
 
 #### Step 2
 
-Run the installer command to set up your database connection as well as all your required Rebrickable credentials. Make sure that you have your Rebrickable email, password and API Key. The installer will automatically generate the Rebrickable User Token based on your provided email & password.
+Run the installer command to set up your database connection as well as all your required Rebrickable credentials. Make sure that you have your Rebrickable email, Username, password and API Key. The installer will automatically generate the Rebrickable User Token based on your provided email & password.
 ```zsh
 php artisan lego:install
 ```
