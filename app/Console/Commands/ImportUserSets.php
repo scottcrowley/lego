@@ -26,9 +26,9 @@ class ImportUserSets extends Command
     /**
      * Rebrickable User Sets
      *
-     * @var null
+     * @var object
      */
-    protected $sets = null;
+    protected $sets;
 
     /**
      * Create a new command instance.

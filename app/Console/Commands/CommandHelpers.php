@@ -30,9 +30,9 @@ trait CommandHelpers
     /**
      * RebrickableApi(Lego|User) instance
      *
-     * @var null
+     * @var object
      */
-    protected $api = null;
+    protected $api;
 
     /**
      * End the command execution and display process time
