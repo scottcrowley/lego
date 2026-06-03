@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Part;
@@ -18,6 +17,7 @@ class UpdatePartImageUrl extends Command
     protected $signature = 'lego:part-image-url
                             {--categories= : The only category ids to update}
                             {--exclude-categories= : Category ids to exclude from update}
+                            {--update-only : Only updates parts that do not currently have a url & won\'t truncate part_image_urls table}
                             {--no-truncate : Do not truncate the part_image_urls table}
                             {--force-truncate : Force truncate the part_image_urls table}';
 
@@ -31,23 +31,23 @@ class UpdatePartImageUrl extends Command
     /**
      * Part image urls collection from existing table
      *
-     * @var null
+     * @var Collection
      */
-    protected $partImageUrls = null;
+    protected $partImageUrls;
 
     /**
      * Part categories from database
      *
-     * @var null
+     * @var Collection
      */
-    protected $partCategories = null;
+    protected $partCategories;
 
     /**
      * Parts from database
      *
-     * @var null
+     * @var Illuminate\Support\LazyCollection
      */
-    protected $allParts = null;
+    protected $allParts;
 
     /**
      * Missing parts from database
@@ -76,6 +76,13 @@ class UpdatePartImageUrl extends Command
      * @var array
      */
     protected $excludeCategories = [];
+
+    /**
+     * Update parts without urls only
+     *
+     * @var boolean
+     */
+    protected $updateOnly = false;
 
     /**
      * Number of parts updated during process
@@ -108,7 +115,7 @@ class UpdatePartImageUrl extends Command
      */
     public function handle()
     {
-        if (! $this->start()) {
+        if (!$this->start()) {
             return false;
         }
 
@@ -156,12 +163,16 @@ class UpdatePartImageUrl extends Command
             $this->truncate = false;
         }
 
-        if ($this->option('no-truncate')) {
-            $this->truncate = false;
+        if ($this->option('update-only')) {
+            $this->updateOnly = true;
         }
 
         if ($this->option('force-truncate')) {
             $this->truncate = true;
+        }
+
+        if ($this->option('no-truncate') || $this->updateOnly) {
+            $this->truncate = false;
         }
     }
 
@@ -175,6 +186,11 @@ class UpdatePartImageUrl extends Command
         $this->updateStatus('Getting parts from database...');
 
         $allParts = Part::select('part_num')->without('category');
+
+        if ($this->updateOnly) {
+            $allParts->with('partImageUrl')->get();
+            $allParts->filter(function ($part) { return is_null($part->image_url); });
+        }
 
         if (count($this->onlyCategories)) {
             $allParts->whereIn('part_category_id', $this->onlyCategories);
@@ -194,17 +210,24 @@ class UpdatePartImageUrl extends Command
      */
     protected function processPartChunks()
     {
-        $partList = [];
-        $this->allParts->chunk(500)->each(function ($parts) use (&$partList) {
-            $partList[] = $parts->implode('part_num', ',');
-        });
+        $chunkSize = 250;
 
-        $partListCount = count($partList);
+        if ($this->updateOnly) {
+            $this->allParts->filter(function ($part) { return is_null($part->image_url); });
+        }
 
-        foreach ($partList as $i => $parts) {
-            $this->getRebrickableParts($parts, ($i + 1), $partListCount);
+        $partListCount = $this->allParts->count();
+
+        $i = 1;
+
+        foreach ($this->allParts->chunk($chunkSize) as $chunk) {
+            $parts = $chunk->implode('part_num', ',');
+
+            $this->getRebrickableParts($parts, ($i), ceil($partListCount / $chunkSize));
 
             $this->api->resetRequest();
+
+            $i++;
         }
     }
 
@@ -224,11 +247,11 @@ class UpdatePartImageUrl extends Command
         $this->api->setUrlParam('part_nums', $partList);
         $parts = $this->api->getAllParts();
 
-        if (! $parts instanceof \Illuminate\Support\Collection) {
+        if (!$parts instanceof \Illuminate\Support\Collection) {
             if (is_array($parts)) {
-                $this->displayError('A problem was encountered! Rebrickable response: '.$parts['status'].' - '.$parts['detail']);
+                $this->displayError('A problem was encountered! Rebrickable response: ' . $parts['status'] . ' - ' . $parts['detail']);
             }
-            $this->displayError('A unknown problem was encountered! Rebrickable response: {'.$parts.'}');
+            $this->displayError('A unknown problem was encountered! Rebrickable response: {' . $parts . '}');
         }
 
         if ($parts->count()) {
@@ -256,7 +279,7 @@ class UpdatePartImageUrl extends Command
         $sqlList = [];
 
         foreach ($parts as $part) {
-            if (! is_null($part['part_img_url']) && (! $currentImages->where('part_num', $part['part_num'])->where('image_url', $part['part_img_url'])->count())) {
+            if (!is_null($part['part_img_url']) && (!$currentImages->where('part_num', $part['part_num'])->where('image_url', $part['part_img_url'])->count())) {
                 $this->processed++;
 
                 $image = $currentImages->where('part_num', $part['part_num'])->first();
@@ -296,9 +319,9 @@ class UpdatePartImageUrl extends Command
         $this->info('');
         $this->warn(
             '>>>> There '
-            .(($this->updatedParts == 1) ? 'was 1 part' : 'were '.$this->updatedParts.' parts').
+            . (($this->updatedParts == 1) ? 'was 1 part' : 'were ' . $this->updatedParts . ' parts') .
             ' updated and '
-            .(($this->addedParts == 1) ? '1 part' : $this->addedParts.' parts').
+            . (($this->addedParts == 1) ? '1 part' : $this->addedParts . ' parts') .
             ' added during the process <<<<'
         );
     }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -32,7 +31,7 @@ class ImportAllCsvFiles extends Command
     /**
      * List of commands to execute
      *
-     * @var boolean
+     * @var array
      */
     protected $commandList = [];
 
@@ -65,7 +64,7 @@ class ImportAllCsvFiles extends Command
      */
     public function handle()
     {
-        if (! $this->start()) {
+        if (!$this->start()) {
             return false;
         }
 
@@ -93,7 +92,7 @@ class ImportAllCsvFiles extends Command
         $this->info('>> This command will execute several sub commands to import files from Rebrickable.');
         $this->info('   The following commands will be executed:');
         foreach ($this->commandList as $command) {
-            $this->info('       '.$command);
+            $this->info('       ' . $command);
         }
         $this->info('   The lego:import-inventory-parts-csv command is not included due to how memory intensive it is.');
         $this->info('   All of these commands should take less than a minute to run.');

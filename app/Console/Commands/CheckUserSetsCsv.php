@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class CheckUserSetsCsv extends Command
 {
@@ -31,6 +32,13 @@ class CheckUserSetsCsv extends Command
     protected $url = '';
 
     /**
+     * CSV Column names
+     *
+     * @var array
+     */
+    protected $csvKeys;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -40,21 +48,55 @@ class CheckUserSetsCsv extends Command
         parent::__construct();
 
         $this->checkTables = [
-            'part_categories' => ['id', 'part_category_id']
+            'sets' => ['set_num', 'set_num']
         ];
 
         $this->missingDeps = $this->loadedDeps = [
-            'part_categories' => []
+            'sets' => []
+        ];
+
+        $this->csvKeys = [
+            'Set Number',
+            'Quantity'
         ];
 
         $this->keys = collect([
-            'part_num',
-            'name',
-            'part_category_id',
-            'part_material_id',
+            'set_num',
+            'quantity'
         ]);
 
         $this->url = 'https://rebrickable.com/users/'.(config('rebrickable.api.username')).'/setlists/sets/?format=rbsetscsv&';
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        if (! $this->start()) {
+            return false;
+        }
+
+        if (! $this->option('bulk')) {
+            $this->processStart = microtime(true);
+        }
+
+        $this->info('');
+        $this->normalizeCsv();
+        $this->getDependencies();
+        // $this->checkDirectory();
+        // $this->retrieveFile();
+        // $this->displayCsvDate();
+        $this->loadDependenciesFromCSV();
+        $this->compileMissingDependencies();
+        $this->cleanUp();
+        $this->displayMissing();
+        if (! $this->option('bulk')) {
+            $this->goodbye();
+        }
+        $this->displayProcessed();
     }
 
     /**
@@ -64,7 +106,63 @@ class CheckUserSetsCsv extends Command
      */
     protected function start()
     {
-        $this->info('>> Please wait while we verify all the dependencies are available for User Sets <<');
+        $this->info('>> Please wait while we verify all the dependencies are available for User Sets');
+        $this->info('   Since the CSV file is located at a dynamic url, you will need to download the file');
+        $this->info('   manually from '.$this->url);
+        $this->info('   rename it "rebrickable.csv" and place the file in /storage/app/csv_files.');
+        return $this->confirm('The process will not be able to complete without this file in that location. Continue?');
+    }
+
+    /**
+     * Update the 1st line of the downloaded csv with the columns name instead of the column labels
+     *
+     * @return void
+     */
+    protected function normalizeCsv()
+    {
+        Storage::move('csv_files/rebrickable.csv', 'csv_files/rebrickable_copy.csv');
+
+        $original = fopen(storage_path('app/csv_files/rebrickable_copy.csv'), 'r');
+        if (! is_resource($original)) {
+            die('Failed to open the source file');
+        }
+
+        $new = fopen(storage_path('app/csv_files/rebrickable.csv'), 'w');
+        if (! is_resource($new)) {
+            die('Failed to open to destination file');
+        }
+
+        $data = [];
+        $data[] = fgetcsv($original);
+
+        if ($data[0] != $this->csvKeys) {
+            array_unshift($data, $this->csvKeys);
+        } else {
+            $data[0] = $this->keys->toArray();
+        }
+
+        while (($line = fgetcsv($original)) !== false) {
+            $data[] = $line;
+        }
+
+        foreach ($data as $row) {
+            fputcsv($new, $row);
+        }
+
+        fclose($original);
+        fclose($new);
+
         return true;
+    }
+
+    /**
+     * Delete the downloaded csv file
+     *
+     * @return void
+     */
+    protected function cleanUp()
+    {
+        Storage::delete('csv_files/rebrickable.csv');
+        Storage::move('csv_files/rebrickable_copy.csv', 'csv_files/rebrickable.csv');
     }
 }

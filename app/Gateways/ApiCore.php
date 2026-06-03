@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Gateways;
 
 class ApiCore
@@ -29,11 +28,11 @@ class ApiCore
     {
         $this->credentials = config('rebrickable.api');
 
-        if (! $bypassVerify) {
+        if (!$bypassVerify) {
             $this->verifyCredentials();
 
             if (class_basename($this) == 'RebrickableApiUser') {
-                $this->baseUrl = $this->baseUrl.$this->credentials['token'].'/';
+                $this->baseUrl = $this->baseUrl . $this->credentials['token'] . '/';
             }
         }
     }
@@ -86,7 +85,7 @@ class ApiCore
         abort_if(
             is_null($this->credentials)
             || (
-                ! is_null($this->credentials) &&
+                !is_null($this->credentials) &&
                 (
                     $this->credentials['email'] == '' ||
                     $this->credentials['password'] == '' ||
@@ -141,10 +140,10 @@ class ApiCore
         }
 
         $this->appendUrl($type);
-        $this->appendUrlParam('page='.$page);
-        $this->appendUrlParam('page_size='.$page_size);
+        $this->appendUrlParam('page=' . $page);
+        $this->appendUrlParam('page_size=' . $page_size);
         if ($ordering != '') {
-            $this->appendUrlParam('ordering='.$ordering);
+            $this->appendUrlParam('ordering=' . $ordering);
         }
 
         $this->executeGet();
@@ -175,6 +174,6 @@ class ApiCore
      */
     public function setUrlParam($name, $value)
     {
-        $this->appendUrlParam($name.'='.$value);
+        $this->appendUrlParam($name . '=' . $value);
     }
 }

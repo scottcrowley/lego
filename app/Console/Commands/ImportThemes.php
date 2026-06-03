@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Theme;
@@ -26,7 +25,7 @@ class ImportThemes extends Command
     /**
      * Rebrickable Themes
      *
-     * @var null
+     * @var object
      */
     protected $themes = null;
 
@@ -79,7 +78,7 @@ class ImportThemes extends Command
         $this->updateStatus('Getting all Themes from Rebrickable...');
 
         $this->themes = $this->api->getAll('themes');
-        $this->info('=========== '.count($this->themes).' themes retrieved.');
+        $this->info('=========== ' . count($this->themes) . ' themes retrieved.');
     }
 
     /**
@@ -93,7 +92,7 @@ class ImportThemes extends Command
 
         $themes = $this->themes;
 
-        if (! $themes->count()) {
+        if (!$themes->count()) {
             $this->warn('** No Themes retrieved from Rebrickable **');
             $this->goodbye();
         }
